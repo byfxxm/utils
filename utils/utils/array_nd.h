@@ -10,8 +10,12 @@ public:
 		static_assert(sizeof...(Ts) == N);
 		_array_nd(0, ts...);
 
-		for (auto i : dim)
-			ele_cnt *= i;
+		for (auto i = 0; i < N; ++i) {
+			ele_cnt *= dim[i];
+			factor[i] = 1;
+			for (auto j = i + 1; j < N; ++j)
+				factor[i] *= dim[j];
+		}
 
 		ele = new T[ele_cnt];
 	}
@@ -41,11 +45,9 @@ private:
 	template<typename T1, typename... Ts>
 	T& _get(T* p, T1 t1, Ts... ts)
 	{
-		int product = 1;
-		for (int i = N - sizeof...(Ts); i < N; ++i)
-			product *= dim[i];
+		constexpr int level = N - sizeof...(Ts) - 1;
 
-		return _get(&p[product * t1], ts...);
+		return _get(&p[factor[level] * t1], ts...);
 	}
 
 	T& _get(T* p)
@@ -57,4 +59,5 @@ private:
 	T* ele{ nullptr };
 	int ele_cnt{ 1 };
 	int dim[N];
+	int factor[N];
 };
