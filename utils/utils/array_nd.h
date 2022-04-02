@@ -1,4 +1,5 @@
 #pragma once
+#include <type_traits>
 
 template<typename T, int N>
 class array_nd
@@ -36,6 +37,7 @@ private:
 	template<typename T1, typename... Ts>
 	void _array_nd(int n, T1 t1, Ts... ts)
 	{
+		static_assert(std::is_integral_v<T1>);
 		dim[n] = t1;
 		_array_nd(++n, ts...);
 	}
@@ -45,6 +47,7 @@ private:
 	template<typename T1, typename... Ts>
 	T& _get(T* p, T1 t1, Ts... ts)
 	{
+		static_assert(std::is_integral_v<T1>);
 		constexpr int level = N - sizeof...(Ts) - 1;
 		return _get(&p[factor[level] * t1], ts...);
 	}
