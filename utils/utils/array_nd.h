@@ -46,7 +46,6 @@ private:
 	T& _get(T* p, T1 t1, Ts... ts)
 	{
 		constexpr int level = N - sizeof...(Ts) - 1;
-
 		return _get(&p[factor[level] * t1], ts...);
 	}
 
