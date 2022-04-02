@@ -42,7 +42,7 @@ private:
 	T& _get(T* p, T1 t1, Ts... ts)
 	{
 		int product = 1;
-		for (auto i = N - sizeof...(Ts); i < N; ++i)
+		for (int i = N - sizeof...(Ts); i < N; ++i)
 			product *= dim[i];
 
 		return _get(&p[product * t1], ts...);
