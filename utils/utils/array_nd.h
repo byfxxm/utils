@@ -1,7 +1,8 @@
 #pragma once
 #include <type_traits>
+#include <cstring>
 
-template<typename T, int N>
+template<typename T, int N, int Init = 0>
 class array_nd
 {
 public:
@@ -19,6 +20,7 @@ public:
 		}
 
 		ele = new T[ele_cnt];
+		memset(ele, Init, ele_cnt * sizeof(T));
 	}
 
 	~array_nd()
