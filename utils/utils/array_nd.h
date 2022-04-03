@@ -50,20 +50,20 @@ public:
 		return _get(ele, ts...);
 	}
 
-	int operator[](int n)
+	int operator[](int idx)
 	{
-		assert(n >= 0 && n < N);
-		return dim[n];
+		assert(idx >= 0 && idx < N);
+		return dim[idx];
 	}
 
 private:
 	template<typename T1, typename... Ts>
-	void _array_nd(int n, T1 t1, Ts... ts)
+	void _array_nd(int idx, T1 t1, Ts... ts)
 	{
 		static_assert(std::is_integral_v<T1>);
-		dim[n] = t1;
+		dim[idx] = t1;
 		if constexpr (sizeof...(ts) > 0)
-			_array_nd(++n, ts...);
+			_array_nd(++idx, ts...);
 	}
 
 	template<typename T1, typename... Ts>
