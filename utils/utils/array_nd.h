@@ -20,12 +20,17 @@ public:
 		}
 
 		ele = new T[ele_cnt];
-		memset(ele, Init, ele_cnt * sizeof(T));
+		reset();
 	}
 
 	~array_nd()
 	{
 		delete[] ele;
+	}
+
+	void reset()
+	{
+		memset(ele, Init, ele_cnt * sizeof(T));
 	}
 
 	template<typename... Ts>
