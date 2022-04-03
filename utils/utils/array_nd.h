@@ -2,7 +2,7 @@
 #include <type_traits>
 #include <cstring>
 
-template<typename T, int N, int Init = 0>
+template<typename T, int N, char Init = 0>
 class array_nd
 {
 public:
