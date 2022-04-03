@@ -19,7 +19,7 @@ public:
 	array_nd(Ts... ts)
 	{
 		static_assert(N > 0);
-		static_assert(sizeof...(Ts) == N);
+		static_assert(sizeof...(ts) == N);
 		_array_nd(0, ts...);
 
 		for (auto i = 0; i < N; ++i) {
@@ -46,7 +46,7 @@ public:
 	template<typename... Ts>
 	T& operator()(Ts... ts)
 	{
-		static_assert(sizeof...(Ts) == N);
+		static_assert(sizeof...(ts) == N);
 		return _get(ele, ts...);
 	}
 
@@ -62,16 +62,15 @@ private:
 	{
 		static_assert(std::is_integral_v<T1>);
 		dim[n] = t1;
-		_array_nd(++n, ts...);
+		if constexpr (sizeof...(ts) > 0)
+			_array_nd(++n, ts...);
 	}
-
-	void _array_nd(int) {}
 
 	template<typename T1, typename... Ts>
 	T& _get(T* p, T1 t1, Ts... ts)
 	{
 		static_assert(std::is_integral_v<T1>);
-		constexpr int idx = N - sizeof...(Ts) - 1;
+		constexpr int idx = N - sizeof...(ts) - 1;
 		assert(t1 >= 0 && t1 < dim[idx]);
 		return _get(&p[factor[idx] * t1], ts...);
 	}
