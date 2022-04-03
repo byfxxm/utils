@@ -18,6 +18,7 @@ public:
 	template<typename... Ts>
 	array_nd(Ts... ts)
 	{
+		static_assert(N > 0);
 		static_assert(sizeof...(Ts) == N);
 		_array_nd(0, ts...);
 
