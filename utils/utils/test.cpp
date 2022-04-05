@@ -13,6 +13,7 @@ int main()
 	auto c = a[1];
 
 	assert(&a(2, 3, 4) - &a(1, 2, 3) == 82);
+	assert(&a(6, 7, 8) - &a(0, 0, 0) == 7 * 8 * 9 - 1);
 
 	return 0;
 }
