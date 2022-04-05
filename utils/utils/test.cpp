@@ -11,6 +11,7 @@ int main()
 				a(i, j, k) = (type)i * j * k;
 
 	assert(8 == a[1]);
+	assert(a(2, 3, 4) == 24);
 	assert(&a(2, 3, 4) - &a(1, 2, 3) == 82);
 	assert(&a(6, 7, 8) - &a(0, 0, 0) == 7 * 8 * 9 - 1);
 	assert((char*)&a(6, 7, 8) - (char*)&a(0, 0, 0) == (7 * 8 * 9 - 1) * sizeof(type));
