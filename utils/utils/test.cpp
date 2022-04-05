@@ -2,7 +2,8 @@
 
 int main()
 {
-	array_nd<__int64, 3> a(7, 8, 9);
+	using type = __int64;
+	array_nd<type, 3> a(7, 8, 9);
 
 	for (int i = 0; i < a[0]; ++i)
 		for (int j = 0; j < a[1]; ++j)
@@ -14,6 +15,7 @@ int main()
 
 	assert(&a(2, 3, 4) - &a(1, 2, 3) == 82);
 	assert(&a(6, 7, 8) - &a(0, 0, 0) == 7 * 8 * 9 - 1);
+	assert((char*)&a(6, 7, 8) - (char*)&a(0, 0, 0) == (7 * 8 * 9 - 1) * sizeof(type));
 
 	return 0;
 }
