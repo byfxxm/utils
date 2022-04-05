@@ -2,7 +2,7 @@
 
 int main()
 {
-	array_nd<char, 3> a(7, 8, 9);
+	array_nd<__int64, 3> a(7, 8, 9);
 
 	for (int i = 0; i < a[0]; ++i)
 		for (int j = 0; j < a[1]; ++j)
@@ -11,6 +11,8 @@ int main()
 
 	auto b = a(4, 7, 8);
 	auto c = a[1];
+
+	assert(&a(2, 3, 4) - &a(1, 2, 3) == 82);
 
 	return 0;
 }
