@@ -54,6 +54,7 @@ public:
 
 	void reset()
 	{
+		assert(_ele);
 		memset(_ele, Init, _ele_cnt * sizeof(T));
 	}
 
@@ -61,11 +62,13 @@ public:
 	T& operator()(Ts... ts) const
 	{
 		static_assert(sizeof...(ts) == N);
+		assert(_ele);
 		return _get(_ele, ts...);
 	}
 
 	int operator[](int idx) const
 	{
+		assert(_ele);
 		assert(idx >= 0 && idx < N);
 		return _dim[idx];
 	}
