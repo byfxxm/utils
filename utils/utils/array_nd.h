@@ -12,7 +12,7 @@
 *		arr.reset(); // 内存初始化为0xff
 */
 template<typename T, int N, char Init = 0>
-class array_nd
+class array_nd final
 {
 public:
 	template<typename... Ts>
@@ -31,6 +31,19 @@ public:
 
 		_ele = new T[_ele_cnt];
 		reset();
+	}
+
+	array_nd(array_nd& arr)
+	{
+		memcpy(this, &arr, sizeof(array_nd));
+		_ele = new T[_ele_cnt];
+		memcpy(_ele, arr._ele, _ele_cnt * sizeof(T));
+	}
+
+	array_nd(array_nd&& arr) noexcept
+	{
+		memcpy(this, &arr, sizeof(array_nd));
+		arr._ele = nullptr;
 	}
 
 	~array_nd()
@@ -83,6 +96,6 @@ private:
 private:
 	T* _ele{ nullptr };
 	int _ele_cnt{ 1 };
-	int _dim[N];
-	int _factor[N];
+	int _dim[N]{};
+	int _factor[N]{};
 };
