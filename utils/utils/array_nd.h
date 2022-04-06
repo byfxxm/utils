@@ -23,37 +23,37 @@ public:
 		_array_nd(0, ts...);
 
 		for (auto i = 0; i < N; ++i) {
-			ele_cnt *= dim[i];
-			factor[i] = 1;
+			_ele_cnt *= _dim[i];
+			_factor[i] = 1;
 			for (auto j = i + 1; j < N; ++j)
-				factor[i] *= dim[j];
+				_factor[i] *= _dim[j];
 		}
 
-		ele = new T[ele_cnt];
+		_ele = new T[_ele_cnt];
 		reset();
 	}
 
 	~array_nd()
 	{
-		delete[] ele;
+		delete[] _ele;
 	}
 
 	void reset()
 	{
-		memset(ele, Init, ele_cnt * sizeof(T));
+		memset(_ele, Init, _ele_cnt * sizeof(T));
 	}
 
 	template<typename... Ts>
 	T& operator()(Ts... ts)
 	{
 		static_assert(sizeof...(ts) == N);
-		return _get(ele, ts...);
+		return _get(_ele, ts...);
 	}
 
 	int operator[](int idx)
 	{
 		assert(idx >= 0 && idx < N);
-		return dim[idx];
+		return _dim[idx];
 	}
 
 private:
@@ -61,7 +61,7 @@ private:
 	void _array_nd(int idx, T1 t1, Ts... ts)
 	{
 		static_assert(std::is_integral_v<T1>);
-		dim[idx] = t1;
+		_dim[idx] = t1;
 		if constexpr (sizeof...(ts) > 0)
 			_array_nd(++idx, ts...);
 	}
@@ -71,8 +71,8 @@ private:
 	{
 		static_assert(std::is_integral_v<T1>);
 		constexpr int idx = N - sizeof...(ts) - 1;
-		assert(t1 >= 0 && t1 < dim[idx]);
-		return _get(&p[factor[idx] * t1], ts...);
+		assert(t1 >= 0 && t1 < _dim[idx]);
+		return _get(&p[_factor[idx] * t1], ts...);
 	}
 
 	T& _get(T* p)
@@ -81,8 +81,8 @@ private:
 	}
 
 private:
-	T* ele{ nullptr };
-	int ele_cnt{ 1 };
-	int dim[N];
-	int factor[N];
+	T* _ele{ nullptr };
+	int _ele_cnt{ 1 };
+	int _dim[N];
+	int _factor[N];
 };
