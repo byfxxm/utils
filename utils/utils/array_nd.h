@@ -68,8 +68,8 @@ public:
 
 	int operator[](int idx) const
 	{
-		assert(_ele);
 		assert(idx >= 0 && idx < N);
+		assert(_ele);
 		return _dim[idx];
 	}
 
