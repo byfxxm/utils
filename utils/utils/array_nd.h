@@ -35,6 +35,7 @@ public:
 
 	array_nd(array_nd& arr)
 	{
+		assert(arr._ele);
 		memcpy(this, &arr, sizeof(array_nd));
 		_ele = new T[_ele_cnt];
 		memcpy(_ele, arr._ele, _ele_cnt * sizeof(T));
