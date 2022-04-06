@@ -12,7 +12,7 @@
 *		arr.reset(); // 内存初始化为0xff
 */
 template<typename T, int N, char Init = 0>
-class array_nd final
+class array_nd
 {
 public:
 	template<typename... Ts>
