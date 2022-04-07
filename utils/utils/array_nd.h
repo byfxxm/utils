@@ -88,7 +88,7 @@ private:
 	{
 		static_assert(std::is_integral_v<T1>);
 		assert(t1 >= 0 && t1 < _dim[idx]);
-		return _get(idx, &p[_factor[idx++] * t1], ts...);
+		return _get(idx + 1, &p[_factor[idx] * t1], ts...);
 	}
 
 	T& _get(int, T* p) const
