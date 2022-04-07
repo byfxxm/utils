@@ -3,6 +3,28 @@
 #include <cstring>
 #include <cassert>
 
+template<typename T, int N>
+struct pointer
+{
+	using value = typename pointer<T*, N - 1>::value;
+};
+
+template<typename T>
+struct pointer<T, 0>
+{
+	using value = T;
+};
+
+/*
+* 指针迭代
+* 因为数组涉及类型退化问题，比如: 有五维数组 int a[1][2][3][4][5]，则 auto b = a[0][0] 的类型退化为 int***。
+* 所以，pointer_cast 用于把类型转换为多级指针，例如: 
+*		int a = 0;
+*		auto b = pointer_cast<int, 5>(a);	// b 类型为 int*****
+*/
+template<typename T, int N>
+using pointer_cast = typename pointer<T, N>::value;
+
 /*
 * 多维数组
 * usage:
@@ -66,10 +88,10 @@ public:
 	}
 
 	template<typename... Ts, typename = std::enable_if_t<(sizeof...(Ts) < N)>>
-	T* operator()(Ts... ts) const
+	auto operator()(Ts... ts) const
 	{
 		assert(_ele);
-		return &_get(0, _ele, ts...);
+		return pointer_cast<T, N - sizeof...(ts)>(&_get(0, _ele, ts...));
 	}
 
 	int operator[](int idx) const
