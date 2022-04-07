@@ -58,12 +58,18 @@ public:
 		memset(_ele, Init, _ele_cnt * sizeof(T));
 	}
 
-	template<typename... Ts>
+	template<typename... Ts, typename = std::enable_if_t<(sizeof...(Ts) == N)>>
 	T& operator()(Ts... ts) const
 	{
-		static_assert(sizeof...(ts) <= N);
 		assert(_ele);
 		return _get(0, _ele, ts...);
+	}
+
+	template<typename... Ts, typename = std::enable_if_t<(sizeof...(Ts) < N)>>
+	T* operator()(Ts... ts) const
+	{
+		assert(_ele);
+		return &_get(0, _ele, ts...);
 	}
 
 	int operator[](int idx) const
