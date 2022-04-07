@@ -4,14 +4,12 @@
 #include <cassert>
 
 template<typename T, int N>
-struct pointer_iterator
-{
+struct pointer_iterator {
 	using type = typename pointer_iterator<T*, N - 1>::type;
 };
 
 template<typename T>
-struct pointer_iterator<T, 0>
-{
+struct pointer_iterator<T, 0> {
 	using type = T;
 };
 
@@ -35,12 +33,10 @@ using pointer_iterator_t = typename pointer_iterator<T, N>::type;
 *		arr.reset(); // 内存初始化为0xff
 */
 template<typename T, int N, unsigned int Init = 0>
-class array_nd
-{
+class array_nd {
 public:
 	template<typename... Ts>
-	array_nd(Ts... ts)
-	{
+	array_nd(Ts... ts) {
 		static_assert(N > 0);
 		static_assert(sizeof...(ts) == N);
 		_array_nd(0, ts...);
@@ -56,54 +52,46 @@ public:
 		reset();
 	}
 
-	array_nd(const array_nd& arr)
-	{
+	array_nd(const array_nd& arr) {
 		assert(arr._ele);
 		memcpy(this, &arr, sizeof(arr));
 		_ele = new T[_ele_cnt];
 		memcpy(_ele, arr._ele, _ele_cnt * sizeof(T));
 	}
 
-	array_nd(array_nd&& arr) noexcept
-	{
+	array_nd(array_nd&& arr) noexcept {
 		memcpy(this, &arr, sizeof(arr));
 		arr._ele = nullptr;
 	}
 
-	~array_nd()
-	{
+	~array_nd() {
 		delete[] _ele;
 	}
 
-	void reset()
-	{
+	void reset() {
 		assert(_ele);
 		memset(_ele, Init, _ele_cnt * sizeof(T));
 	}
 
 	template<typename... Ts, typename = std::enable_if_t<sizeof...(Ts) == N>>
-	T& operator()(Ts... ts) const
-	{
+	T& operator()(Ts... ts) const {
 		assert(_ele);
 		return *_get(0, _ele, ts...);
 	}
 
 	template<typename... Ts, typename = std::enable_if_t<sizeof...(Ts) < N>>
-	auto operator()(Ts... ts) const
-	{
+	auto operator()(Ts... ts) const {
 		assert(_ele);
 		return pointer_iterator_t<T, N - sizeof...(ts)>(_get(0, _ele, ts...));
 	}
 
-	int operator[](int idx) const
-	{
+	int operator[](int idx) const {
 		assert(idx >= 0 && idx < N);
 		assert(_ele);
 		return _dim[idx];
 	}
 
-	array_nd& operator=(const array_nd& arr)
-	{
+	array_nd& operator=(const array_nd& arr) {
 		assert(arr._ele);
 		_ele_cnt = arr._ele_cnt;
 		memcpy(_dim, arr._dim, sizeof(_dim));
@@ -118,8 +106,7 @@ public:
 
 private:
 	template<typename T1, typename... Ts>
-	void _array_nd(int idx, T1 t1, Ts... ts)
-	{
+	void _array_nd(int idx, T1 t1, Ts... ts) {
 		static_assert(std::is_integral_v<T1> || std::is_enum_v<T1>);
 		_dim[idx] = t1;
 		if constexpr (sizeof...(ts) > 0)
@@ -127,15 +114,13 @@ private:
 	}
 
 	template<typename T1, typename... Ts>
-	T* _get(int idx, T* p, T1 t1, Ts... ts) const
-	{
+	T* _get(int idx, T* p, T1 t1, Ts... ts) const {
 		static_assert(std::is_integral_v<T1> || std::is_enum_v<T1>);
 		assert(t1 >= 0 && t1 < _dim[idx]);
 		return _get(idx + 1, &p[_factor[idx] * t1], ts...);
 	}
 
-	T* _get(int, T* p) const
-	{
+	T* _get(int, T* p) const {
 		return p;
 	}
 

@@ -1,8 +1,7 @@
 #include <vector>
 #include "array_nd.h"
 
-int main()
-{
+int main() {
 	using type = __int64;
 	array_nd<type, 3> a(7, 8, 9);
 
