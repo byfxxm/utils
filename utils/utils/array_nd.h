@@ -16,8 +16,8 @@ struct pointer_iterator<T, 0>
 };
 
 /*
-* 指针迭代
-* 因为数组涉及类型退化问题，比如: 有五维数组 int a[1][2][3][4][5]，则 auto b = a[0][0] 的类型退化为 int***。
+* 多级指针
+* 数组有类型退化的特性，比如: 有五维数组 int a[1][2][3][4][5]，则 auto b = a[0][0] 中 b 的类型退化为 int***。
 * 所以，pointer_iterator_t 用于把类型转换为多级指针，例如: 
 *		int a = 0;
 *		auto b = pointer_iterator_t<int, 5>(a);	// b 类型为 int*****
