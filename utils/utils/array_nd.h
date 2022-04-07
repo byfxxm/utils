@@ -73,6 +73,20 @@ public:
 		return _dim[idx];
 	}
 
+	array_nd& operator=(const array_nd& arr)
+	{
+		assert(arr._ele);
+		_ele_cnt = arr._ele_cnt;
+		memcpy(_dim, arr._dim, sizeof(_dim));
+		memcpy(_factor, arr._factor, sizeof(_factor));
+
+		delete _ele;
+		_ele = new T[_ele_cnt];
+		memcpy(_ele, arr._ele, _ele_cnt * sizeof(T));
+
+		return *this;
+	}
+
 private:
 	template<typename T1, typename... Ts>
 	void _array_nd(int idx, T1 t1, Ts... ts)
