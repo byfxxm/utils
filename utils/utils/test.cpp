@@ -35,6 +35,8 @@ int main()
 
 	std::vector<array_nd<type, 3>> v;
 	v.push_back(d);
+	v.push_back(d);
+	assert(v[0]() != v[1]());
 
 	return 0;
 }
