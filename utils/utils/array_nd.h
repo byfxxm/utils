@@ -81,14 +81,14 @@ public:
 		memset(_ele, Init, _ele_cnt * sizeof(T));
 	}
 
-	template<typename... Ts, typename = std::enable_if_t<(sizeof...(Ts) == N)>>
+	template<typename... Ts, typename = std::enable_if_t<sizeof...(Ts) == N>>
 	T& operator()(Ts... ts) const
 	{
 		assert(_ele);
 		return _get(0, _ele, ts...);
 	}
 
-	template<typename... Ts, typename = std::enable_if_t<(sizeof...(Ts) < N)>>
+	template<typename... Ts, typename = std::enable_if_t<sizeof...(Ts) < N>>
 	auto operator()(Ts... ts) const
 	{
 		assert(_ele);
