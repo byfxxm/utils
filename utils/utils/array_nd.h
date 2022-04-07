@@ -61,9 +61,9 @@ public:
 	template<typename... Ts>
 	T& operator()(Ts... ts) const
 	{
-		static_assert(sizeof...(ts) == N);
+		static_assert(sizeof...(ts) <= N);
 		assert(_ele);
-		return _get(_ele, ts...);
+		return _get(0, _ele, ts...);
 	}
 
 	int operator[](int idx) const
@@ -84,15 +84,14 @@ private:
 	}
 
 	template<typename T1, typename... Ts>
-	T& _get(T* p, T1 t1, Ts... ts) const
+	T& _get(int idx, T* p, T1 t1, Ts... ts) const
 	{
 		static_assert(std::is_integral_v<T1>);
-		constexpr int idx = N - sizeof...(ts) - 1;
 		assert(t1 >= 0 && t1 < _dim[idx]);
-		return _get(&p[_factor[idx] * t1], ts...);
+		return _get(idx, &p[_factor[idx++] * t1], ts...);
 	}
 
-	T& _get(T* p) const
+	T& _get(int, T* p) const
 	{
 		return *p;
 	}
