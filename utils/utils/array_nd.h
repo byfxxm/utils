@@ -6,24 +6,24 @@
 template<typename T, int N>
 struct pointer_iterator
 {
-	using value = typename pointer_iterator<T*, N - 1>::value;
+	using type = typename pointer_iterator<T*, N - 1>::type;
 };
 
 template<typename T>
 struct pointer_iterator<T, 0>
 {
-	using value = T;
+	using type = T;
 };
 
 /*
 * 指针迭代
 * 因为数组涉及类型退化问题，比如: 有五维数组 int a[1][2][3][4][5]，则 auto b = a[0][0] 的类型退化为 int***。
-* 所以，pointer_iterator_v 用于把类型转换为多级指针，例如: 
+* 所以，pointer_iterator_t 用于把类型转换为多级指针，例如: 
 *		int a = 0;
-*		auto b = pointer_iterator_v<int, 5>(a);	// b 类型为 int*****
+*		auto b = pointer_iterator_t<int, 5>(a);	// b 类型为 int*****
 */
 template<typename T, int N>
-using pointer_iterator_v = typename pointer_iterator<T, N>::value;
+using pointer_iterator_t = typename pointer_iterator<T, N>::type;
 
 /*
 * 多维数组
@@ -91,7 +91,7 @@ public:
 	auto operator()(Ts... ts) const
 	{
 		assert(_ele);
-		return pointer_iterator_v<T, N - sizeof...(ts)>(&_get(0, _ele, ts...));
+		return pointer_iterator_t<T, N - sizeof...(ts)>(&_get(0, _ele, ts...));
 	}
 
 	int operator[](int idx) const
