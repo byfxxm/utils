@@ -85,14 +85,14 @@ public:
 	T& operator()(Ts... ts) const
 	{
 		assert(_ele);
-		return _get(0, _ele, ts...);
+		return *_get(0, _ele, ts...);
 	}
 
 	template<typename... Ts, typename = std::enable_if_t<sizeof...(Ts) < N>>
 	auto operator()(Ts... ts) const
 	{
 		assert(_ele);
-		return pointer_iterator_t<T, N - sizeof...(ts)>(&_get(0, _ele, ts...));
+		return pointer_iterator_t<T, N - sizeof...(ts)>(_get(0, _ele, ts...));
 	}
 
 	int operator[](int idx) const
@@ -127,16 +127,16 @@ private:
 	}
 
 	template<typename T1, typename... Ts>
-	T& _get(int idx, T* p, T1 t1, Ts... ts) const
+	T* _get(int idx, T* p, T1 t1, Ts... ts) const
 	{
 		static_assert(std::is_integral_v<T1> || std::is_enum_v<T1>);
 		assert(t1 >= 0 && t1 < _dim[idx]);
 		return _get(idx + 1, &p[_factor[idx] * t1], ts...);
 	}
 
-	T& _get(int, T* p) const
+	T* _get(int, T* p) const
 	{
-		return *p;
+		return p;
 	}
 
 private:
