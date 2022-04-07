@@ -91,7 +91,7 @@ private:
 	template<typename T1, typename... Ts>
 	void _array_nd(int idx, T1 t1, Ts... ts)
 	{
-		static_assert(std::is_integral_v<T1>);
+		static_assert(std::is_integral_v<T1> || std::is_enum_v<T1>);
 		_dim[idx] = t1;
 		if constexpr (sizeof...(ts) > 0)
 			_array_nd(++idx, ts...);
@@ -100,7 +100,7 @@ private:
 	template<typename T1, typename... Ts>
 	T& _get(int idx, T* p, T1 t1, Ts... ts) const
 	{
-		static_assert(std::is_integral_v<T1>);
+		static_assert(std::is_integral_v<T1> || std::is_enum_v<T1>);
 		assert(t1 >= 0 && t1 < _dim[idx]);
 		return _get(idx + 1, &p[_factor[idx] * t1], ts...);
 	}
