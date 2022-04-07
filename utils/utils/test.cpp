@@ -1,3 +1,4 @@
+#include <vector>
 #include "array_nd.h"
 
 int main()
@@ -31,6 +32,9 @@ int main()
 	e = b;
 	assert(&e(6, 7, 8, 9, 10) - &e(0, 0, 0, 0, 0) == 7 * 8 * 9 * 10 * 11 - 1);
 	assert(&e(2, 3, 4, 5, 6) - &e(2, 1, 2, 1, 2) == 2 * 9 * 10 * 11 + 2 * 10 * 11 + 4 * 11 + 4);
+
+	std::vector<array_nd<type, 3>> v;
+	v.push_back(d);
 
 	return 0;
 }

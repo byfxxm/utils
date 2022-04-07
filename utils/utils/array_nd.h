@@ -55,7 +55,7 @@ public:
 		reset();
 	}
 
-	array_nd(array_nd& arr)
+	array_nd(const array_nd& arr)
 	{
 		assert(arr._ele);
 		memcpy(this, &arr, sizeof(arr));
