@@ -34,7 +34,7 @@ using pointer_iterator_t = typename pointer_iterator<T, N>::type;
 *		int e = arr[0]; // 获取第一维度
 *		arr.reset(); // 内存初始化为0xff
 */
-template<typename T, int N, char Init = 0>
+template<typename T, int N, unsigned int Init = 0>
 class array_nd
 {
 public:
