@@ -32,7 +32,7 @@ using pointer_iterator_t = typename pointer_iterator<T, N>::type;
 *		int e = arr[0]; // 获取第一维度
 *		arr.reset(); // 内存初始化为0xff
 */
-template<typename T, int N, unsigned int Init = 0>
+template<typename T, int N>
 class array_nd {
 public:
 	template<typename... Ts>
@@ -69,9 +69,9 @@ public:
 		delete[] _ele;
 	}
 
-	void reset() {
+	void reset(unsigned char val = 0) {
 		assert(_ele);
-		memset(_ele, Init, _ele_cnt * sizeof(T));
+		memset(_ele, val, _ele_cnt * sizeof(T));
 	}
 
 	template<typename... Ts, typename = std::enable_if_t<sizeof...(Ts) == N>>
