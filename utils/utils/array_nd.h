@@ -60,6 +60,7 @@ public:
 	}
 
 	array_nd(array_nd&& arr) noexcept {
+		assert(arr._ele);
 		memcpy(this, &arr, sizeof(arr));
 		arr._ele = nullptr;
 	}
