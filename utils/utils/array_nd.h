@@ -26,11 +26,11 @@ using pointer_iterator_t = typename pointer_iterator<T, N>::type;
 /*
 * 多维数组
 * usage:
-*		array_nd<char, 3, 0xff> arr(7, 8, 9); // 构建对象（元素类型为char，维数是3，内存初始化为0xff，第一、第二、第三维度分别是7、8、9）
+*		array_nd<char, 3> arr(7, 8, 9); // 构建对象（元素类型为char，维数是3，内存初始化为0xff，第一、第二、第三维度分别是7、8、9）
 *		char c = arr(1, 2, 3); // 随机访问数组
 *		auto d = arr(5); // 参数个数小于维数时，返回类型为指定类型的 N 级指针，N = 维数 - 参数个数，此处 d 类型为 char**
 *		int e = arr[0]; // 获取第一维度
-*		arr.reset(); // 内存初始化为0xff
+*		arr.reset(0xff); // 内存初始化，默认每个字节初始化为0
 */
 template<typename T, int N>
 class array_nd {
