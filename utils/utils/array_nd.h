@@ -54,13 +54,19 @@ public:
 
 	array_nd(const array_nd& arr) {
 		assert(arr._ele);
-		memcpy(this, &arr, sizeof(arr));
+		_ele_cnt = arr._ele_cnt;
+		memcpy(_dim, arr._dim, sizeof(_dim));
+		memcpy(_factor, arr._factor, sizeof(_factor));
 		_ele = new T[_ele_cnt];
 		memcpy(_ele, arr._ele, _ele_cnt * sizeof(T));
 	}
 
 	array_nd(array_nd&& arr) noexcept {
-		memcpy(this, &arr, sizeof(arr));
+		assert(arr._ele);
+		_ele_cnt = arr._ele_cnt;
+		memcpy(_dim, arr._dim, sizeof(_dim));
+		memcpy(_factor, arr._factor, sizeof(_factor));
+		_ele = arr._ele;
 		arr._ele = nullptr;
 	}
 
