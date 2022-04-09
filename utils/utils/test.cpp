@@ -36,6 +36,7 @@ int main() {
 	v.push_back(d);
 	v.push_back(d);
 	assert(v[0]() != v[1]());
+	assert(v[0](1, 2, 3) == 6);
 	v[0].reset(0xff);
 	assert(v[0](1, 2, 3) == -1);
 
