@@ -3,32 +3,12 @@
 #include <cstring>
 #include <cassert>
 
-template<typename T, int N>
-struct pointer_iterator {
-	using type = typename pointer_iterator<T*, N - 1>::type;
-};
-
-template<typename T>
-struct pointer_iterator<T, 0> {
-	using type = T;
-};
-
-/*
-* 多级指针
-* 数组有类型退化的特性，比如: 有五维数组 int a[1][2][3][4][5]，则 auto b = a[0][0] 中 b 的类型退化为 int***。
-* 所以，pointer_iterator_t 用于把类型转换为多级指针，例如: 
-*		int a = 0;
-*		auto b = pointer_iterator_t<int, 5>(a);	// b 类型为 int*****
-*/
-template<typename T, int N>
-using pointer_iterator_t = typename pointer_iterator<T, N>::type;
-
 /*
 * 多维数组
 * usage:
 *		array_nd<char, 3> arr(7, 8, 9); // 构建对象（元素类型为 char，维数是 3，内存初始化为 0xff，第一、第二、第三维度分别是 7、8、9）
-*		char c = arr(1, 2, 3); // 随机访问数组
-*		auto d = arr(5); // 参数个数小于维数时，返回类型为指定类型的 N 级指针，N = 维数 - 参数个数，此处 d 类型为 char**
+*		char c = arr(1, 2, 3); // 随机访问数组，参数个数等于维数时，返回引用
+*		char* d = arr(5); // 参数个数小于维数时，返回指针
 *		int e = arr[0]; // 获取第一维度
 *		arr.reset(0xff); // 内存初始化，默认每个字节初始化为 0
 */
@@ -81,9 +61,9 @@ public:
 	}
 
 	template<typename... Ts, typename = std::enable_if_t<sizeof...(Ts) < N>>
-	auto operator()(Ts... ts) const {
+	T* operator()(Ts... ts) const {
 		assert(_ele);
-		return pointer_iterator_t<T, N - sizeof...(ts)>(_get(0, _ele, ts...));
+		return _get(0, _ele, ts...);
 	}
 
 	int operator[](int idx) const {
