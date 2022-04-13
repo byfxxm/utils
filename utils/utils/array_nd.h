@@ -36,7 +36,7 @@ public:
 		assert(arr._ele);
 		memcpy(this, &arr, sizeof(arr));
 		_ele = new T[_ele_cnt];
-		memcpy(_ele, arr._ele, _ele_cnt * sizeof(T));
+		_copy_ele(arr._ele);
 	}
 
 	array_nd(array_nd&& arr) noexcept {
@@ -78,9 +78,9 @@ public:
 		memcpy(_dim, arr._dim, sizeof(_dim));
 		memcpy(_factor, arr._factor, sizeof(_factor));
 
-		delete _ele;
+		delete[] _ele;
 		_ele = new T[_ele_cnt];
-		memcpy(_ele, arr._ele, _ele_cnt * sizeof(T));
+		_copy_ele(arr._ele);
 
 		return *this;
 	}
@@ -103,6 +103,14 @@ private:
 
 	T* _get(int, T* p) const {
 		return p;
+	}
+
+	void _copy_ele(T* p) {
+		if constexpr (std::is_pod_v<T>)
+			memcpy(_ele, p, _ele_cnt * sizeof(T));
+		else
+			for (int i = 0; i < _ele_cnt; ++i)
+				_ele[i] = p[i];
 	}
 
 private:

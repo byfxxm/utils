@@ -1,6 +1,13 @@
 #include <vector>
 #include "array_nd.h"
 
+class A
+{
+public:
+	A() {}
+	~A() {}
+};
+
 int main() {
 	using type = __int64;
 	array_nd<type, 3> a(7, 8, 9);
@@ -43,6 +50,11 @@ int main() {
 	assert(v[0](1, 2, 3) == 6);
 	v[0].reset(0xff);
 	assert(v[0](1, 2, 3) == -1);
+
+	array_nd<A, 2> f(1, 2);
+	array_nd<A, 2> f1(f);
+	array_nd<A, 2> f2(3, 4);
+	f = f2;
 
 	return 0;
 }
