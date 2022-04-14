@@ -106,7 +106,7 @@ private:
 	}
 
 	void CopyEle(T* p) {
-		if constexpr (std::is_pod_v<T>)
+		if constexpr (std::is_trivially_copyable_v<T>)
 			memcpy(ele_, p, ele_cnt_ * sizeof(T));
 		else
 			for (int i = 0; i < ele_cnt_; ++i)
