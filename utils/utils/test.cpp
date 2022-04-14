@@ -1,14 +1,13 @@
 #include <vector>
 #include "array_nd.h"
 
-class A
-{
+class A {
 public:
 	A() {}
 	~A() {}
 };
 
-int main() {
+void TestArrayNd() {
 	using type = __int64;
 	ArrayNd<type, 3> a(7, 8, 9);
 	type a1[7][8][9]{};
@@ -55,6 +54,9 @@ int main() {
 	ArrayNd<A, 2> f1(f);
 	ArrayNd<A, 2> f2(3, 4);
 	f = f2;
+}
 
+int main() {
+	TestArrayNd();
 	return 0;
 }
