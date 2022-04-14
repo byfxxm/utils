@@ -10,7 +10,7 @@
 *		char c = arr(1, 2, 3); // 随机访问数组，参数个数等于维数时，返回引用
 *		char* d = arr(5); // 参数个数小于维数时，返回指针
 *		int e = arr[0]; // 获取第一维度
-*		arr.reset(0xff); // 内存初始化，默认每个字节初始化为 0
+*		arr.Reset(0xff); // 内存初始化，默认每个字节初始化为 0
 */
 template<typename T, int N>
 class ArrayNd {
