@@ -6,20 +6,20 @@
 /*
 * 多维数组
 * usage:
-*		array_nd<char, 3> arr(7, 8, 9); // 构建对象（元素类型为 char，维数是 3，内存初始化为 0xff，第一、第二、第三维度分别是 7、8、9）
+*		ArrayNd<char, 3> arr(7, 8, 9); // 构建对象（元素类型为 char，维数是 3，内存初始化为 0xff，第一、第二、第三维度分别是 7、8、9）
 *		char c = arr(1, 2, 3); // 随机访问数组，参数个数等于维数时，返回引用
 *		char* d = arr(5); // 参数个数小于维数时，返回指针
 *		int e = arr[0]; // 获取第一维度
 *		arr.reset(0xff); // 内存初始化，默认每个字节初始化为 0
 */
 template<typename T, int N>
-class array_nd {
+class ArrayNd {
 public:
 	template<typename... Ts>
-	array_nd(Ts... ts) {
+	ArrayNd(Ts... ts) {
 		static_assert(N > 0);
 		static_assert(sizeof...(ts) == N);
-		_array_nd(0, ts...);
+		EmplaceDim(0, ts...);
 
 		for (auto i = 0; i < N; ++i) {
 			ele_cnt_ *= dim_[i];
@@ -29,27 +29,27 @@ public:
 		}
 
 		ele_ = new T[ele_cnt_];
-		reset();
+		Reset();
 	}
 
-	array_nd(const array_nd& arr) {
+	ArrayNd(const ArrayNd& arr) {
 		assert(arr.ele_);
 		memcpy(this, &arr, sizeof(arr));
 		ele_ = new T[ele_cnt_];
-		_copy_ele(arr.ele_);
+		CopyEle(arr.ele_);
 	}
 
-	array_nd(array_nd&& arr) noexcept {
+	ArrayNd(ArrayNd&& arr) noexcept {
 		assert(arr.ele_);
 		memcpy(this, &arr, sizeof(arr));
 		arr.ele_ = nullptr;
 	}
 
-	~array_nd() {
+	~ArrayNd() {
 		delete[] ele_;
 	}
 
-	void reset(unsigned char val = 0) {
+	void Reset(unsigned char val = 0) {
 		assert(ele_);
 		memset(ele_, val, ele_cnt_ * sizeof(T));
 	}
@@ -57,13 +57,13 @@ public:
 	template<typename... Ts, typename = std::enable_if_t<sizeof...(Ts) == N>>
 	T& operator()(Ts... ts) const {
 		assert(ele_);
-		return *_get(0, ele_, ts...);
+		return *Index(0, ele_, ts...);
 	}
 
 	template<typename... Ts, typename = std::enable_if_t<sizeof...(Ts) < N>>
 	T* operator()(Ts... ts) const {
 		assert(ele_);
-		return _get(0, ele_, ts...);
+		return Index(0, ele_, ts...);
 	}
 
 	int operator[](int idx) const {
@@ -72,7 +72,7 @@ public:
 		return dim_[idx];
 	}
 
-	array_nd& operator=(const array_nd& arr) {
+	ArrayNd& operator=(const ArrayNd& arr) {
 		assert(arr.ele_);
 		ele_cnt_ = arr.ele_cnt_;
 		memcpy(dim_, arr.dim_, sizeof(dim_));
@@ -80,32 +80,32 @@ public:
 
 		delete[] ele_;
 		ele_ = new T[ele_cnt_];
-		_copy_ele(arr.ele_);
+		CopyEle(arr.ele_);
 
 		return *this;
 	}
 
 private:
 	template<typename T1, typename... Ts>
-	void _array_nd(int idx, T1 t1, Ts... ts) {
+	void EmplaceDim(int idx, T1 t1, Ts... ts) {
 		static_assert(std::is_integral_v<T1> || std::is_enum_v<T1>);
 		dim_[idx] = t1;
 		if constexpr (sizeof...(ts) > 0)
-			_array_nd(++idx, ts...);
+			EmplaceDim(++idx, ts...);
 	}
 
 	template<typename T1, typename... Ts>
-	T* _get(int idx, T* p, T1 t1, Ts... ts) const {
+	T* Index(int idx, T* p, T1 t1, Ts... ts) const {
 		static_assert(std::is_integral_v<T1> || std::is_enum_v<T1>);
 		assert(t1 >= 0 && t1 < dim_[idx]);
-		return _get(idx + 1, &p[factor_[idx] * t1], ts...);
+		return Index(idx + 1, &p[factor_[idx] * t1], ts...);
 	}
 
-	T* _get(int, T* p) const {
+	T* Index(int, T* p) const {
 		return p;
 	}
 
-	void _copy_ele(T* p) {
+	void CopyEle(T* p) {
 		if constexpr (std::is_pod_v<T>)
 			memcpy(ele_, p, ele_cnt_ * sizeof(T));
 		else
