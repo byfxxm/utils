@@ -22,65 +22,65 @@ public:
 		_array_nd(0, ts...);
 
 		for (auto i = 0; i < N; ++i) {
-			_ele_cnt *= _dim[i];
-			_factor[i] = 1;
+			ele_cnt_ *= dim_[i];
+			factor_[i] = 1;
 			for (auto j = i + 1; j < N; ++j)
-				_factor[i] *= _dim[j];
+				factor_[i] *= dim_[j];
 		}
 
-		_ele = new T[_ele_cnt];
+		ele_ = new T[ele_cnt_];
 		reset();
 	}
 
 	array_nd(const array_nd& arr) {
-		assert(arr._ele);
+		assert(arr.ele_);
 		memcpy(this, &arr, sizeof(arr));
-		_ele = new T[_ele_cnt];
-		_copy_ele(arr._ele);
+		ele_ = new T[ele_cnt_];
+		_copy_ele(arr.ele_);
 	}
 
 	array_nd(array_nd&& arr) noexcept {
-		assert(arr._ele);
+		assert(arr.ele_);
 		memcpy(this, &arr, sizeof(arr));
-		arr._ele = nullptr;
+		arr.ele_ = nullptr;
 	}
 
 	~array_nd() {
-		delete[] _ele;
+		delete[] ele_;
 	}
 
 	void reset(unsigned char val = 0) {
-		assert(_ele);
-		memset(_ele, val, _ele_cnt * sizeof(T));
+		assert(ele_);
+		memset(ele_, val, ele_cnt_ * sizeof(T));
 	}
 
 	template<typename... Ts, typename = std::enable_if_t<sizeof...(Ts) == N>>
 	T& operator()(Ts... ts) const {
-		assert(_ele);
-		return *_get(0, _ele, ts...);
+		assert(ele_);
+		return *_get(0, ele_, ts...);
 	}
 
 	template<typename... Ts, typename = std::enable_if_t<sizeof...(Ts) < N>>
 	T* operator()(Ts... ts) const {
-		assert(_ele);
-		return _get(0, _ele, ts...);
+		assert(ele_);
+		return _get(0, ele_, ts...);
 	}
 
 	int operator[](int idx) const {
 		assert(idx >= 0 && idx < N);
-		assert(_ele);
-		return _dim[idx];
+		assert(ele_);
+		return dim_[idx];
 	}
 
 	array_nd& operator=(const array_nd& arr) {
-		assert(arr._ele);
-		_ele_cnt = arr._ele_cnt;
-		memcpy(_dim, arr._dim, sizeof(_dim));
-		memcpy(_factor, arr._factor, sizeof(_factor));
+		assert(arr.ele_);
+		ele_cnt_ = arr.ele_cnt_;
+		memcpy(dim_, arr.dim_, sizeof(dim_));
+		memcpy(factor_, arr.factor_, sizeof(factor_));
 
-		delete[] _ele;
-		_ele = new T[_ele_cnt];
-		_copy_ele(arr._ele);
+		delete[] ele_;
+		ele_ = new T[ele_cnt_];
+		_copy_ele(arr.ele_);
 
 		return *this;
 	}
@@ -89,7 +89,7 @@ private:
 	template<typename T1, typename... Ts>
 	void _array_nd(int idx, T1 t1, Ts... ts) {
 		static_assert(std::is_integral_v<T1> || std::is_enum_v<T1>);
-		_dim[idx] = t1;
+		dim_[idx] = t1;
 		if constexpr (sizeof...(ts) > 0)
 			_array_nd(++idx, ts...);
 	}
@@ -97,8 +97,8 @@ private:
 	template<typename T1, typename... Ts>
 	T* _get(int idx, T* p, T1 t1, Ts... ts) const {
 		static_assert(std::is_integral_v<T1> || std::is_enum_v<T1>);
-		assert(t1 >= 0 && t1 < _dim[idx]);
-		return _get(idx + 1, &p[_factor[idx] * t1], ts...);
+		assert(t1 >= 0 && t1 < dim_[idx]);
+		return _get(idx + 1, &p[factor_[idx] * t1], ts...);
 	}
 
 	T* _get(int, T* p) const {
@@ -107,15 +107,15 @@ private:
 
 	void _copy_ele(T* p) {
 		if constexpr (std::is_pod_v<T>)
-			memcpy(_ele, p, _ele_cnt * sizeof(T));
+			memcpy(ele_, p, ele_cnt_ * sizeof(T));
 		else
-			for (int i = 0; i < _ele_cnt; ++i)
-				_ele[i] = p[i];
+			for (int i = 0; i < ele_cnt_; ++i)
+				ele_[i] = p[i];
 	}
 
 private:
-	T* _ele{ nullptr };
-	int _ele_cnt{ 1 };
-	int _dim[N]{};
-	int _factor[N]{};
+	T* ele_{ nullptr };
+	int ele_cnt_{ 1 };
+	int dim_[N]{};
+	int factor_[N]{};
 };
