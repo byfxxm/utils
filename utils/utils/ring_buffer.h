@@ -1,6 +1,6 @@
 #pragma once
 
-template<typename T, int N>
+template<typename T, size_t N>
 class RingBuffer {
 public:
 	void Reset() {
@@ -34,7 +34,7 @@ public:
 	}
 
 private:
-	volatile int read_index_{ 0 };
-	volatile int write_index_{ 0 };
+	volatile size_t read_index_{ 0 };
+	volatile size_t write_index_{ 0 };
 	T data_[N];
 };
