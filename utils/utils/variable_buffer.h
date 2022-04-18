@@ -79,7 +79,7 @@ private:
 		}
 
 		memcpy(data, &buffer_[index], count);
-		index = (index + count) % N;
+		index += count;
 	}
 
 private:
