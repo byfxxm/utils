@@ -1,5 +1,8 @@
 #include <vector>
+#include <thread>
+#include <iostream>
 #include "array_nd.h"
+#include "variable_buffer.h"
 
 class A {
 public:
@@ -56,7 +59,37 @@ void TestArrayNd() {
 	f = f2;
 }
 
+void TestVariableBuffer() {
+	VariableBuffer<100> vbuf;
+	double x = 3.1415926;
+	volatile bool write_finished = false;
+
+	std::thread th1([&]() {
+		for (int i = 0; i < 1000; ++i) {
+			while (!vbuf.Write((char*)&x, sizeof(x)))
+				std::this_thread::yield();
+		}
+		write_finished = true;
+		});
+
+	std::thread th2([&]() {
+		double buf;
+		size_t count = 0;
+
+		while (!write_finished) {
+			while (!vbuf.Read((char*)&buf, count))
+				std::this_thread::yield();
+
+			std::cout << buf << " " << count << std::endl;
+		}
+		});
+
+	th1.join();
+	th2.join();
+}
+
 int main() {
 	TestArrayNd();
+	TestVariableBuffer();
 	return 0;
 }
