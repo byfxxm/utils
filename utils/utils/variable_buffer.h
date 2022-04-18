@@ -16,20 +16,20 @@ public:
 		read_index_ = write_index_;
 	}
 
-	bool IsEmpty() {
+	bool IsEmpty() const {
 		return read_index_ == write_index_;
 	}
 
-	bool IsFull() {
+	bool IsFull() const {
 		return (write_index_ + 1) % N == read_index_;
 	}
 
-	size_t Free() {
+	size_t Free() const {
 		return (read_index_ + N - write_index_ - 1) % N;
 	}
 
 	bool Write(const char* data, size_t count) {
-		if (Free() < count)
+		if (Free() < count + sizeof(Head))
 			return false;
 
 		Head head{ count };
@@ -37,6 +37,7 @@ public:
 		Write(index, (char*)&head, sizeof(head));
 		Write(index, data, count);
 		write_index_ = index;
+		assert(write_index_ < N);
 		return true;
 	}
 
@@ -50,6 +51,7 @@ public:
 		Read(index, data, head.data_length);
 		count = head.data_length;
 		read_index_ = index;
+		assert(read_index_ < N);
 		return true;
 	}
 
@@ -65,7 +67,7 @@ private:
 		}
 
 		memcpy(&buffer_[index], data, count);
-		index += count;
+		index = (index + count) % N;
 	}
 
 	void Read(size_t& index, char* data, size_t count) {
@@ -79,7 +81,7 @@ private:
 		}
 
 		memcpy(data, &buffer_[index], count);
-		index += count;
+		index = (index + count) % N;
 	}
 
 private:

@@ -60,7 +60,7 @@ void TestArrayNd() {
 }
 
 void TestVariableBuffer() {
-	VariableBuffer<100> vbuf;
+	VariableBuffer<13> vbuf;
 	double x = 3.1415926;
 	int y = -999;
 	short z = 66;
