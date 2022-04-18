@@ -109,6 +109,16 @@ void TestVariableBuffer() {
 
 	th1.join();
 	th2.join();
+
+	//VariableBuffer<1000> vbuf1;
+	//double d[100]{};
+	//for (auto i : d)
+	//	i = x;
+	//vbuf1.Write(d);
+	//double d1[100]{};
+	//vbuf1.Read(d1);
+	//for (auto i : d1)
+	//	assert(i == x);
 }
 
 int main() {

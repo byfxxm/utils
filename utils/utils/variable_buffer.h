@@ -4,7 +4,7 @@ template<size_t N>
 class VariableBuffer {
 public:
 	struct Head {
-		size_t data_length;
+		size_t data_size;
 	};
 
 public:
@@ -28,32 +28,54 @@ public:
 		return (read_index_ + N - write_index_ - 1) % N;
 	}
 
-	bool Write(const char* data, size_t count) {
-		if (Free() < count + sizeof(Head))
+	//bool PeekSize(size_t& size) const {
+	//	if (IsEmpty())
+	//		return false;
+
+	//	if (N - read_index_ < count) {
+	//		return;
+	//	}
+
+	//	buffer_[]
+	//}
+
+	bool Write(const char* data, size_t size) {
+		if (Free() < size + sizeof(Head))
 			return false;
 
-		Head head{ count };
+		Head head{ size };
 		auto index = write_index_;
 		Write(index, (char*)&head, sizeof(head));
-		Write(index, data, count);
+		Write(index, data, size);
 		write_index_ = index;
 		assert(write_index_ < N);
 		return true;
 	}
 
-	bool Read(char* data, size_t& count) {
+	template<typename T, size_t N>
+	bool Write(const T(&arr)[N]) {
+		return Write((char*)arr, sizeof(arr));
+	}
+
+	bool Read(char* data, size_t& size) {
 		if (IsEmpty())
 			return false;
 
 		Head head{ 0 };
 		auto index = read_index_;
 		Read(index, (char*)&head, sizeof(head));
-		Read(index, data, head.data_length);
-		count = head.data_length;
+		Read(index, data, head.data_size);
+		size = head.data_size;
 		read_index_ = index;
 		assert(read_index_ < N);
 		return true;
 	}
+
+	//template<typename T, size_t N>
+	//bool Read(T(&arr)[N], size_t& size) {
+	//	decltype(buffer_) buf{ 0 };
+	//	return Read((char*)arr, sizeof(arr));
+	//}
 
 private:
 	void Write(size_t& index, const char* data, size_t count) {
