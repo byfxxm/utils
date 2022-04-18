@@ -62,25 +62,48 @@ void TestArrayNd() {
 void TestVariableBuffer() {
 	VariableBuffer<100> vbuf;
 	double x = 3.1415926;
+	int y = -999;
+	short z = 66;
 	volatile bool write_finished = false;
 
 	std::thread th1([&]() {
-		for (int i = 0; i < 1000; ++i) {
-			while (!vbuf.Write((char*)&x, sizeof(x)))
-				std::this_thread::yield();
+		for (int i = 0; i < 10000; ++i) {
+			auto remainder = i % 3;
+			if (remainder ==0)
+				while (!vbuf.Write((char*)&x, sizeof(x)))
+					std::this_thread::yield();
+			else if (remainder == 1)
+				while (!vbuf.Write((char*)&y, sizeof(y)))
+					std::this_thread::yield();
+			else if (remainder == 2)
+				while (!vbuf.Write((char*)&z, sizeof(z)))
+					std::this_thread::yield();
 		}
 		write_finished = true;
 		});
 
 	std::thread th2([&]() {
-		double buf;
+		union Buffer {
+			double d;
+			int i;
+			short s;
+		};
+
+		Buffer buf;
 		size_t count = 0;
 
 		while (!write_finished) {
 			while (!vbuf.Read((char*)&buf, count))
 				std::this_thread::yield();
 
-			std::cout << buf << " " << count << std::endl;
+			if (count == 8)
+				std::cout << buf.d << "\t" << count << std::endl;
+			else if (count == 4)
+				std::cout << buf.i << "\t" << count << std::endl;
+			else if (count == 2)
+				std::cout << buf.s << "\t" << count << std::endl;
+			else
+				assert(0);
 		}
 		});
 
