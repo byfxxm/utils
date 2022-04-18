@@ -61,6 +61,11 @@ public:
 		return true;
 	}
 
+	template<typename T, size_t N>
+	bool Read(T(&arr)[N], size_t& actual_count) {
+		return Read((char*)arr, sizeof(arr), actual_count);
+	}
+
 private:
 	void Write(size_t& index, const char* buffer, size_t count) {
 		if (N - index < count) {

@@ -67,7 +67,7 @@ void TestVariableBuffer() {
 	volatile bool write_finished = false;
 
 	std::thread th1([&]() {
-		for (int i = 0; i < 10000; ++i) {
+		for (int i = 0; i < 1000; ++i) {
 			auto remainder = i % 3;
 			if (remainder ==0)
 				while (!vbuf.Write((char*)&x, sizeof(x)))
@@ -110,15 +110,18 @@ void TestVariableBuffer() {
 	th1.join();
 	th2.join();
 
-	//VariableBuffer<1000> vbuf1;
-	//double d[100]{};
-	//for (auto i : d)
-	//	i = x;
-	//vbuf1.Write(d);
-	//double d1[100]{};
-	//vbuf1.Read(d1);
-	//for (auto i : d1)
-	//	assert(i == x);
+	VariableBuffer<1000> vbuf1;
+	double d[100]{};
+	for (auto& i : d)
+		i = x;
+	vbuf1.Write(d);
+	double d1[200]{};
+	size_t count = 0;
+	vbuf1.Read(d1, count);
+	assert(count == sizeof(d));
+	for (auto i = 0; i < 100; ++i) {
+		assert(d1[i] == x);
+	}
 }
 
 int main() {
