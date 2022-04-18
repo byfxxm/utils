@@ -12,9 +12,9 @@ void TestArrayNd() {
 	ArrayNd<type, 3> a(7, 8, 9);
 	type a1[7][8][9]{};
 
-	for (int i = 0; i < a[0]; ++i)
-		for (int j = 0; j < a[1]; ++j)
-			for (int k = 0; k < a[2]; ++k) {
+	for (size_t i = 0; i < a[0]; ++i)
+		for (size_t j = 0; j < a[1]; ++j)
+			for (size_t k = 0; k < a[2]; ++k) {
 				a(i, j, k) = (type)i * j * k;
 				a1[i][j][k] = (type)i * j * k;
 			}

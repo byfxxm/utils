@@ -21,6 +21,9 @@
     <ClInclude Include="ring_buffer.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="variable_buffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test.cpp">
