@@ -4,7 +4,7 @@ template<size_t N>
 class VariableBuffer {
 public:
 	struct Head {
-		size_t data_count;
+		size_t data_size;
 	};
 
 public:
@@ -53,8 +53,8 @@ public:
 		Head head{ 0 };
 		auto index = read_index_;
 		Read(index, (char*)&head, sizeof(head));
-		Read(index, buffer, head.data_count);
-		count = head.data_count;
+		Read(index, buffer, head.data_size);
+		count = head.data_size;
 		read_index_ = index;
 		assert(read_index_ < N);
 		return true;
