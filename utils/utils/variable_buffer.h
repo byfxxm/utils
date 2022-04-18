@@ -1,4 +1,5 @@
 #pragma once
+#include <cstring>
 
 template<size_t N>
 class VariableBuffer {
@@ -46,15 +47,15 @@ public:
 		return Write((char*)arr, sizeof(arr));
 	}
 
-	bool Read(char* buffer, size_t& count) {
-		if (IsEmpty())
+	bool Read(char* buffer, size_t count, size_t& actual_count) {
+		if (IsEmpty() || count < Peek())
 			return false;
 
 		Head head{ 0 };
 		auto index = read_index_;
 		Read(index, (char*)&head, sizeof(head));
 		Read(index, buffer, head.data_size);
-		count = head.data_size;
+		actual_count = head.data_size;
 		read_index_ = index;
 		assert(read_index_ < N);
 		return true;
@@ -87,6 +88,19 @@ private:
 
 		memcpy(buffer, &data_[index], count);
 		index = (index + count) % N;
+	}
+
+	size_t Peek() const {
+		if (N - read_index_ < sizeof(Head)) {
+			auto part1 = N - read_index_;
+			auto part2 = sizeof(Head) - part1;
+			Head head;
+			memcpy(&head, &data_[read_index_], part1);
+			memcpy((char*)&head + part1, data_, part2);
+			return head.data_size;
+		}
+
+		return ((Head*)&data_[read_index_])->data_size;
 	}
 
 private:

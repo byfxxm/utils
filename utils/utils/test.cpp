@@ -93,7 +93,7 @@ void TestVariableBuffer() {
 		size_t count = 0;
 
 		while (!write_finished) {
-			while (!vbuf.Read((char*)&buf, count))
+			while (!vbuf.Read((char*)&buf, sizeof(buf), count))
 				std::this_thread::yield();
 
 			if (count == 8)
