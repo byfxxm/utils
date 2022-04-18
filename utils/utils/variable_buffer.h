@@ -6,7 +6,7 @@ template<size_t N>
 class VariableBuffer {
 public:
 	struct Head {
-		size_t data_size;
+		size_t data_length;
 	};
 
 public:
@@ -55,8 +55,8 @@ public:
 		Head head{ 0 };
 		auto index = read_index_;
 		Read(index, (char*)&head, sizeof(head));
-		Read(index, buffer, head.data_size);
-		actual_count = head.data_size;
+		Read(index, buffer, head.data_length);
+		actual_count = head.data_length;
 		read_index_ = index;
 		assert(read_index_ < N);
 		return true;
@@ -103,10 +103,10 @@ private:
 			Head head;
 			memcpy(&head, &data_[read_index_], part1);
 			memcpy((char*)&head + part1, data_, part2);
-			return head.data_size;
+			return head.data_length;
 		}
 
-		return ((Head*)&data_[read_index_])->data_size;
+		return ((Head*)&data_[read_index_])->data_length;
 	}
 
 private:
