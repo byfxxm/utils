@@ -1,5 +1,6 @@
 #pragma once
 #include <cstring>
+#include <cassert>
 
 template<size_t N>
 class VariableBuffer {
