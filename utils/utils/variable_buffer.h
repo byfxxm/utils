@@ -6,7 +6,7 @@ template<size_t N>
 class VariableBuffer {
 public:
 	struct Head {
-		size_t data_length;
+		size_t data_size;
 	};
 
 public:
@@ -30,6 +30,19 @@ public:
 		return (read_index_ + N - write_index_ - 1) % N;
 	}
 
+	size_t PeekSize() const {
+		if (N - read_index_ < sizeof(Head)) {
+			auto part1 = N - read_index_;
+			auto part2 = sizeof(Head) - part1;
+			Head head;
+			memcpy(&head, &data_[read_index_], part1);
+			memcpy((char*)&head + part1, data_, part2);
+			return head.data_size;
+		}
+
+		return ((Head*)&data_[read_index_])->data_size;
+	}
+
 	bool Write(const char* buffer, size_t count) {
 		if (Free() < count + sizeof(Head))
 			return false;
@@ -48,23 +61,23 @@ public:
 		return Write((char*)arr, sizeof(arr));
 	}
 
-	bool Read(char* buffer, size_t count, size_t& actual_count) {
-		if (IsEmpty() || count < Peek())
+	bool Read(char* buffer, size_t count, size_t& size) {
+		if (IsEmpty() || count < PeekSize())
 			return false;
 
 		Head head{ 0 };
 		auto index = read_index_;
 		Read(index, (char*)&head, sizeof(head));
-		Read(index, buffer, head.data_length);
-		actual_count = head.data_length;
+		Read(index, buffer, head.data_size);
+		size = head.data_size;
 		read_index_ = index;
 		assert(read_index_ < N);
 		return true;
 	}
 
 	template<typename T, size_t N>
-	bool Read(T(&arr)[N], size_t& actual_count) {
-		return Read((char*)arr, sizeof(arr), actual_count);
+	bool Read(T(&arr)[N], size_t& size) {
+		return Read((char*)arr, sizeof(arr), size);
 	}
 
 private:
@@ -94,19 +107,6 @@ private:
 
 		memcpy(buffer, &data_[index], count);
 		index = (index + count) % N;
-	}
-
-	size_t Peek() const {
-		if (N - read_index_ < sizeof(Head)) {
-			auto part1 = N - read_index_;
-			auto part2 = sizeof(Head) - part1;
-			Head head;
-			memcpy(&head, &data_[read_index_], part1);
-			memcpy((char*)&head + part1, data_, part2);
-			return head.data_length;
-		}
-
-		return ((Head*)&data_[read_index_])->data_length;
 	}
 
 private:
