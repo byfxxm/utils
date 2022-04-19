@@ -4,13 +4,13 @@
 #include "array_nd.h"
 #include "variable_buffer.h"
 
-class A {
-public:
-	A() {}
-	~A() {}
-};
-
 void TestArrayNd() {
+	class A {
+	public:
+		A() {}
+		~A() {}
+	};
+
 	using type = __int64;
 	ArrayNd<type, 3> a(7, 8, 9);
 	type a1[7][8][9]{};
