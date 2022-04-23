@@ -16,7 +16,7 @@ public:
 			if (it.first == k)
 				return it.second;
 
-		Insert(k, 0);
+		bucket_[hash].push_back(std::make_pair(k, 0));
 		return bucket_[hash].back().second;
 	}
 
