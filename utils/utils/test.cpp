@@ -3,6 +3,7 @@
 #include <iostream>
 #include "array_nd.h"
 #include "variable_buffer.h"
+#include "hash_map.h"
 
 void TestArrayNd() {
 	class A {
@@ -124,8 +125,17 @@ void TestVariableBuffer() {
 	}
 }
 
+void TestHashMap() {
+	HashMap<int, double> map;
+	map.Insert(3, 5.);
+	map[103] = 7;
+
+	std::cout << map[203] << std::endl;
+}
+
 int main() {
 	TestArrayNd();
 	TestVariableBuffer();
+	TestHashMap();
 	return 0;
 }
