@@ -10,10 +10,6 @@ public:
 	};
 
 public:
-	~VariableBuffer() {
-		std::cout << std::endl;
-	}
-
 	void Reset() {
 		read_index_ = write_index_;
 	}
