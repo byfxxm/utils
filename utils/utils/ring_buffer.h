@@ -1,6 +1,6 @@
 #pragma once
 
-template<typename T, size_t N>
+template <typename T, size_t N>
 class RingBuffer {
 public:
 	void Reset() {

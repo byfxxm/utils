@@ -2,7 +2,7 @@
 #include <cstring>
 #include <cassert>
 
-template<size_t N>
+template <size_t N>
 class VariableBuffer {
 public:
 	struct Head {
@@ -52,7 +52,7 @@ public:
 		return true;
 	}
 
-	template<typename T, size_t N>
+	template <typename T, size_t N>
 	bool Write(const T(&arr)[N]) {
 		return Write((char*)arr, sizeof(arr));
 	}
@@ -71,7 +71,7 @@ public:
 		return true;
 	}
 
-	template<typename T, size_t N>
+	template <typename T, size_t N>
 	bool Read(T(&arr)[N], size_t& size) {
 		return Read((char*)arr, sizeof(arr), size);
 	}

@@ -1,6 +1,6 @@
 #pragma once
 
-template<typename T>
+template <typename T>
 class RbtreeMap {
 public:
 	enum class Color {

@@ -12,10 +12,10 @@
 *		size_t e = arr[0]; // 获取第一维度
 *		arr.Reset(0xff); // 内存初始化，默认每个字节初始化为 0
 */
-template<typename T, size_t N>
+template <typename T, size_t N>
 class ArrayNd {
 public:
-	template<typename... Ts>
+	template <typename... Ts>
 	ArrayNd(Ts... ts) {
 		static_assert(N > 0);
 		static_assert(sizeof...(ts) == N);
@@ -54,13 +54,13 @@ public:
 		memset(ele_, val, ele_cnt_ * sizeof(T));
 	}
 
-	template<typename... Ts, typename = std::enable_if_t<sizeof...(Ts) == N>>
+	template <typename... Ts, typename = std::enable_if_t<sizeof...(Ts) == N>>
 	T& operator()(Ts... ts) const {
 		assert(ele_);
 		return *Index(0, ele_, ts...);
 	}
 
-	template<typename... Ts, typename = std::enable_if_t<sizeof...(Ts) < N>>
+	template <typename... Ts, typename = std::enable_if_t<sizeof...(Ts) < N>>
 	T* operator()(Ts... ts) const {
 		assert(ele_);
 		return Index(0, ele_, ts...);
@@ -86,7 +86,7 @@ public:
 	}
 
 private:
-	template<typename T1, typename... Ts>
+	template <typename T1, typename... Ts>
 	void EmplaceDim(size_t idx, T1 t1, Ts... ts) {
 		static_assert(std::is_integral_v<T1> || std::is_enum_v<T1>);
 		dim_[idx] = t1;
@@ -94,7 +94,7 @@ private:
 			EmplaceDim(++idx, ts...);
 	}
 
-	template<typename T1, typename... Ts>
+	template <typename T1, typename... Ts>
 	T* Index(size_t idx, T* p, T1 t1, Ts... ts) const {
 		static_assert(std::is_integral_v<T1> || std::is_enum_v<T1>);
 		assert((size_t)t1 < dim_[idx]);

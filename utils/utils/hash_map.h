@@ -3,7 +3,7 @@
 #include <list>
 #include <array>
 
-template<typename Key, typename Value>
+template <typename Key, typename Value>
 class HashMap {
 public:
 	void Insert(Key k, Value v) {
