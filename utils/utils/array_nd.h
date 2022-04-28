@@ -85,6 +85,14 @@ public:
 		return *this;
 	}
 
+	T* begin() {
+		return ele_;
+	}
+
+	T* end() {
+		return ele_ + ele_cnt_;
+	}
+
 private:
 	template <typename T1, typename... Ts>
 	void EmplaceDim(size_t idx, T1 t1, Ts... ts) {

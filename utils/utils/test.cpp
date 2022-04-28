@@ -23,6 +23,10 @@ void TestArrayNd() {
 				a1[i][j][k] = (type)i * j * k;
 			}
 
+	for (auto it : a) {
+		std::cout << it << std::endl;
+	}
+
 	assert(memcmp(a(), a1, sizeof(a1)) == 0);
 	assert(8 == a[1]);
 	assert(a(2, 3, 4) == 24);
