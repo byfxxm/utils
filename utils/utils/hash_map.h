@@ -14,8 +14,8 @@ public:
 
 	void Insert(Key k, Value v) {
 		auto* bucket = &buckets_[Hash(k)];
-		for (auto& it : *bucket)
-			if (it.first == k)
+		for (auto& pair : *bucket)
+			if (pair.first == k)
 				return;
 
 		if (Expand())
@@ -37,9 +37,9 @@ public:
 
 	Value& operator[](Key k) {
 		auto* bucket = &buckets_[Hash(k)];
-		for (auto& it : *bucket)
-			if (it.first == k)
-				return it.second;
+		for (auto& pair : *bucket)
+			if (pair.first == k)
+				return pair.second;
 
 		if (Expand())
 			bucket = &buckets_[Hash(k)];
@@ -61,9 +61,9 @@ private:
 		std::vector<BucketList> tmp;
 		tmp.resize(kSizes[++size_num_], BucketList());
 
-		for (auto& it : buckets_)
-			for (auto& it1 : it)
-				tmp[Hash(it1.first)].swap(it);
+		for (auto& list : buckets_)
+			for (auto& pair : list)
+				tmp[Hash(pair.first)].swap(list);
 
 		buckets_.swap(tmp);
 		return true;
