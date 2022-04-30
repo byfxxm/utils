@@ -9,7 +9,7 @@ private:
 
 public:
 	HashMap() {
-		buckets_.resize(kSizes[size_num_], BucketList());
+		buckets_.resize(kCapacities[capacity_index_], BucketList());
 	}
 
 	void Insert(Key k, Value v) {
@@ -21,14 +21,14 @@ public:
 		if (Expand())
 			bucket = &buckets_[Hash(k)];
 		bucket->push_back(std::make_pair(k, v));
-		++ele_cnt;
+		++kv_cnt_;
 	}
 
 	void Erase(Key k) {
 		auto* bucket = &buckets_[Hash(k)];
 		for (auto it = bucket->begin(); it != bucket->end(); ++it) {
 			if (it->first == k) {
-				--ele_cnt;
+				--kv_cnt_;
 				bucket->erase(it);
 				break;
 			}
@@ -44,22 +44,22 @@ public:
 		if (Expand())
 			bucket = &buckets_[Hash(k)];
 		bucket->push_back(std::make_pair(k, 0));
-		++ele_cnt;
+		++kv_cnt_;
 		return bucket->back().second;
 	}
 
 private:
 	size_t Hash(Key k) {
 		if constexpr (std::is_integral_v<Key>)
-			return k % kSizes[size_num_];
+			return k % kCapacities[capacity_index_];
 	}
 
 	bool Expand() {
-		if (ele_cnt < kSizes[size_num_])
+		if (kv_cnt_ < kCapacities[capacity_index_])
 			return false;
 		
 		std::vector<BucketList> tmp;
-		tmp.resize(kSizes[++size_num_], BucketList());
+		tmp.resize(kCapacities[++capacity_index_], BucketList());
 
 		for (auto& list : buckets_)
 			for (auto& pair : list)
@@ -70,8 +70,8 @@ private:
 	}
 
 private:
-	static constexpr size_t kSizes[] = { 8, 64, 256, 512, 1024, 2048, 4096, 8192 };
-	size_t size_num_{ 0 };
+	static constexpr size_t kCapacities[] = { 8, 64, 256, 512, 1024, 2048, 4096, 8192 };
+	size_t capacity_index_{ 0 };
 	std::vector<BucketList> buckets_;
-	size_t ele_cnt{ 0 };
+	size_t kv_cnt_{ 0 };
 };
