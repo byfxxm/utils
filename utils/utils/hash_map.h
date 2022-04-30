@@ -63,7 +63,7 @@ private:
 
 		for (auto& list : buckets_)
 			for (auto& pair : list)
-				tmp[Hash(pair.first)].swap(list);
+				tmp[Hash(pair.first)].push_back(pair);
 
 		buckets_.swap(tmp);
 		return true;
