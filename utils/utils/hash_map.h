@@ -24,8 +24,14 @@ public:
 		bucket->push_back(std::make_pair(k, v));
 	}
 
-	void Erase(Key) {
-
+	void Erase(Key k) {
+		auto* bucket = &buckets_[Hash(k)];
+		for (auto it = bucket->begin(); it != bucket->end(); ++it) {
+			if (it->first == k) {
+				bucket->erase(it);
+				break;
+			}
+		}
 	}
 
 	Value& operator[](Key k) {

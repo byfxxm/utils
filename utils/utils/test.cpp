@@ -138,6 +138,8 @@ void TestHashMap() {
 	}
 
 	std::cout << std::setprecision(8) <<m[203] << std::endl;
+	m.Erase(203);
+	std::cout << std::setprecision(8) << m[203] << std::endl;
 }
 
 int main() {
