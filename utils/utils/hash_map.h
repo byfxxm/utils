@@ -19,6 +19,7 @@ public:
 			if (it.first == k)
 				return;
 
+		++ele_cnt;
 		bucket.value().push_back(std::make_pair(k, v));
 	}
 
@@ -31,6 +32,7 @@ public:
 			if (it.first == k)
 				return it.second;
 
+		++ele_cnt;
 		bucket.value().push_back(std::make_pair(k, 0));
 		return bucket.value().back().second;
 	}
@@ -45,4 +47,5 @@ private:
 	static constexpr size_t kSizes[] = {8, 64, 256, 512, 1024, 2048, 4096, 8192};
 	size_t size_num_{ 0 };
 	std::vector<std::optional<std::list<std::pair<Key, Value>>>> buckets_;
+	size_t ele_cnt{ 0 };
 };
