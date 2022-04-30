@@ -1,6 +1,7 @@
 #include <vector>
 #include <thread>
 #include <iostream>
+#include <iomanip>
 #include "array_nd.h"
 #include "variable_buffer.h"
 #include "hash_map.h"
@@ -72,7 +73,7 @@ void TestVariableBuffer() {
 	volatile bool write_finished = false;
 
 	std::thread th1([&]() {
-		for (int i = 0; i < 1000; ++i) {
+		for (int i = 0; i < 100; ++i) {
 			auto remainder = i % 3;
 			if (remainder ==0)
 				while (!vbuf.Write((char*)&x, sizeof(x)))
@@ -130,11 +131,13 @@ void TestVariableBuffer() {
 }
 
 void TestHashMap() {
-	HashMap<int, double> map;
-	map.Insert(3, 5.);
-	map[103] = 7;
+	HashMap<int, double> m;
+	m[203] = 3.1415926;
+	for (size_t i = 0; i < 100; ++i) {
+		m.Insert(i, i);
+	}
 
-	std::cout << map[203] << std::endl;
+	std::cout << std::setprecision(8) <<m[203] << std::endl;
 }
 
 int main() {
