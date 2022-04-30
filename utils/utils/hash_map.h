@@ -69,7 +69,7 @@ private:
 	}
 
 private:
-	static constexpr size_t kSizes[] = {8, 64, 256, 512, 1024, 2048, 4096, 8192};
+	static constexpr size_t kSizes[] = { 8, 64, 256, 512, 1024, 2048, 4096, 8192 };
 	size_t size_num_{ 0 };
 	std::vector<BucketList> buckets_;
 	size_t ele_cnt{ 0 };
