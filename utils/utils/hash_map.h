@@ -13,25 +13,32 @@ public:
 	}
 
 	void Insert(Key k, Value v) {
-		for (auto& it : buckets_[Hash(k)])
+		auto* bucket = &buckets_[Hash(k)];
+		for (auto& it : *bucket)
 			if (it.first == k)
 				return;
 
-		Expand();
+		if (Expand())
+			bucket = &buckets_[Hash(k)];
 		++ele_cnt;
-		buckets_[Hash(k)].push_back(std::make_pair(k, v));
+		bucket->push_back(std::make_pair(k, v));
+	}
+
+	void Erase(Key) {
+
 	}
 
 	Value& operator[](Key k) {
-		for (auto& it : buckets_[Hash(k)])
+		auto* bucket = &buckets_[Hash(k)];
+		for (auto& it : *bucket)
 			if (it.first == k)
 				return it.second;
 
-		Expand();
+		if (Expand())
+			bucket = &buckets_[Hash(k)];
 		++ele_cnt;
-		auto& bucket = buckets_[Hash(k)];
-		bucket.push_back(std::make_pair(k, 0));
-		return bucket.back().second;
+		bucket->push_back(std::make_pair(k, 0));
+		return bucket->back().second;
 	}
 
 private:
@@ -40,9 +47,9 @@ private:
 			return k % kSizes[size_num_];
 	}
 
-	void Expand() {
+	bool Expand() {
 		if (ele_cnt < kSizes[size_num_])
-			return;
+			return false;
 		
 		std::vector<BucketList> tmp;
 		tmp.resize(kSizes[++size_num_], BucketList());
@@ -52,6 +59,7 @@ private:
 				tmp[Hash(it1.first)].swap(it);
 
 		buckets_.swap(tmp);
+		return true;
 	}
 
 private:
