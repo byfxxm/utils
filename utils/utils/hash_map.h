@@ -20,14 +20,15 @@ public:
 
 		if (Expand())
 			bucket = &buckets_[Hash(k)];
-		++ele_cnt;
 		bucket->push_back(std::make_pair(k, v));
+		++ele_cnt;
 	}
 
 	void Erase(Key k) {
 		auto* bucket = &buckets_[Hash(k)];
 		for (auto it = bucket->begin(); it != bucket->end(); ++it) {
 			if (it->first == k) {
+				--ele_cnt;
 				bucket->erase(it);
 				break;
 			}
@@ -42,8 +43,8 @@ public:
 
 		if (Expand())
 			bucket = &buckets_[Hash(k)];
-		++ele_cnt;
 		bucket->push_back(std::make_pair(k, 0));
+		++ele_cnt;
 		return bucket->back().second;
 	}
 
