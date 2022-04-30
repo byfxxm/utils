@@ -20,5 +20,14 @@ public:
 	}
 
 private:
+	void Left(Node*) {
+
+	}
+
+	void Right(Node*) {
+
+	}
+
+private:
 	Node* root_{ nullptr };
 };
