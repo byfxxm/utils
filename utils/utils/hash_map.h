@@ -57,7 +57,7 @@ public:
 private:
 	size_t Hash(Key k) {
 		if constexpr (std::is_integral_v<Key>)
-			return k % kCapacities[capacity_index_];
+			return k & (kCapacities[capacity_index_] - 1);
 	}
 
 	void Rehash(size_t size) {
