@@ -133,13 +133,10 @@ void TestVariableBuffer() {
 void TestHashMap() {
 	HashMap<int, double> m;
 	m[203] = 3.1415926;
-	for (size_t i = 0; i < 100; ++i) {
+	for (size_t i = 0; i < 100; ++i)
 		m.Insert(i, i);
-	}
-
-	for (size_t i = 0; i < 100; ++i) {
+	for (size_t i = 0; i < 100; ++i)
 		m.Erase(i);
-	}
 
 	assert(m.Size() == 1);
 	std::cout << std::setprecision(8) << m[203] << std::endl;
