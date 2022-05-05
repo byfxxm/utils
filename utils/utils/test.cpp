@@ -137,6 +137,11 @@ void TestHashMap() {
 		m.Insert(i, i);
 	}
 
+	for (size_t i = 0; i < 100; ++i) {
+		m.Erase(i);
+	}
+
+	assert(m.Size() == 1);
 	std::cout << std::setprecision(8) << m[203] << std::endl;
 	m.Erase(203);
 	std::cout << std::setprecision(8) << m[203] << std::endl;

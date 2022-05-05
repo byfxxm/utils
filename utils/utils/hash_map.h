@@ -33,6 +33,8 @@ public:
 				break;
 			}
 		}
+
+		Reduce();
 	}
 
 	Value& operator[](Key k) {
@@ -48,24 +50,40 @@ public:
 		return bucket->back().second;
 	}
 
+	size_t Size() {
+		return kv_cnt_;
+	}
+
 private:
 	size_t Hash(Key k) {
 		if constexpr (std::is_integral_v<Key>)
 			return k % kCapacities[capacity_index_];
 	}
 
-	bool Expand() {
-		if (kv_cnt_ < kCapacities[capacity_index_])
-			return false;
-		
+	void Rehash(size_t size) {
 		std::vector<BucketList> tmp;
-		tmp.resize(kCapacities[++capacity_index_], BucketList());
+		tmp.resize(size, BucketList());
 
 		for (auto& list : buckets_)
 			for (auto& pair : list)
 				tmp[Hash(pair.first)].push_back(pair);
 
 		buckets_.swap(tmp);
+	}
+
+	bool Expand() {
+		if (kv_cnt_ < kCapacities[capacity_index_])
+			return false;
+
+		Rehash(kCapacities[++capacity_index_]);
+		return true;
+	}
+
+	bool Reduce() {
+		if (capacity_index_ == 0 || kv_cnt_ < kCapacities[capacity_index_ - 1])
+			return false;
+
+		Rehash(kCapacities[--capacity_index_]);
 		return true;
 	}
 
