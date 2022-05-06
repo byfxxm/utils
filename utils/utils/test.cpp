@@ -146,12 +146,23 @@ void TestHashMap() {
 }
 
 void TestRingBuffer() {
-	RingBuffer<double, 8> rb;
-	rb.Reset();
-	rb.Write(2);
-	double n;
-	rb.Read(n);
-	assert(n == 2);
+	RingBuffer<int, 1024> rb1;
+	RingBuffer<int, 1023> rb2;
+	int temp;
+	auto time1 = std::chrono::system_clock::now();
+	for (int i = 0; i < 10000; ++i) {
+		while (rb1.Write(5));
+		while (rb1.Read(temp));
+	}
+	auto time2 = std::chrono::system_clock::now();
+	for (int i = 0; i < 10000; ++i) {
+		while (rb2.Write(5));
+		while (rb2.Read(temp));
+	}
+	auto time3 = std::chrono::system_clock::now();
+
+	std::cout << (time2 - time1).count() << std::endl;
+	std::cout << (time3 - time2).count() << std::endl;
 }
 
 int main() {

@@ -1,7 +1,7 @@
 #pragma once
 #include <type_traits>
 
-template <typename T, size_t N, typename = std::enable_if_t<((N& (N - 1)) == 0 && N > 0)>>
+template <typename T, size_t N>
 class RingBuffer {
 public:
 	void Reset() {
@@ -36,7 +36,10 @@ public:
 
 private:
 	size_t Mod(size_t num) {
-		return (num & (N - 1));
+		if constexpr ((N & (N - 1)) == 0)
+			return (num & (N - 1));
+		else
+			return (num % N);
 	}
 
 private:
