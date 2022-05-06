@@ -5,6 +5,7 @@
 #include "array_nd.h"
 #include "variable_buffer.h"
 #include "hash_map.h"
+#include "ring_buffer.h"
 
 void TestArrayNd() {
 	class A {
@@ -144,9 +145,15 @@ void TestHashMap() {
 	std::cout << std::setprecision(8) << m[203] << std::endl;
 }
 
+void TestRingBuffer() {
+	RingBuffer<double, 8> rb;
+	rb.Reset();
+}
+
 int main() {
 	TestArrayNd();
 	TestVariableBuffer();
 	TestHashMap();
+	TestRingBuffer();
 	return 0;
 }

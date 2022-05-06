@@ -1,6 +1,7 @@
 #pragma once
+#include <type_traits>
 
-template <typename T, size_t N>
+template <typename T, size_t N, typename = std::enable_if_t<((N& (N - 1)) == 0 && N > 0)>>
 class RingBuffer {
 public:
 	void Reset() {
