@@ -148,6 +148,10 @@ void TestHashMap() {
 void TestRingBuffer() {
 	RingBuffer<double, 8> rb;
 	rb.Reset();
+	rb.Write(2);
+	double n;
+	rb.Read(n);
+	assert(n == 2);
 }
 
 int main() {

@@ -13,7 +13,7 @@ public:
 	}
 
 	bool IsFull() {
-		return (write_index_ + 1) % N == read_index_;
+		return Mod(write_index_ + 1) == read_index_;
 	}
 
 	bool Write(T t) {
@@ -21,7 +21,7 @@ public:
 			return false;
 
 		data_[write_index_] = t;
-		write_index_ = (write_index_ + 1) % N;
+		write_index_ = Mod(write_index_ + 1);
 		return true;
 	}
 
@@ -30,8 +30,13 @@ public:
 			return false;
 
 		t = data_[read_index_];
-		read_index_ = (read_index_ + 1) % N;
+		read_index_ = Mod(read_index_ + 1);
 		return true;
+	}
+
+private:
+	size_t Mod(size_t num) {
+		return (num & (N - 1));
 	}
 
 private:
