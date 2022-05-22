@@ -57,5 +57,5 @@ private:
 	int def_{ 0 };
 	int att_{ 0 };
 	size_t freq_{ 1 };		// ¹¥»÷´ÎÊý/Ãë
-	size_t period_{ 0 };
+	size_t period_{ 0 };	// ¹¥»÷¼ä¸ô(Î¢Ãë)
 };
