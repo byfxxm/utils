@@ -22,14 +22,14 @@ public:
 		if (!IsAlive())
 			return;
 
-		war.Defense(att_);
+		war.Defense(*this);
 	}
 
-	virtual void Defense(int att) {
-		if (!IsAlive() || att <= def_)
+	virtual void Defense(Warrior& war) {
+		if (!IsAlive() || war.att_ <= def_)
 			return;
 
-		int damage = att - def_;
+		int damage = war.att_ - def_;
 		int expect = life_;
 		int left_life = expect - damage;
 		while (!life_.compare_exchange_strong(expect, left_life, std::memory_order_relaxed)) {
