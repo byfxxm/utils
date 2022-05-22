@@ -6,7 +6,7 @@
 
 class Warrior {
 public:
-	Warrior(const std::string& name, int life, int att, int def, int freq) : name_(name), life_(life), att_(att), def_(def), freq_(freq), period_(1000 / freq_) {}
+	Warrior(const std::string& name, int life, int att, int def, int freq) : name_(name), life_(life), att_(att), def_(def), freq_(freq), period_(1'000'000 / freq_) {}
 	~Warrior() = default;
 
 	const std::string GetName() const {
@@ -36,13 +36,13 @@ public:
 			std::this_thread::yield();
 		}
 
-		std::cout << name_ << " is attaced. Life left " << left_life << "." << std::endl;
+		//std::cout << name_ << " is attaced. Life left " << left_life << "." << std::endl;
 	}
 
 	virtual void ContinuousAttack(Warrior& war) {
 		while (IsAlive() && war.IsAlive()) {
 			Attack(war);
-			std::this_thread::sleep_for(std::chrono::milliseconds(period_));
+			std::this_thread::sleep_for(std::chrono::microseconds(period_));
 		}
 	}
 
