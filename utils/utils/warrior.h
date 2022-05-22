@@ -40,7 +40,7 @@ public:
 		printf("%s is attaced. Life left %d\n", name_.c_str(), left_life);
 	}
 
-	virtual void ContinuousAttack(Warrior& war) {
+	virtual void AttackContinuously(Warrior& war) {
 		auto t0 = std::chrono::steady_clock::now();
 		while (IsAlive() && war.IsAlive()) {
 			Attack(war);

@@ -176,14 +176,14 @@ void TestWarrior() {
 		while (!ready)
 			std::this_thread::yield();
 
-		A.ContinuousAttack(B);
+		A.AttackContinuously(B);
 		});
 
 	std::thread th2([&]() {
 		while (!ready)
 			std::this_thread::yield();
 
-		B.ContinuousAttack(A);
+		B.AttackContinuously(A);
 		});
 
 	ready = true;
