@@ -3,6 +3,7 @@
 #include <thread>
 #include <chrono>
 #include <string>
+#include <cstdio>
 
 class Warrior {
 public:
@@ -36,25 +37,17 @@ public:
 			left_life = expect - damage;
 		}
 
-		//std::cout << name_ << " is attaced. Life left " << left_life << "." << std::endl;
+		printf("%s is attaced. Life left %d\n", name_.c_str(), left_life);
 	}
-
-	//virtual void ContinuousAttack(Warrior& war) {
-	//	while (IsAlive() && war.IsAlive()) {
-	//		Attack(war);
-	//		std::this_thread::sleep_for(std::chrono::microseconds(period_));
-	//	}
-	//}
 
 	virtual void ContinuousAttack(Warrior& war) {
 		auto t0 = std::chrono::steady_clock::now();
-		int att_count = 0;
 		while (IsAlive() && war.IsAlive()) {
 			Attack(war);
-			++att_count;
-
-			while (std::chrono::steady_clock::now() < t0 + std::chrono::microseconds(period_ * att_count))
+			while (std::chrono::steady_clock::now() < t0 + std::chrono::microseconds(period_))
 				std::this_thread::yield();
+
+			t0 += std::chrono::microseconds(period_);
 		}
 	}
 
@@ -63,6 +56,6 @@ private:
 	std::atomic<int> life_{ 1 };
 	int def_{ 0 };
 	int att_{ 0 };
-	int freq_{ 1 };		// 攻击次数/秒
-	int period_{ 0 };
+	size_t freq_{ 1 };		// 攻击次数/秒
+	size_t period_{ 0 };
 };
