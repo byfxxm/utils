@@ -14,41 +14,32 @@ public:
 		return name_;
 	}
 
-	virtual bool IsAlive() const {
+	bool IsAlive() const {
 		return life_ > 0;
 	}
 
-	virtual void Attack(Warrior& war) {
-		if (!IsAlive())
-			return;
-
-		war.Defense(*this);
-	}
-
-	virtual void Defense(Warrior& war) {
-		if (!IsAlive() || war.att_ <= def_)
-			return;
-
-		int damage = war.att_ - def_;
-		int expect = life_;
-		int left_life = expect - damage;
-		while (!life_.compare_exchange_strong(expect, left_life, std::memory_order_relaxed)) {
-			std::this_thread::yield();
-			left_life = expect - damage;
-		}
-
-		printf("%s is attaced. Life left %d\n", name_.c_str(), left_life);
-	}
-
-	virtual void AttackContinuously(Warrior& war) {
+	void Attack(Warrior& war) {
 		auto t0 = std::chrono::steady_clock::now();
 		while (IsAlive() && war.IsAlive()) {
-			Attack(war);
+			AttackOnce(war);
 			while (std::chrono::steady_clock::now() < t0 + std::chrono::microseconds(period_))
 				std::this_thread::yield();
 
 			t0 += std::chrono::microseconds(period_);
 		}
+	}
+
+private:
+	virtual void AttackOnce(Warrior& war) {
+		int damage = att_ - war.def_;
+		if (!IsAlive() || !war.IsAlive() || damage <= 0)
+			return;
+
+		int cur_life = war.life_;
+		while (!war.life_.compare_exchange_strong(cur_life, cur_life - damage, std::memory_order_relaxed))
+			std::this_thread::yield();
+
+		printf("%s attack %s cause %d damage points. %s's life is %d left.\n", name_.c_str(), war.name_.c_str(), damage, war.name_.c_str(), cur_life - damage);
 	}
 
 private:

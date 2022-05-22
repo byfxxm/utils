@@ -169,21 +169,21 @@ void TestRingBuffer() {
 
 void TestWarrior() {
 	Warrior A("A", 11, 5, 2, 10);
-	Warrior B("B", 11, 3, 3, 21);
+	Warrior B("B", 11, 3, 3, 20);
 	std::atomic<bool> ready = false;
 
 	std::thread th1([&]() {
 		while (!ready)
 			std::this_thread::yield();
 
-		A.AttackContinuously(B);
+		A.Attack(B);
 		});
 
 	std::thread th2([&]() {
 		while (!ready)
 			std::this_thread::yield();
 
-		B.AttackContinuously(A);
+		B.Attack(A);
 		});
 
 	ready = true;
