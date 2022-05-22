@@ -148,6 +148,7 @@
     <ClInclude Include="rbtree_map.h" />
     <ClInclude Include="ring_buffer.h" />
     <ClInclude Include="variable_buffer.h" />
+    <ClInclude Include="warrior.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test.cpp" />

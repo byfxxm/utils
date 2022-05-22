@@ -2,10 +2,12 @@
 #include <thread>
 #include <iostream>
 #include <iomanip>
+#include <condition_variable>
 #include "array_nd.h"
 #include "variable_buffer.h"
 #include "hash_map.h"
 #include "ring_buffer.h"
+#include "warrior.h"
 
 void TestArrayNd() {
 	class A {
@@ -149,20 +151,51 @@ void TestRingBuffer() {
 	RingBuffer<int, 1024> rb1;
 	RingBuffer<int, 1023> rb2;
 	int temp;
-	auto time1 = std::chrono::system_clock::now();
+	auto time1 = std::chrono::steady_clock::now();
 	for (int i = 0; i < 10000; ++i) {
 		while (rb1.Write(5));
 		while (rb1.Read(temp));
 	}
-	auto time2 = std::chrono::system_clock::now();
+	auto time2 = std::chrono::steady_clock::now();
 	for (int i = 0; i < 10000; ++i) {
 		while (rb2.Write(5));
 		while (rb2.Read(temp));
 	}
-	auto time3 = std::chrono::system_clock::now();
+	auto time3 = std::chrono::steady_clock::now();
 
 	std::cout << (time2 - time1).count() << std::endl;
 	std::cout << (time3 - time2).count() << std::endl;
+}
+
+void TestWarrior() {
+	Warrior A("A", 10, 5, 2, 10);
+	Warrior B("B", 10, 3, 3, 25);
+	std::atomic<bool> ready = false;
+
+	std::thread th1([&]() {
+		while (!ready)
+			std::this_thread::yield();
+
+		A.ContinuousAttack(B);
+		});
+
+	std::thread th2([&]() {
+		while (!ready)
+			std::this_thread::yield();
+
+		B.ContinuousAttack(A);
+		});
+
+	ready = true;
+	th1.join();
+	th2.join();
+
+	if (A.IsAlive() && !B.IsAlive())
+		std::cout << A.GetName() << " won" << std::endl;
+	else if (!A.IsAlive() && B.IsAlive())
+		std::cout << B.GetName() << " won" << std::endl;
+	else
+		std::cout << "Even" << std::endl;
 }
 
 int main() {
@@ -170,5 +203,6 @@ int main() {
 	TestVariableBuffer();
 	TestHashMap();
 	TestRingBuffer();
+	TestWarrior();
 	return 0;
 }
