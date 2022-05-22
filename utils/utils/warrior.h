@@ -32,17 +32,29 @@ public:
 		int expect = life_;
 		int left_life = expect - damage;
 		while (!life_.compare_exchange_strong(expect, left_life, std::memory_order_relaxed)) {
-			left_life = expect - damage;
 			std::this_thread::yield();
+			left_life = expect - damage;
 		}
 
 		//std::cout << name_ << " is attaced. Life left " << left_life << "." << std::endl;
 	}
 
+	//virtual void ContinuousAttack(Warrior& war) {
+	//	while (IsAlive() && war.IsAlive()) {
+	//		Attack(war);
+	//		std::this_thread::sleep_for(std::chrono::microseconds(period_));
+	//	}
+	//}
+
 	virtual void ContinuousAttack(Warrior& war) {
+		auto t0 = std::chrono::steady_clock::now();
+		int att_count = 0;
 		while (IsAlive() && war.IsAlive()) {
 			Attack(war);
-			std::this_thread::sleep_for(std::chrono::microseconds(period_));
+			++att_count;
+
+			while (std::chrono::steady_clock::now() < t0 + std::chrono::microseconds(period_ * att_count))
+				std::this_thread::yield();
 		}
 	}
 

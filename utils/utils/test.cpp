@@ -168,8 +168,8 @@ void TestRingBuffer() {
 }
 
 void TestWarrior() {
-	Warrior A("A", 10, 5, 2, 10);
-	Warrior B("B", 10, 3, 3, 23);
+	Warrior A("A", 10, 3, 3, 22);
+	Warrior B("B", 10, 5, 2, 10);
 	std::atomic<bool> ready = false;
 
 	std::thread th1([&]() {
