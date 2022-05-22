@@ -8,17 +8,17 @@
 class Warrior {
 public:
 	Warrior(const std::string& name, int life, int att, int def, int freq) : name_(name), life_(life), att_(att), def_(def), freq_(freq), period_(1'000'000 / freq_) {}
-	~Warrior() = default;
+	virtual ~Warrior() = default;
 
-	const std::string GetName() const {
+	virtual const std::string GetName() const {
 		return name_;
 	}
 
-	bool IsAlive() const {
+	virtual bool IsAlive() const {
 		return life_ > 0;
 	}
 
-	void Attack(Warrior& war) {
+	virtual void Attack(Warrior& war) {
 		auto t0 = std::chrono::steady_clock::now();
 		while (IsAlive() && war.IsAlive()) {
 			AttackOnce(war);
@@ -30,7 +30,7 @@ public:
 	}
 
 private:
-	virtual void AttackOnce(Warrior& war) {
+	void AttackOnce(Warrior& war) {
 		int damage = att_ - war.def_;
 		if (!IsAlive() || !war.IsAlive() || damage <= 0)
 			return;
@@ -42,7 +42,7 @@ private:
 		printf("%s attack %s cause %d damage points. %s's life is %d left.\n", name_.c_str(), war.name_.c_str(), damage, war.name_.c_str(), cur_life - damage);
 	}
 
-private:
+protected:
 	std::string name_;
 	std::atomic<int> life_{ 1 };
 	int def_{ 0 };
