@@ -5,6 +5,7 @@
 #include <string>
 #include <cstdio>
 #include <cmath>
+#include <mutex>
 
 class Position {
 public:
@@ -22,11 +23,11 @@ public:
 		return y_;
 	}
 
-	Position operator+(const Position& pos) {
+	Position operator+(const Position& pos) const {
 		return Position(x_ + pos.x_, y_ + pos.y_);
 	}
 
-	Position operator-(const Position& pos) {
+	Position operator-(const Position& pos) const {
 		return Position(x_ - pos.x_, y_ - pos.y_);
 	}
 
@@ -59,15 +60,15 @@ struct WarriorInfo {
 
 class Warrior {
 public:
-	Warrior(const WarriorInfo& war_info)
-		: name_(war_info.name)
-		, life_(war_info.life)
-		, att_(war_info.att)
-		, def_(war_info.def)
-		, freq_(war_info.freq)
+	Warrior(const WarriorInfo& winfo)
+		: name_(winfo.name)
+		, life_(winfo.life)
+		, att_(winfo.att)
+		, def_(winfo.def)
+		, freq_(winfo.freq)
 		, period_(1'000'000 / freq_)
-		, range_(war_info.range)
-		, pos_(war_info.pos)
+		, range_(winfo.range)
+		, pos_(winfo.pos)
 	{}
 
 	virtual ~Warrior() = default;
@@ -80,9 +81,13 @@ public:
 		return life_ > 0;
 	}
 
-	virtual void Attack(Warrior& war) {
+	virtual bool IsInRange(const Warrior* war) const {
+		return (pos_ - war->pos_).Length() <= range_;
+	}
+
+	virtual void Attack(Warrior* war) {
 		auto t0 = std::chrono::steady_clock::now();
-		while (IsAlive() && war.IsAlive()) {
+		while (IsAlive() && war->IsAlive() && IsInRange(war)) {
 			AttackOnce(war);
 			while (std::chrono::steady_clock::now() < t0 + std::chrono::microseconds(period_))
 				std::this_thread::yield();
@@ -92,16 +97,16 @@ public:
 	}
 
 protected:
-	void AttackOnce(Warrior& war) {
-		int damage = att_ - war.def_;
-		if (!IsAlive() || !war.IsAlive() || damage <= 0)
+	void AttackOnce(Warrior* war) {
+		int damage = att_ - war->def_;
+		if (damage <= 0)
 			return;
 
-		int cur_life = war.life_;
-		while (!war.life_.compare_exchange_strong(cur_life, cur_life - damage, std::memory_order_relaxed))
+		int cur_life = war->life_;
+		while (!war->life_.compare_exchange_strong(cur_life, cur_life - damage, std::memory_order_relaxed))
 			std::this_thread::yield();
 
-		printf("%s attack %s cause %d damage points. %s's life is %d left.\n", name_.c_str(), war.name_.c_str(), damage, war.name_.c_str(), cur_life - damage);
+		printf("%s attack %s cause %d damage points. %s's life is %d left.\n", name_.c_str(), war->name_.c_str(), damage, war->name_.c_str(), cur_life - damage);
 	}
 
 protected:
@@ -121,4 +126,54 @@ struct ArcherInfo : public WarriorInfo {
 class Archer : public Warrior {
 public:
 	Archer(const ArcherInfo& arc_info) : Warrior(arc_info) { range_ = 10; }
+};
+
+class BattleGround {
+public:
+	static BattleGround* Instance() {
+		static BattleGround inst;
+		return &inst;
+	}
+
+	~BattleGround() {
+		Clear();
+	}
+
+	void Clear() {
+		std::lock_guard<std::mutex> lck(mtx_);
+		for (auto w : warriors_)
+			delete w;
+
+		warriors_.clear();
+	}
+
+	Warrior* CreateWarrior(const WarriorInfo& winfo) {
+		std::lock_guard<std::mutex> lck(mtx_);
+		ClearDeadIfNeed();
+		auto war = new Warrior(winfo);
+		warriors_.push_back(war);
+		return war;
+	}
+
+	Archer* CreateArcher(const ArcherInfo& ainfo) {
+		std::lock_guard<std::mutex> lck(mtx_);
+		ClearDeadIfNeed();
+		auto archer = new Archer(ainfo);
+		warriors_.push_back(archer);
+		return archer;
+	}
+
+private:
+	void ClearDeadIfNeed() {
+		for (auto it = warriors_.begin(); it != warriors_.end();) {
+			if (!(*it)->IsAlive())
+				warriors_.erase(it);
+
+			++it;
+		}
+	}
+
+private:
+	std::vector<Warrior*> warriors_;
+	std::mutex mtx_;
 };

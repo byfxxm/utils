@@ -168,33 +168,34 @@ void TestRingBuffer() {
 }
 
 void TestWarrior() {
-	Warrior A({ "A", 11, 5, 2, 10 });
-	Warrior B({ "B", 11, 3, 3, 21 });
-	Archer C({ "C", 8, 5, 1, 20 });
+	auto battle_ground = BattleGround::Instance();
+	auto A = battle_ground->CreateWarrior({ "A", 11, 5, 2, 10 });
+	auto B = battle_ground->CreateWarrior({ "B", 11, 3, 3, 21 });
+	//auto C = battle_ground->CreateArcher({ "C", 8, 5, 1, 20 });
 	std::atomic<bool> ready = false;
 
 	std::thread th1([&]() {
 		while (!ready)
 			std::this_thread::yield();
 
-		A.Attack(B);
+		A->Attack(B);
 		});
 
 	std::thread th2([&]() {
 		while (!ready)
 			std::this_thread::yield();
 
-		B.Attack(A);
+		B->Attack(A);
 		});
 
 	ready = true;
 	th1.join();
 	th2.join();
 
-	if (A.IsAlive() && !B.IsAlive())
-		std::cout << A.GetName() << " won" << std::endl;
-	else if (!A.IsAlive() && B.IsAlive())
-		std::cout << B.GetName() << " won" << std::endl;
+	if (A->IsAlive() && !B->IsAlive())
+		std::cout << A->GetName() << " won" << std::endl;
+	else if (!A->IsAlive() && B->IsAlive())
+		std::cout << B->GetName() << " won" << std::endl;
 	else
 		std::cout << "Even" << std::endl;
 }
