@@ -77,7 +77,6 @@ public:
 		delete[] ele_;
 		ele_ = new T[ele_cnt_];
 		CopyEle(arr.ele_);
-
 		return *this;
 	}
 
