@@ -15,19 +15,15 @@
 template <typename T, size_t N>
 class ArrayNd {
 public:
-	template <typename... Ts>
+	template <typename... Ts, typename = std::enable_if_t<(N > 0) && (sizeof...(Ts) == N)>>
 	ArrayNd(Ts... ts) {
-		static_assert(N > 0);
-		static_assert(sizeof...(ts) == N);
 		EmplaceDim(0, ts...);
-
 		for (auto i = 0; i < N; ++i) {
 			ele_cnt_ *= dim_[i];
 			factor_[i] = 1;
 			for (auto j = i + 1; j < N; ++j)
 				factor_[i] *= dim_[j];
 		}
-
 		ele_ = new T[ele_cnt_];
 		Reset();
 	}
