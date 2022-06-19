@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="array_nd.h" />
     <ClInclude Include="hash_map.h" />
+    <ClInclude Include="MetaprogrammingPractice.h" />
     <ClInclude Include="rbtree_map.h" />
     <ClInclude Include="ring_buffer.h" />
     <ClInclude Include="variable_buffer.h" />

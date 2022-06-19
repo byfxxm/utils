@@ -8,6 +8,7 @@
 #include "hash_map.h"
 #include "ring_buffer.h"
 #include "warrior.h"
+#include "MetaprogrammingPractice.h"
 
 void TestArrayNd() {
 	class A {
@@ -200,11 +201,23 @@ void TestWarrior() {
 		std::cout << "Even" << std::endl;
 }
 
+void TestMetaprogramming() {
+	struct A {
+		using type = void;
+	};
+
+	struct B {};
+
+	static_assert(MP::HasType_v<A>);
+	static_assert(!MP::HasType_v<B>);
+}
+
 int main() {
 	TestArrayNd();
 	TestVariableBuffer();
 	TestHashMap();
 	TestRingBuffer();
 	TestWarrior();
+	TestMetaprogramming();
 	return 0;
 }
