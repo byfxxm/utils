@@ -33,7 +33,7 @@
     <ClInclude Include="warrior.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="MetaprogrammingPractice.h">
+    <ClInclude Include="metaprogramming_practice.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

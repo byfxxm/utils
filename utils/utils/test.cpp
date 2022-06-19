@@ -8,7 +8,7 @@
 #include "hash_map.h"
 #include "ring_buffer.h"
 #include "warrior.h"
-#include "MetaprogrammingPractice.h"
+#include "metaprogramming_practice.h"
 
 void TestArrayNd() {
 	class A {
