@@ -210,6 +210,8 @@ void TestMetaprogramming() {
 
 	static_assert(MP::HasType_v<A>);
 	static_assert(!MP::HasType_v<B>);
+
+	static_assert(MP::PiN_v<2> == 4);
 }
 
 int main() {
