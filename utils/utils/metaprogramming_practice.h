@@ -30,9 +30,17 @@ namespace MP {
 	/// </summary>
 	template <int N>
 	struct PiN {
-		static constexpr double Pi() {
-			return 3.1415926;
-		}
+		template <int N1>
+		struct Pi {
+			static constexpr double sum = 1. / (N1 * N1) + Pi<N1 - 1>::sum;
+			static constexpr double value = sum * 6;
+		};
+
+		template <>
+		struct Pi<1> {
+			static constexpr double sum = 1.;
+			static constexpr double value = sum * 6;
+		};
 
 		template <int N1>
 		struct Factor {
@@ -44,7 +52,7 @@ namespace MP {
 			static constexpr int value = 1;
 		};
 
-		static constexpr int value = (int)(Pi() * Factor<N>::value) % 10;
+		static constexpr int value = (int)(Pi<N * 500>::value * Factor<N>::value) % 10;
 	};
 
 	template <int N>

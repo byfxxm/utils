@@ -211,7 +211,9 @@ void TestMetaprogramming() {
 	static_assert(MP::HasType_v<A>);
 	static_assert(!MP::HasType_v<B>);
 
-	static_assert(MP::PiN_v<2> == 4);
+	//constexpr auto x = MP::PiN<5>::Pi<1000>::value;
+	//std::cout << sqrt(x) << std::endl;
+	//static_assert(MP::PiN_v<2> == 4);
 }
 
 int main() {
