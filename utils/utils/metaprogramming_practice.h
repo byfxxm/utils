@@ -52,7 +52,7 @@ namespace MP {
 			static constexpr int value = 1;
 		};
 
-		static constexpr int value = (int)(Pi<N * 500>::value * Factor<N>::value) % 10;
+		static constexpr int value = (int)(Pi<N * 10>::value * Factor<N>::value) % 10;
 	};
 
 	template <int N>
