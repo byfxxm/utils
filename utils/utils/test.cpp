@@ -164,8 +164,8 @@ void TestRingBuffer() {
 	}
 	auto time3 = std::chrono::steady_clock::now();
 
-	std::cout << (time2 - time1).count() << std::endl;
-	std::cout << (time3 - time2).count() << std::endl;
+	std::cout << std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1).count() << std::endl;
+	std::cout << std::chrono::duration_cast<std::chrono::microseconds>(time3 - time2).count() << std::endl;
 }
 
 void TestWarrior() {
