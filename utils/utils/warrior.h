@@ -60,6 +60,14 @@ struct WarriorInfo {
 
 class Warrior {
 public:
+	enum class Status {
+		kIdle,
+		kAttacking,
+		kMoving,
+		kDead,
+	};
+
+public:
 	Warrior(const WarriorInfo& winfo)
 		: name_(winfo.name)
 		, life_(winfo.life)
@@ -71,42 +79,77 @@ public:
 		, pos_(winfo.pos)
 	{}
 
-	virtual ~Warrior() = default;
+	virtual ~Warrior() {
+		if (thrd_.joinable())
+			thrd_.join();
+	}
 
-	virtual const std::string GetName() const {
+	virtual const std::string Name() const {
 		return name_;
 	}
 
-	virtual bool IsAlive() const {
-		return life_ > 0;
+	virtual Status GetStatus() const {
+		return status_.load();
 	}
 
+	virtual bool IsDead() const {
+		return status_ == Status::kDead;
+	}
+
+	virtual bool IsIdle() const {
+		return status_ == Status::kIdle;
+	}
+
+	virtual bool IsAttacking() const {
+		return status_ == Status::kAttacking;
+	}
+
+	virtual bool IsMoving() const {
+		return status_ == Status::kMoving;
+	}
+
+	virtual void Attack(Warrior* war) {
+		status_ = Status::kAttacking;
+		thrd_ = std::thread([=, this]() {
+			AutoAttack(war);
+			});
+	}
+
+	virtual int Defense(int att) {
+		int damage = att - def_;
+		life_ -= damage;
+		if (life_ <= 0)
+			status_ = Status::kDead;
+		return damage;
+	}
+
+	virtual int Life() const {
+		return life_;
+	}
+
+protected:
 	virtual bool IsInRange(const Warrior* war) const {
 		return (pos_ - war->pos_).Length() <= range_;
 	}
 
-	virtual void Attack(Warrior* war) {
+	virtual void AutoAttack(Warrior* war) {
 		auto t0 = std::chrono::steady_clock::now();
-		while (IsAlive() && war->IsAlive() && IsInRange(war)) {
+		while (!IsDead() && !war->IsDead() && IsInRange(war)) {
 			AttackOnce(war);
+			if (war->IsDead())
+				break;
+
 			while (std::chrono::steady_clock::now() < t0 + std::chrono::microseconds(period_))
 				std::this_thread::yield();
-
 			t0 += std::chrono::microseconds(period_);
 		}
+
+		status_ = Status::kIdle;
 	}
 
-protected:
 	void AttackOnce(Warrior* war) {
-		int damage = att_ - war->def_;
-		if (damage <= 0)
-			return;
-
-		int cur_life = war->life_;
-		while (!war->life_.compare_exchange_strong(cur_life, cur_life - damage, std::memory_order_relaxed))
-			std::this_thread::yield();
-
-		printf("%s attack %s cause %d damage points. %s's life is %d left.\n", name_.c_str(), war->name_.c_str(), damage, war->name_.c_str(), cur_life - damage);
+		auto damage = war->Defense(att_);
+		printf("%s attack %s cause %d damage points. %s's life is %d left.\n", name_.c_str(), war->name_.c_str(), damage, war->name_.c_str(), war->Life());
 	}
 
 protected:
@@ -118,6 +161,8 @@ protected:
 	size_t period_{ 0 };	// ¹¥»÷¼ä¸ô(Î¢Ãë)
 	double range_{ 0.5 };
 	Position pos_{ 10,10 };
+	std::thread thrd_;
+	std::atomic<Status> status_{ Status::kIdle };
 };
 
 struct ArcherInfo : public WarriorInfo {
@@ -166,7 +211,7 @@ public:
 private:
 	void ClearDeadIfNeed() {
 		for (auto it = warriors_.begin(); it != warriors_.end();) {
-			if (!(*it)->IsAlive())
+			if ((*it)->GetStatus() == Warrior::Status::kDead)
 				warriors_.erase(it);
 
 			++it;

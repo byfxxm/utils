@@ -171,32 +171,17 @@ void TestRingBuffer() {
 void TestWarrior() {
 	auto battle_ground = BattleGround::Instance();
 	auto A = battle_ground->CreateWarrior({ "A", 11, 5, 2, 10 });
-	auto B = battle_ground->CreateWarrior({ "B", 11, 3, 3, 21 });
-	//auto C = battle_ground->CreateArcher({ "C", 8, 5, 1, 20 });
-	std::atomic<bool> ready = false;
+	auto B = battle_ground->CreateWarrior({ "B", 11, 3, 3, 20 });
+	A->Attack(B);
+	B->Attack(A);
 
-	std::thread th1([&]() {
-		while (!ready)
-			std::this_thread::yield();
+	while (!A->IsDead() && !B->IsDead())
+		std::this_thread::yield();
 
-		A->Attack(B);
-		});
-
-	std::thread th2([&]() {
-		while (!ready)
-			std::this_thread::yield();
-
-		B->Attack(A);
-		});
-
-	ready = true;
-	th1.join();
-	th2.join();
-
-	if (A->IsAlive() && !B->IsAlive())
-		std::cout << A->GetName() << " won" << std::endl;
-	else if (!A->IsAlive() && B->IsAlive())
-		std::cout << B->GetName() << " won" << std::endl;
+	if (!A->IsDead() && B->IsDead())
+		std::cout << A->Name() << " won" << std::endl;
+	else if (A->IsDead() && !B->IsDead())
+		std::cout << B->Name() << " won" << std::endl;
 	else
 		std::cout << "Even" << std::endl;
 }
