@@ -27,7 +27,7 @@ namespace NQueens {
 				return y_;
 			}
 
-			bool InRange(const Queen& queen) {
+			bool InRange(const Queen& queen) const {
 				return x_ == queen.GetX() || y_ == queen.GetY() || abs(x_ - queen.GetX()) == abs(y_ - queen.GetY());
 			}
 
@@ -68,7 +68,7 @@ namespace NQueens {
 			}
 		}
 
-		bool IsPeace() {
+		bool IsPeace() const {
 			for (int i = 0; i < N; ++i)
 				for (int j = 0; j < N; ++j)
 					if (i != j && queens_[i].InRange(queens_[j]))
