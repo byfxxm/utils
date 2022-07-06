@@ -9,6 +9,7 @@
 #include "ring_buffer.h"
 #include "warrior.h"
 #include "metaprogramming_practice.h"
+#include "n_queens.h"
 
 void TestArrayNd() {
 	class A {
@@ -201,6 +202,15 @@ void TestMetaprogramming() {
 	//static_assert(MP::PiN_v<2> == 4);
 }
 
+void TestNQueens() {
+	NQueens::Queens<8> queens_8;
+	for (int i = 0; i < queens_8.Count(); ++i) {
+		std::cout << "resolve " << i << ":" << std::endl;
+		for (auto q : queens_8[i])
+			std::cout << q.GetX() << ", " << q.GetY() << std::endl;
+	}
+}
+
 int main() {
 	TestArrayNd();
 	TestVariableBuffer();
@@ -208,5 +218,6 @@ int main() {
 	TestRingBuffer();
 	TestWarrior();
 	TestMetaprogramming();
+	TestNQueens();
 	return 0;
 }

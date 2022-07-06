@@ -36,6 +36,9 @@
     <ClInclude Include="metaprogramming_practice.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="n_queens.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test.cpp">
