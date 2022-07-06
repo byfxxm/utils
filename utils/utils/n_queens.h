@@ -37,6 +37,7 @@ namespace NQueens {
 		};
 
 		using QueensArray = std::array<Queen, N>;
+		using QueensContainer = std::vector<QueensArray>;
 
 	public:
 		Queens() {
@@ -83,6 +84,6 @@ namespace NQueens {
 		}
 
 	private:
-		std::vector<QueensArray> resolves_;
+		QueensContainer resolves_;
 	};
 }
