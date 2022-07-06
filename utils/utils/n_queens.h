@@ -40,10 +40,11 @@ namespace NQueens {
 
 	public:
 		Queens() {
+			QueensArray queens;
 			for (int i = 0; i < N; ++i)
-				queens_[i].SetX(i);
+				queens[i].SetX(i);
 
-			Generate();
+			Generate(queens);
 		}
 
 		int Count() const {
@@ -51,34 +52,37 @@ namespace NQueens {
 		}
 
 		const QueensArray& operator[](int index) const {
+			if (index < 0 || index >= Count())
+				std::terminate();
+
 			return resolves_[index];
 		}
 
 	private:
-		void Generate(int index = 0) {
+		void Generate(QueensArray& queens, int index = 0) {
 			if (index == N) {
-				if (IsPeace())
-					resolves_.push_back(queens_);
+				if (IsPeace(queens))
+					resolves_.push_back(queens);
+
 				return;
 			}
 
 			for (int i = 0; i < N; ++i) {
-				queens_[index].SetY(i);
-				Generate(index + 1);
+				queens[index].SetY(i);
+				Generate(queens, index + 1);
 			}
 		}
 
-		bool IsPeace() const {
+		bool IsPeace(const QueensArray& queens) const {
 			for (int i = 0; i < N; ++i)
 				for (int j = 0; j < N; ++j)
-					if (i != j && queens_[i].InRange(queens_[j]))
+					if (i != j && queens[i].InRange(queens[j]))
 						return false;
 
 			return true;
 		}
 
 	private:
-		QueensArray queens_;
 		std::vector<QueensArray> resolves_;
 	};
 }
