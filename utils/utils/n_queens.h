@@ -81,5 +81,4 @@ namespace NQueens {
 		QueensArray queens_;
 		std::vector<QueensArray> resolves_;
 	};
-	
 }
