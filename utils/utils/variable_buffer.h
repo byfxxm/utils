@@ -26,19 +26,6 @@ public:
 		return (read_index_ + N - write_index_ - 1) % N;
 	}
 
-	size_t PeekSize() const {
-		if (N - read_index_ < sizeof(Head)) {
-			auto part1 = N - read_index_;
-			auto part2 = sizeof(Head) - part1;
-			Head head;
-			memcpy(&head, &data_[read_index_], part1);
-			memcpy((char*)&head + part1, data_, part2);
-			return head.data_size;
-		}
-
-		return ((Head*)&data_[read_index_])->data_size;
-	}
-
 	bool Write(const char* buffer, size_t count) {
 		if (Free() < count + sizeof(Head))
 			return false;
@@ -103,6 +90,20 @@ private:
 
 		memcpy(buffer, &data_[index], count);
 		index = (index + count) % N;
+	}
+
+	size_t PeekSize() const {
+		assert(!IsEmpty());
+		if (N - read_index_ < sizeof(Head)) {
+			auto part1 = N - read_index_;
+			auto part2 = sizeof(Head) - part1;
+			Head head;
+			memcpy(&head, &data_[read_index_], part1);
+			memcpy((char*)&head + part1, data_, part2);
+			return head.data_size;
+		}
+
+		return ((Head*)&data_[read_index_])->data_size;
 	}
 
 private:
