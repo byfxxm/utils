@@ -24,6 +24,7 @@ public:
 			for (auto j = i + 1; j < N; ++j)
 				factor_[i] *= dim_[j];
 		}
+
 		ele_ = new T[ele_cnt_];
 		Reset();
 	}
