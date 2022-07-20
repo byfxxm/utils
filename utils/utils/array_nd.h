@@ -90,17 +90,15 @@ public:
 	}
 
 private:
-	template <typename T1, typename... Ts>
+	template <typename T1, typename... Ts, typename = std::enable_if_t<std::is_integral_v<T1>>>
 	void EmplaceDim(size_t idx, T1 t1, Ts... ts) {
-		static_assert(std::is_integral_v<T1> || std::is_enum_v<T1>);
 		dim_[idx] = t1;
 		if constexpr (sizeof...(ts) > 0)
 			EmplaceDim(++idx, ts...);
 	}
 
-	template <typename T1, typename... Ts>
+	template <typename T1, typename... Ts, typename = std::enable_if_t<std::is_integral_v<T1>>>
 	T* Index(size_t idx, T* p, T1 t1, Ts... ts) const {
-		static_assert(std::is_integral_v<T1> || std::is_enum_v<T1>);
 		assert((size_t)t1 < dim_[idx]);
 		return Index(idx + 1, &p[factor_[idx] * t1], ts...);
 	}
