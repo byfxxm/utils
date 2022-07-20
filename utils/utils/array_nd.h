@@ -94,7 +94,7 @@ private:
 	void EmplaceDim(size_t idx, T1 t1, Ts... ts) {
 		dim_[idx] = t1;
 		if constexpr (sizeof...(ts) > 0)
-			EmplaceDim(++idx, ts...);
+			EmplaceDim(idx + 1, ts...);
 	}
 
 	template <typename T1, typename... Ts, typename = std::enable_if_t<std::is_integral_v<T1>>>
