@@ -70,6 +70,9 @@ public:
 	}
 
 	ArrayNd& operator=(const ArrayNd& arr) {
+		if (this == &arr)
+			return *this;
+
 		assert(arr.ele_);
 		ele_cnt_ = arr.ele_cnt_;
 		memcpy(dim_, arr.dim_, sizeof(dim_));
