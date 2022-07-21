@@ -10,6 +10,7 @@
 #include "warrior.h"
 #include "metaprogramming_practice.h"
 #include "n_queens.h"
+#include "asm.h"
 
 void TestArrayNd() {
 	class A {
@@ -211,6 +212,11 @@ void TestNQueens() {
 	}
 }
 
+void TestAsm() {
+	int a[100]{};
+	Memset(a, (int)2, 100);
+}
+
 int main() {
 	TestArrayNd();
 	TestVariableBuffer();
@@ -219,5 +225,6 @@ int main() {
 	TestWarrior();
 	TestMetaprogramming();
 	TestNQueens();
+	TestAsm();
 	return 0;
 }
