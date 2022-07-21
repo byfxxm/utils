@@ -1,6 +1,6 @@
 #pragma once
 
-void Memset(int* p, int v, int c) {
+inline void Memset(int* p, int v, int c) {
 	__asm {
 		mov ecx, c
 		mov edi, p
