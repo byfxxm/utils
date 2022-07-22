@@ -5,7 +5,6 @@ inline void Memset(int* p, int v, int c) {
 		mov ecx, c
 		mov edi, p
 		mov eax, v
-		mov es:[edi], eax
 		rep stos dword ptr es:[edi]
 	}
 }
