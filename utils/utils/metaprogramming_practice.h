@@ -57,4 +57,51 @@ namespace MP {
 
 	template <int N>
 	static constexpr auto PiN_v = PiN<N>::value;
+
+	/// <summary>
+	/// 求pi的第N位的数值（第二种实现）
+	/// </summary>
+	template <int N>
+	struct PiN1 {
+		template <double N>
+		struct Sqrt {
+			static constexpr double _Sqrt(double n, double low, double high) {
+				double half = (low + high) / 2;
+				if ((n > half && n - half < 1e-1) || (n <= half && half - n < 1e-1))
+					return half;
+
+				double half_pow = half * half;
+				if (half_pow > n)
+					_Sqrt(n, low, half);
+				else
+					_Sqrt(n, half, high);
+			}
+
+			static constexpr double value = _Sqrt(N, 0., N);
+		};
+
+		template <int N>
+		struct Pi {
+			static constexpr double Sum(int n) {
+				if (n == 1)
+					return 1;
+
+				return 1. / (n * n) + Sum(n - 1);
+			}
+
+			static constexpr double value = Sqrt<Sum(N) * 6>::value;
+		};
+
+		static constexpr int Factor(int n) {
+			if (n == 1)
+				return 1;
+
+			return 10 * Factor(n - 1);
+		}
+
+		static constexpr int value = int(Pi<N * 100>::value * Factor(N)) % 10;
+	};
+
+	template <int N>
+	static constexpr auto PiN1_v = PiN1<N>::value;
 }
