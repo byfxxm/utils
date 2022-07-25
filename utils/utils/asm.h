@@ -1,6 +1,8 @@
 #pragma once
+#include <type_traits>
 
-inline void Memset(int* p, int v, int c) {
+template <class T, class = std::enable_if_t<sizeof(T) == 4>>
+inline void Memset(T* p, T v, int c) {
 	__asm {
 		mov ecx, c
 		mov edi, p
