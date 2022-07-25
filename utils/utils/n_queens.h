@@ -62,7 +62,7 @@ namespace NQueens {
 	private:
 		void Generate(QueensArray& queens, int index = 0) {
 			if (index == N) {
-				if (IsPeace(queens))
+				if (Checkmate(queens))
 					resolves_.push_back(queens);
 
 				return;
@@ -74,7 +74,7 @@ namespace NQueens {
 			}
 		}
 
-		bool IsPeace(const QueensArray& queens) const {
+		bool Checkmate(const QueensArray& queens) const {
 			for (int i = 0; i < N; ++i)
 				for (int j = 0; j < N; ++j)
 					if (i != j && queens[i].InRange(queens[j]))
