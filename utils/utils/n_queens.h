@@ -4,36 +4,36 @@
 #include <array>
 
 namespace NQueens {
-	template <int N>
+	template <size_t N>
 	class Queens {
 	public:
 		class Queen {
 		public:
-			void SetX(int x) {
+			void SetX(size_t x) {
 				assert(x >= 0 && x < N);
 				x_ = x;
 			}
 
-			void SetY(int y) {
+			void SetY(size_t y) {
 				assert(y >= 0 && y < N);
 				y_ = y;
 			}
 
-			int GetX() const {
+			size_t GetX() const {
 				return x_;
 			}
 
-			int GetY() const {
+			size_t GetY() const {
 				return y_;
 			}
 
 			bool InRange(const Queen& queen) const {
-				return x_ == queen.GetX() || y_ == queen.GetY() || abs(x_ - queen.GetX()) == abs(y_ - queen.GetY());
+				return x_ == queen.GetX() || y_ == queen.GetY() || abs(intptr_t(x_ - queen.GetX())) == abs(intptr_t(y_ - queen.GetY()));
 			}
 
 		private:
-			int x_ = 0;
-			int y_ = 0;
+			size_t x_ = 0;
+			size_t y_ = 0;
 		};
 
 		using QueensArray = std::array<Queen, N>;
@@ -42,25 +42,25 @@ namespace NQueens {
 	public:
 		Queens() {
 			QueensArray queens;
-			for (int i = 0; i < N; ++i)
+			for (size_t i = 0; i < N; ++i)
 				queens[i].SetX(i);
 
 			Generate(queens);
 		}
 
-		int Count() const {
+		size_t Count() const {
 			return resolves_.size();
 		}
 
-		const QueensArray& operator[](int index) const {
-			if (index < 0 || index >= Count())
+		const QueensArray& operator[](size_t index) const {
+			if (index >= Count())
 				std::terminate();
 
 			return resolves_[index];
 		}
 
 	private:
-		void Generate(QueensArray& queens, int index = 0) {
+		void Generate(QueensArray& queens, size_t index = 0) {
 			if (index == N) {
 				if (Checkmate(queens))
 					resolves_.push_back(queens);
@@ -75,8 +75,8 @@ namespace NQueens {
 		}
 
 		bool Checkmate(const QueensArray& queens) const {
-			for (int i = 0; i < N; ++i)
-				for (int j = 0; j < N; ++j)
+			for (size_t i = 0; i < N; ++i)
+				for (size_t j = 0; j < N; ++j)
 					if (i != j && queens[i].InRange(queens[j]))
 						return false;
 

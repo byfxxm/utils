@@ -72,7 +72,7 @@ void TestArrayNd() {
 }
 
 void TestVariableBuffer() {
-	VariableBuffer<13> vbuf;
+	VariableBuffer<20> vbuf;
 	double x = 3.1415926;
 	int y = -999;
 	short z = 66;
@@ -137,10 +137,10 @@ void TestVariableBuffer() {
 }
 
 void TestHashMap() {
-	HashMap<int, double> m;
+	HashMap<size_t, double> m;
 	m[203] = 3.1415926;
 	for (size_t i = 0; i < 100; ++i)
-		m.Insert(i, i);
+		m.Insert(i, (double)i);
 	for (size_t i = 0; i < 100; ++i)
 		m.Erase(i);
 
@@ -210,7 +210,7 @@ void TestNQueens() {
 	NQueens::Queens<8> queens_8;
 	for (int i = 0; i < queens_8.Count(); ++i) {
 		std::cout << "resolve " << i << ":" << std::endl;
-		for (auto q : queens_8[i])
+		for (auto& q : queens_8[i])
 			std::cout << q.GetX() << ", " << q.GetY() << std::endl;
 	}
 }
