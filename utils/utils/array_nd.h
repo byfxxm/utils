@@ -16,8 +16,8 @@ template <typename T, size_t N, typename = std::enable_if_t<(N > 0)>>
 class ArrayNd {
 public:
 	template <typename... Ts, typename = std::enable_if_t<sizeof...(Ts) == N>>
-	ArrayNd(Ts... ts) {
-		EmplaceDim(0, ts...);
+	ArrayNd(Ts&&... ts) {
+		EmplaceDim(0, std::forward<Ts>(ts)...);
 		for (auto i = 0; i < N; ++i) {
 			ele_cnt_ *= dim_[i];
 			factor_[i] = 1;
@@ -52,15 +52,15 @@ public:
 	}
 
 	template <typename... Ts, typename = std::enable_if_t<sizeof...(Ts) == N>>
-	T& operator()(Ts... ts) const {
+	T& operator()(Ts&&... ts) const {
 		assert(ele_);
-		return *Index(0, ele_, ts...);
+		return *Index(0, ele_, std::forward<Ts>(ts)...);
 	}
 
 	template <typename... Ts, typename = std::enable_if_t<sizeof...(Ts) < N>>
-	T* operator()(Ts... ts) const {
+	T* operator()(Ts&&... ts) const {
 		assert(ele_);
-		return Index(0, ele_, ts...);
+		return Index(0, ele_, std::forward<Ts>(ts)...);
 	}
 
 	size_t operator[](size_t idx) const {
@@ -93,17 +93,17 @@ public:
 	}
 
 private:
-	template <typename T1, typename... Ts, typename = std::enable_if_t<std::is_integral_v<T1>>>
-	void EmplaceDim(size_t idx, T1 t1, Ts... ts) {
+	template <typename T1, typename... Ts, typename = std::enable_if_t<std::is_integral_v<std::remove_reference_t<T1>>>>
+	void EmplaceDim(size_t idx, T1&& t1, Ts&&... ts) {
 		dim_[idx] = t1;
 		if constexpr (sizeof...(ts) > 0)
-			EmplaceDim(idx + 1, ts...);
+			EmplaceDim(idx + 1, std::forward<Ts>(ts)...);
 	}
 
-	template <typename T1, typename... Ts, typename = std::enable_if_t<std::is_integral_v<T1>>>
-	T* Index(size_t idx, T* p, T1 t1, Ts... ts) const {
+	template <typename T1, typename... Ts, typename = std::enable_if_t<std::is_integral_v<std::remove_reference_t<T1>>>>
+	T* Index(size_t idx, T* p, T1&& t1, Ts&&... ts) const {
 		assert((size_t)t1 < dim_[idx]);
-		return Index(idx + 1, &p[factor_[idx] * t1], ts...);
+		return Index(idx + 1, &p[factor_[idx] * t1], std::forward<Ts>(ts)...);
 	}
 
 	T* Index(size_t, T* p) const {
