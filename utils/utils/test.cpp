@@ -154,6 +154,7 @@ void TestRingBuffer() {
 	RingBuffer<int, 1024> rb1;
 	RingBuffer<int, 1023> rb2;
 	int temp;
+
 	auto time1 = std::chrono::steady_clock::now();
 	for (int i = 0; i < 10000; ++i) {
 		while (rb1.Write(5));
@@ -166,8 +167,8 @@ void TestRingBuffer() {
 	}
 	auto time3 = std::chrono::steady_clock::now();
 
-	std::cout << std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1).count() << std::endl;
-	std::cout << std::chrono::duration_cast<std::chrono::microseconds>(time3 - time2).count() << std::endl;
+	std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(time2 - time1).count() << " ms" << std::endl;
+	std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(time3 - time2).count() << " ms" << std::endl;
 }
 
 void TestWarrior() {
