@@ -155,17 +155,17 @@ void TestRingBuffer() {
 	RingBuffer<int, 1023> rb2;
 	int temp;
 
-	auto time1 = std::chrono::steady_clock::now();
+	auto time1 = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < 10000; ++i) {
 		while (rb1.Write(5));
 		while (rb1.Read(temp));
 	}
-	auto time2 = std::chrono::steady_clock::now();
+	auto time2 = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < 10000; ++i) {
 		while (rb2.Write(5));
 		while (rb2.Read(temp));
 	}
-	auto time3 = std::chrono::steady_clock::now();
+	auto time3 = std::chrono::high_resolution_clock::now();
 
 	std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(time2 - time1).count() << " ms" << std::endl;
 	std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(time3 - time2).count() << " ms" << std::endl;
@@ -209,7 +209,7 @@ void TestMetaprogramming() {
 
 void TestNQueens() {
 	NQueens::Queens<8> queens_8;
-	for (int i = 0; i < queens_8.Count(); ++i) {
+	for (size_t i = 0; i < queens_8.Count(); ++i) {
 		std::cout << "resolve " << i << ":" << std::endl;
 		for (auto& q : queens_8[i])
 			std::cout << q.GetX() << ", " << q.GetY() << std::endl;
