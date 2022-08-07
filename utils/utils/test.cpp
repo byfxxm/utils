@@ -198,13 +198,6 @@ void TestMetaprogramming() {
 
 	static_assert(MP::HasType_v<A>);
 	static_assert(!MP::HasType_v<B>);
-
-	constexpr auto x = MP::PiN<5>::Pi<500>::value;
-	std::cout << sqrt(x) << std::endl;
-	//static_assert(MP::PiN_v<2> == 4);
-
-	//constexpr auto y = MP::PiN1<5>::Pi<500>::value;
-	//std::cout << y << std::endl;
 }
 
 void TestNQueens() {
