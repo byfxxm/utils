@@ -1,6 +1,6 @@
 #pragma once
 
-namespace MP {
+namespace Meta {
 	/// <summary>
 	/// 判断是否有子类型模板，利用SFINAE特性实现
 	/// </summary>

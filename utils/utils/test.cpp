@@ -196,8 +196,8 @@ void TestMetaprogramming() {
 
 	struct B {};
 
-	static_assert(MP::HasType_v<A>);
-	static_assert(!MP::HasType_v<B>);
+	static_assert(Meta::HasType_v<A>);
+	static_assert(!Meta::HasType_v<B>);
 }
 
 void TestNQueens() {
