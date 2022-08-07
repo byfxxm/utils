@@ -8,7 +8,7 @@ namespace MP {
 	template <class T, class = typename T::type>
 	constexpr bool _HasType(){
 		return true;
-	};
+	}
 
 	template <class>
 	constexpr bool _HasType(...) {
