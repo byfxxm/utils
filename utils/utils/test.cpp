@@ -83,6 +83,11 @@ void TestArrayNd() {
 	a[1][2][3] = 2;
 	auto b = std::move(a);
 	assert(b[1][2][3] == 2);
+	b.Reset();
+	assert(b[1][2][3] == 0);
+	
+	array_nd::ArrayNd<size_t, 1> c(5);
+	assert(c[1] == 0);
 }
 
 void TestVariableBuffer() {
@@ -229,14 +234,14 @@ void TestAsm() {
 }
 
 int main() {
-	//TestArrayNdCont();
+	TestArrayNdCont();
 	TestArrayNd();
-	//TestVariableBuffer();
-	//TestHashMap();
-	//TestRingBuffer();
-	//TestWarrior();
-	//TestMetaprogramming();
-	//TestNQueens();
-	//TestAsm();
+	TestVariableBuffer();
+	TestHashMap();
+	TestRingBuffer();
+	TestWarrior();
+	TestMetaprogramming();
+	TestNQueens();
+	TestAsm();
 	return 0;
 }

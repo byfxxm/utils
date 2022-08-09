@@ -26,6 +26,7 @@ namespace array_nd {
 
 		_Base& operator[](size_t idx) {
 			assert(idx >= 0 && idx < count_);
+			assert(base_address_);
 			return base_address_[idx];
 		}
 
@@ -49,6 +50,8 @@ namespace array_nd {
 		}
 
 		T& operator[](size_t idx) {
+			assert(idx >= 0 && idx < count_);
+			assert(base_address_);
 			return base_address_[idx];
 		}
 
