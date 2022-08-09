@@ -11,10 +11,10 @@ namespace array_nd {
 
 	public:
 		template <class... Args, class = std::enable_if_t<sizeof...(Args) == N - 1>>
-		ArrayNd(size_t first, Args&&... args) : count_(first) {
+		ArrayNd(size_t first, Args... args) : count_(first) {
 			base_address_.reset(new _Base[count_]);
 			for (size_t i = 0; i < count_; ++i)
-				new(&base_address_[i]) _Base(std::forward<Args>(args)...);
+				new(&base_address_[i]) _Base(args...);
 		}
 
 		ArrayNd() = default;
