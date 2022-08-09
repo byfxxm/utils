@@ -19,6 +19,11 @@ namespace array_nd {
 
 		ArrayNd() = default;
 
+		void Reset() {
+			for (size_t i = 0; i < count_; ++i)
+				base_address_[i].Reset();
+		}
+
 		_Base& operator[](size_t idx) {
 			assert(idx >= 0 && idx < count_);
 			return base_address_[idx];
@@ -34,10 +39,14 @@ namespace array_nd {
 	public:
 		ArrayNd(size_t first) : count_(first) {
 			base_address_.reset(new T[count_]);
-			memset(base_address_.get(), 0, count_ * sizeof(T));
+			Reset();
 		}
 
 		ArrayNd() = default;
+
+		void Reset() {
+			memset(base_address_.get(), 0, count_ * sizeof(T));
+		}
 
 		T& operator[](size_t idx) {
 			return base_address_[idx];

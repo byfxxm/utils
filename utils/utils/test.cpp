@@ -79,6 +79,10 @@ void TestArrayNd() {
 		for (size_t j = 0; j < 8; ++j)
 			for (size_t k = 0; k < 9; ++k)
 				assert(a[i][j][k] == 0);
+
+	a[1][2][3] = 2;
+	auto b = std::move(a);
+	assert(b[1][2][3] == 2);
 }
 
 void TestVariableBuffer() {
