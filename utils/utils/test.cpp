@@ -74,8 +74,11 @@ void TestArrayNdCont() {
 
 void TestArrayNd() {
 	array_nd::ArrayNd<size_t, 3> a(7, 8, 9);
-	a[0][1][2] = 5;
-	assert(a[0][1][2] == 5);
+
+	for (size_t i = 0; i < 7; ++i)
+		for (size_t j = 0; j < 8; ++j)
+			for (size_t k = 0; k < 9; ++k)
+				assert(a[i][j][k] == 0);
 }
 
 void TestVariableBuffer() {
@@ -222,14 +225,14 @@ void TestAsm() {
 }
 
 int main() {
-	TestArrayNdCont();
+	//TestArrayNdCont();
 	TestArrayNd();
-	TestVariableBuffer();
-	TestHashMap();
-	TestRingBuffer();
-	TestWarrior();
-	TestMetaprogramming();
-	TestNQueens();
-	TestAsm();
+	//TestVariableBuffer();
+	//TestHashMap();
+	//TestRingBuffer();
+	//TestWarrior();
+	//TestMetaprogramming();
+	//TestNQueens();
+	//TestAsm();
 	return 0;
 }
