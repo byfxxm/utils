@@ -24,7 +24,7 @@ namespace array_nd {
 				base_address_[i].Reset();
 		}
 
-		_Base& operator[](size_t idx) {
+		const _Base& operator[](size_t idx) const {
 			assert(idx >= 0 && idx < count_);
 			assert(base_address_);
 			return base_address_[idx];
@@ -49,7 +49,7 @@ namespace array_nd {
 			memset(base_address_.get(), 0, count_ * sizeof(T));
 		}
 
-		T& operator[](size_t idx) {
+		T& operator[](size_t idx) const {
 			assert(idx >= 0 && idx < count_);
 			assert(base_address_);
 			return base_address_[idx];
