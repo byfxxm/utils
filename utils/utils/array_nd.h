@@ -1,126 +1,51 @@
 #pragma once
 #include <type_traits>
-#include <cstring>
+#include <memory>
 #include <cassert>
 
-/*
-* 多维数组
-* usage:
-*		ArrayNd<char, 3> arr(7, 8, 9); // 构建对象（元素类型为 char，维数是 3，内存初始化为 0xff，第一、第二、第三维度分别是 7、8、9）
-*		char c = arr(1, 2, 3); // 随机访问数组，参数个数等于维数时，返回引用
-*		char* d = arr(5); // 参数个数小于维数时，返回指针
-*		size_t e = arr[0]; // 获取第一维度
-*		arr.Reset(0xff); // 内存初始化，默认每个字节初始化为 0
-*/
-template <typename T, size_t N, typename = std::enable_if_t<(N > 0)>>
-class ArrayNd {
-public:
-	template <typename... Ts, typename = std::enable_if_t<sizeof...(Ts) == N>>
-	ArrayNd(Ts&&... ts) {
-		EmplaceDim(0, std::forward<Ts>(ts)...);
-		for (auto i = 0; i < N; ++i) {
-			ele_cnt_ *= dim_[i];
-			factor_[i] = 1;
-			for (auto j = i + 1; j < N; ++j)
-				factor_[i] *= dim_[j];
+namespace array_nd {
+	template <class T, size_t N, class = std::enable_if_t<(N > 0)>>
+	class ArrayNd {
+	private:
+		using _Base = ArrayNd<T, N - 1>;
+
+	public:
+		template <class... Args, class = std::enable_if_t<sizeof...(Args) == N - 1>>
+		ArrayNd(size_t first, Args... args) : count_(first) {
+			base_address_.reset(new _Base[count_]);
+			for (size_t i = 0; i < count_; ++i) {
+				new(&base_address_[i]) _Base(args...);
+			}
 		}
 
-		ele_ = new T[ele_cnt_];
-		Reset();
-	}
+		ArrayNd() = default;
 
-	ArrayNd(const ArrayNd& arr) {
-		assert(arr.ele_);
-		memcpy(this, &arr, sizeof(arr));
-		ele_ = new T[ele_cnt_];
-		CopyEle(arr.ele_);
-	}
+		_Base& operator[](size_t idx) {
+			assert(idx >= 0 && idx < count_);
+			return base_address_[idx];
+		}
 
-	ArrayNd(ArrayNd&& arr) noexcept {
-		assert(arr.ele_);
-		memcpy(this, &arr, sizeof(arr));
-		arr.ele_ = nullptr;
-	}
+	private:
+		std::shared_ptr<_Base[]> base_address_;
+		size_t count_{ 0 };
+	};
 
-	~ArrayNd() {
-		delete[] ele_;
-	}
+	template <class T>
+	class ArrayNd<T, 1> {
+	public:
+		ArrayNd(size_t first) : count_(first) {
+			base_address_.reset(new T[count_]);
+			memset(base_address_.get(), 0, count_ * sizeof(T));
+		}
 
-	void Reset(unsigned char val = 0) {
-		assert(ele_);
-		memset(ele_, val, ele_cnt_ * sizeof(T));
-	}
+		ArrayNd() = default;
 
-	template <typename... Ts, typename = std::enable_if_t<sizeof...(Ts) == N>>
-	T& operator()(Ts&&... ts) const {
-		assert(ele_);
-		return *Index(0, ele_, std::forward<Ts>(ts)...);
-	}
+		T& operator[](size_t idx) {
+			return base_address_[idx];
+		}
 
-	template <typename... Ts, typename = std::enable_if_t<sizeof...(Ts) < N>>
-	T* operator()(Ts&&... ts) const {
-		assert(ele_);
-		return Index(0, ele_, std::forward<Ts>(ts)...);
-	}
-
-	size_t operator[](size_t idx) const {
-		assert(idx >= 0 && idx < N);
-		assert(ele_);
-		return dim_[idx];
-	}
-
-	ArrayNd& operator=(const ArrayNd& arr) {
-		if (this == &arr)
-			return *this;
-
-		assert(arr.ele_);
-		ele_cnt_ = arr.ele_cnt_;
-		memcpy(dim_, arr.dim_, sizeof(dim_));
-		memcpy(factor_, arr.factor_, sizeof(factor_));
-
-		delete[] ele_;
-		ele_ = new T[ele_cnt_];
-		CopyEle(arr.ele_);
-		return *this;
-	}
-
-	T* begin() {
-		return ele_;
-	}
-
-	T* end() {
-		return ele_ + ele_cnt_;
-	}
-
-private:
-	template <typename T1, typename... Ts, typename = std::enable_if_t<std::is_integral_v<std::remove_reference_t<T1>>>>
-	void EmplaceDim(size_t idx, T1&& t1, Ts&&... ts) {
-		dim_[idx] = t1;
-		if constexpr (sizeof...(ts) > 0)
-			EmplaceDim(idx + 1, std::forward<Ts>(ts)...);
-	}
-
-	template <typename T1, typename... Ts, typename = std::enable_if_t<std::is_integral_v<std::remove_reference_t<T1>>>>
-	T* Index(size_t idx, T* p, T1&& t1, Ts&&... ts) const {
-		assert((size_t)t1 < dim_[idx]);
-		return Index(idx + 1, &p[factor_[idx] * t1], std::forward<Ts>(ts)...);
-	}
-
-	T* Index(size_t, T* p) const {
-		return p;
-	}
-
-	void CopyEle(T* p) {
-		if constexpr (std::is_trivial_v<T>)
-			memcpy(ele_, p, ele_cnt_ * sizeof(T));
-		else
-			for (size_t i = 0; i < ele_cnt_; ++i)
-				ele_[i] = p[i];
-	}
-
-private:
-	T* ele_{ nullptr };
-	size_t ele_cnt_{ 1 };
-	size_t dim_[N]{};
-	size_t factor_[N]{};
-};
+	private:
+		std::shared_ptr<T[]> base_address_;
+		size_t count_{ 0 };
+	};
+}

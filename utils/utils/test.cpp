@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <condition_variable>
 #include "array_nd.h"
+#include "array_nd_cont.h"
 #include "variable_buffer.h"
 #include "hash_map.h"
 #include "ring_buffer.h"
@@ -12,7 +13,7 @@
 #include "n_queens.h"
 #include "asm.h"
 
-void TestArrayNd() {
+void TestArrayNdCont() {
 	class A {
 	public:
 		A() {}
@@ -69,6 +70,12 @@ void TestArrayNd() {
 	ArrayNd<A, 2> f1(f);
 	ArrayNd<A, 2> f2(3, 4);
 	f = f2;
+}
+
+void TestArrayNd() {
+	array_nd::ArrayNd<size_t, 3> a(7, 8, 9);
+	a[0][1][2] = 5;
+	assert(a[0][1][2] == 5);
 }
 
 void TestVariableBuffer() {
@@ -215,6 +222,7 @@ void TestAsm() {
 }
 
 int main() {
+	TestArrayNdCont();
 	TestArrayNd();
 	TestVariableBuffer();
 	TestHashMap();
