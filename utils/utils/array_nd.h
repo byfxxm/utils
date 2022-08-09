@@ -10,16 +10,16 @@ namespace array_nd {
 		using _Base = ArrayNd<T, N - 1>;
 
 	public:
-		ArrayNd() = default;
-		ArrayNd(const ArrayNd&) = delete;
-		ArrayNd(ArrayNd&&) noexcept = default;
-
 		template <class... Args, class = std::enable_if_t<sizeof...(Args) == N - 1>>
 		ArrayNd(size_t first, Args... args) : count_(first) {
 			base_address_.reset(new _Base[count_]);
 			for (size_t i = 0; i < count_; ++i)
 				new(&base_address_[i]) _Base(args...);
 		}
+
+		ArrayNd() = default;
+		ArrayNd(const ArrayNd&) = delete;
+		ArrayNd(ArrayNd&&) noexcept = default;
 
 		void Reset(T val) {
 			for (size_t i = 0; i < count_; ++i)
@@ -40,14 +40,14 @@ namespace array_nd {
 	template <class T>
 	class ArrayNd<T, 1> {
 	public:
-		ArrayNd() = default;
-		ArrayNd(const ArrayNd&) = delete;
-		ArrayNd(ArrayNd&&) noexcept = default;
-
 		ArrayNd(size_t first) : count_(first) {
 			base_address_.reset(new T[count_]);
 			Reset(static_cast<std::decay_t<T>>(0));
 		}
+
+		ArrayNd() = default;
+		ArrayNd(const ArrayNd&) = delete;
+		ArrayNd(ArrayNd&&) noexcept = default;
 
 		void Reset(T val) {
 			for (size_t i = 0; i < count_; ++i)
