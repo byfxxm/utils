@@ -4,7 +4,7 @@
 #include <cassert>
 
 namespace array_nd {
-	template <class T, size_t N, class = std::enable_if_t<(N > 0)>>
+	template <class T, size_t N, class = std::enable_if_t<(N > 0) && (std::is_integral_v<std::decay_t<T>> || std::is_floating_point_v<std::decay_t<T>>)>>
 	class ArrayNd {
 	private:
 		using _Base = ArrayNd<T, N - 1>;
@@ -19,9 +19,9 @@ namespace array_nd {
 
 		ArrayNd() = default;
 
-		void Reset() {
+		void Reset(T val) {
 			for (size_t i = 0; i < count_; ++i)
-				base_address_[i].Reset();
+				base_address_[i].Reset(val);
 		}
 
 		const _Base& operator[](size_t idx) const {
@@ -40,13 +40,14 @@ namespace array_nd {
 	public:
 		ArrayNd(size_t first) : count_(first) {
 			base_address_.reset(new T[count_]);
-			Reset();
+			Reset(static_cast<std::decay_t<T>>(0));
 		}
 
 		ArrayNd() = default;
 
-		void Reset() {
-			memset(base_address_.get(), 0, count_ * sizeof(T));
+		void Reset(T val) {
+			for (size_t i = 0; i < count_; ++i)
+				base_address_[i] = val;
 		}
 
 		T& operator[](size_t idx) const {
