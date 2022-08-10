@@ -40,8 +40,8 @@ namespace array_nd {
 	template <class T>
 	class ArrayNd<T, 1> {
 	public:
-		template <class First>
-		ArrayNd(First&& first) : count_(first) {
+		template <class Last>
+		ArrayNd(Last&& last) : count_(last) {
 			base_addr_ = std::make_shared<T[]>(count_);
 			Memset(static_cast<std::decay_t<T>>(0));
 		}
