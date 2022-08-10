@@ -21,7 +21,7 @@ namespace array_nd {
 		ArrayNd(const ArrayNd&) = delete;
 		ArrayNd(ArrayNd&&) noexcept = default;
 
-		void Memset(T val) {
+		void Memset(T val) const {
 			for (size_t i = 0; i < count_; ++i)
 				base_addr_[i].Memset(val);
 		}
@@ -49,7 +49,7 @@ namespace array_nd {
 		ArrayNd(const ArrayNd&) = delete;
 		ArrayNd(ArrayNd&&) noexcept = default;
 
-		void Memset(T val) {
+		void Memset(T val) const {
 			for (size_t i = 0; i < count_; ++i)
 				base_addr_[i] = val;
 		}

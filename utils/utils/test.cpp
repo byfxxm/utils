@@ -80,6 +80,10 @@ void TestArrayNd() {
 			for (size_t k = 0; k < 9; ++k)
 				assert(a[i][j][k] == 50);
 
+	a[1].Memset(10);
+	assert(a[1][2][3] == 10);
+	assert(a[2][2][3] == 50);
+
 	a[1][2][3] = 2;
 	auto b = std::move(a);
 	assert(b[1][2][3] == 2);
