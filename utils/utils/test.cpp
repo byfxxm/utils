@@ -83,7 +83,7 @@ void TestArrayNd() {
 	a[1][2][3] = 2;
 	auto b = std::move(a);
 	assert(b[1][2][3] == 2);
-	b.Reset(25);
+	b.Memset(25);
 	assert(b[1][2][3] == 25);
 	
 	array_nd::ArrayNd<size_t, 1> c(5);

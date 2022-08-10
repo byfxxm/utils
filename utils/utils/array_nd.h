@@ -21,9 +21,9 @@ namespace array_nd {
 		ArrayNd(const ArrayNd&) = delete;
 		ArrayNd(ArrayNd&&) noexcept = default;
 
-		void Reset(T val) {
+		void Memset(T val) {
 			for (size_t i = 0; i < count_; ++i)
-				base_addr_[i].Reset(val);
+				base_addr_[i].Memset(val);
 		}
 
 		const _Base& operator[](size_t idx) const {
@@ -42,14 +42,14 @@ namespace array_nd {
 	public:
 		ArrayNd(size_t first) : count_(first) {
 			base_addr_ = std::make_shared<T[]>(count_);
-			Reset(static_cast<std::decay_t<T>>(0));
+			Memset(static_cast<std::decay_t<T>>(0));
 		}
 
 		ArrayNd() = default;
 		ArrayNd(const ArrayNd&) = delete;
 		ArrayNd(ArrayNd&&) noexcept = default;
 
-		void Reset(T val) {
+		void Memset(T val) {
 			for (size_t i = 0; i < count_; ++i)
 				base_addr_[i] = val;
 		}
