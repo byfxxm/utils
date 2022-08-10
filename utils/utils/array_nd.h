@@ -4,7 +4,7 @@
 #include <cassert>
 
 namespace array_nd {
-	template <class T, size_t N, class = std::enable_if_t<std::is_arithmetic_v<std::decay_t<T>> && (N > 0)>>
+	template <class T, size_t N, class = std::enable_if_t<std::is_arithmetic_v<T> && (N > 0)>>
 	class ArrayNd {
 	private:
 		using _Base = ArrayNd<T, N - 1>;
