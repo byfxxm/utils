@@ -42,7 +42,7 @@ namespace array_nd {
 	public:
 		ArrayNd(size_t last) : count_(last) {
 			base_addr_ = std::make_shared<T[]>(count_);
-			Memset(static_cast<std::decay_t<T>>(0));
+			Memset(static_cast<T>(0));
 		}
 
 		ArrayNd() = default;
