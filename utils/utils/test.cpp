@@ -74,11 +74,11 @@ void TestArrayNdCont() {
 
 void TestArrayNd() {
 	array_nd::ArrayNd<size_t, 3> a(7, 8, 9);
-
+	a.Memset(50);
 	for (size_t i = 0; i < 7; ++i)
 		for (size_t j = 0; j < 8; ++j)
 			for (size_t k = 0; k < 9; ++k)
-				assert(a[i][j][k] == 0);
+				assert(a[i][j][k] == 50);
 
 	a[1][2][3] = 2;
 	auto b = std::move(a);
