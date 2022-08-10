@@ -10,11 +10,11 @@ namespace array_nd {
 		using _Base = ArrayNd<T, N - 1>;
 
 	public:
-		template <class First, class... Rest, class = std::enable_if_t<sizeof...(Rest) == N - 1>>
-		ArrayNd(First&& first, Rest&&... rest) : count_(std::forward<First>(first)) {
+		template <class... Args, class = std::enable_if_t<sizeof...(Args) == N - 1>>
+		ArrayNd(size_t first, Args... args) : count_(first) {
 			base_addr_ = std::make_shared<_Base[]>(count_);
 			for (size_t i = 0; i < count_; ++i)
-				new(&base_addr_[i]) _Base(std::forward<Rest>(rest)...);
+				new(&base_addr_[i]) _Base(args...);
 		}
 
 		ArrayNd() = default;
@@ -40,8 +40,7 @@ namespace array_nd {
 	template <class T>
 	class ArrayNd<T, 1> {
 	public:
-		template <class Last>
-		ArrayNd(Last&& last) : count_(std::forward<Last>(last)) {
+		ArrayNd(size_t last) : count_(last) {
 			base_addr_ = std::make_shared<T[]>(count_);
 			Memset(static_cast<std::decay_t<T>>(0));
 		}
