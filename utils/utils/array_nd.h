@@ -21,15 +21,15 @@ namespace array_nd {
 		ArrayNd(const ArrayNd&) = delete;
 		ArrayNd(ArrayNd&&) noexcept = default;
 
-		void Memset(T val) const {
-			for (size_t i = 0; i < count_; ++i)
-				base_addr_[i].Memset(val);
-		}
-
 		const _Base& operator[](size_t idx) const {
 			assert(idx >= 0 && idx < count_);
 			assert(base_addr_);
 			return base_addr_[idx];
+		}
+
+		void Memset(T val) const {
+			for (size_t i = 0; i < count_; ++i)
+				base_addr_[i].Memset(val);
 		}
 
 	private:
@@ -49,15 +49,15 @@ namespace array_nd {
 		ArrayNd(const ArrayNd&) = delete;
 		ArrayNd(ArrayNd&&) noexcept = default;
 
-		void Memset(T val) const {
-			for (size_t i = 0; i < count_; ++i)
-				base_addr_[i] = val;
-		}
-
 		T& operator[](size_t idx) const {
 			assert(idx >= 0 && idx < count_);
 			assert(base_addr_);
 			return base_addr_[idx];
+		}
+
+		void Memset(T val) const {
+			for (size_t i = 0; i < count_; ++i)
+				base_addr_[i] = val;
 		}
 
 	private:
