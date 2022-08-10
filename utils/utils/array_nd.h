@@ -27,6 +27,10 @@ namespace array_nd {
 			return base_addr_[idx];
 		}
 
+		operator T* () const {
+			return static_cast<T*>(*base_addr_.get());
+		}
+
 		void Memset(T val) const {
 			for (size_t i = 0; i < count_; ++i)
 				base_addr_[i].Memset(val);
@@ -53,6 +57,10 @@ namespace array_nd {
 			assert(idx >= 0 && idx < count_);
 			assert(base_addr_);
 			return base_addr_[idx];
+		}
+
+		operator T* () const {
+			return base_addr_.get();
 		}
 
 		void Memset(T val) const {
