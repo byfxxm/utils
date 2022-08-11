@@ -27,7 +27,7 @@ namespace array_nd {
 			return base_addr_[idx];
 		}
 
-		operator T* () const {
+		explicit operator T* () const {
 			return static_cast<T*>(*base_addr_.get());
 		}
 
@@ -59,7 +59,7 @@ namespace array_nd {
 			return base_addr_[idx];
 		}
 
-		operator T* () const {
+		explicit operator T* () const {
 			return base_addr_.get();
 		}
 

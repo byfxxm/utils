@@ -80,7 +80,7 @@ void TestArrayNd() {
 			for (size_t k = 0; k < 9; ++k)
 				assert(a[i][j][k] == 50);
 
-	size_t* pa1 = a[1];
+	auto pa1 = (size_t*)a[1];
 	*pa1 = 20;
 	assert(a[1][0][0] = 20);
 	a[1].Memset(10);
