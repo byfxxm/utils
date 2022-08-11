@@ -5,7 +5,7 @@
 
 namespace array_nd {
 	template <class T, size_t N, class = std::enable_if_t<std::is_arithmetic_v<T> && (N > 0)>>
-	class ArrayNd {
+	class ArrayNd final {
 	private:
 		using _Base = ArrayNd<T, N - 1>;
 
@@ -43,7 +43,7 @@ namespace array_nd {
 	};
 
 	template <class T>
-	class ArrayNd<T, 1> {
+	class ArrayNd<T, 1> final {
 	public:
 		ArrayNd(size_t last) : count_(last) {
 			base_addr_ = std::make_shared<T[]>(count_);
