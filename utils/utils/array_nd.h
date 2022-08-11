@@ -18,7 +18,6 @@ namespace array_nd {
 		}
 
 		ArrayNd() = default;
-		ArrayNd(const ArrayNd&) = delete;
 		ArrayNd(ArrayNd&&) noexcept = default;
 
 		const _Base& operator[](size_t idx) const {
@@ -50,7 +49,6 @@ namespace array_nd {
 		}
 
 		ArrayNd() = default;
-		ArrayNd(const ArrayNd&) = delete;
 		ArrayNd(ArrayNd&&) noexcept = default;
 
 		T& operator[](size_t idx) const {
