@@ -19,6 +19,8 @@ namespace array_nd {
 
 		ArrayNd() = default;
 		ArrayNd(ArrayNd&&) noexcept = default;
+		ArrayNd(const ArrayNd&) = delete;
+		ArrayNd& operator=(const ArrayNd&) = delete;
 
 		const _Base& operator[](size_t idx) const {
 			assert(idx >= 0 && idx < count_);
@@ -50,6 +52,8 @@ namespace array_nd {
 
 		ArrayNd() = default;
 		ArrayNd(ArrayNd&&) noexcept = default;
+		ArrayNd(const ArrayNd&) = delete;
+		ArrayNd& operator=(const ArrayNd&) = delete;
 
 		T& operator[](size_t idx) const {
 			assert(idx >= 0 && idx < count_);
