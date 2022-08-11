@@ -73,13 +73,14 @@ void TestArrayNdCont() {
 }
 
 void TestArrayNd() {
-	array_nd::ArrayNd<size_t, 3> a(7, 8, 9);
-	a.Memset(50);
+	array_nd::ArrayNd<size_t, 3> a1(7, 8, 9);
+	a1.Memset(50);
 	for (size_t i = 0; i < 7; ++i)
 		for (size_t j = 0; j < 8; ++j)
 			for (size_t k = 0; k < 9; ++k)
-				assert(a[i][j][k] == 50);
+				assert(a1[i][j][k] == 50);
 
+	decltype(a1) a(std::move(a1));
 	auto pa1 = (size_t*)a[1];
 	*pa1 = 20;
 	assert(a[1][0][0] = 20);
