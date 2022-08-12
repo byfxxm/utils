@@ -8,16 +8,17 @@ namespace array_nd {
 	class ArrayNd final {
 	private:
 		using _Base = ArrayNd<T, N - 1>;
+		friend class ArrayNd<T, N + 1>;
+		ArrayNd() = default;
 
 	public:
 		template <class... Args, class = std::enable_if_t<sizeof...(Args) == N - 1>>
 		ArrayNd(size_t first, Args... args) : count_(first) {
-			base_addr_ = std::make_shared<_Base[]>(count_);
+			base_addr_.reset(new _Base[count_]);
 			for (size_t i = 0; i < count_; ++i)
 				new(&base_addr_[i]) _Base(args...);
 		}
 
-		ArrayNd() = default;
 		ArrayNd(ArrayNd&&) noexcept = default;
 		ArrayNd(const ArrayNd&) = delete;
 		ArrayNd& operator=(const ArrayNd&) = delete;
@@ -44,13 +45,16 @@ namespace array_nd {
 
 	template <class T>
 	class ArrayNd<T, 1> final {
+	private:
+		friend class ArrayNd<T, 2>;
+		ArrayNd() = default;
+
 	public:
 		ArrayNd(size_t last) : count_(last) {
 			base_addr_ = std::make_shared<T[]>(count_);
 			Memset(static_cast<T>(0));
 		}
 
-		ArrayNd() = default;
 		ArrayNd(ArrayNd&&) noexcept = default;
 		ArrayNd(const ArrayNd&) = delete;
 		ArrayNd& operator=(const ArrayNd&) = delete;
