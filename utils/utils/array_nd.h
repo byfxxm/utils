@@ -9,7 +9,6 @@ namespace array_nd {
 	private:
 		using _Base = ArrayNd<T, N - 1>;
 		friend class ArrayNd<T, N + 1>;
-		ArrayNd() = default;
 
 	public:
 		template <class... Args, class = std::enable_if_t<sizeof...(Args) == N - 1>>
@@ -19,6 +18,10 @@ namespace array_nd {
 				new(&base_addr_[i]) _Base(args...);
 		}
 
+	private:
+		ArrayNd() = default;
+
+	public:
 		ArrayNd(ArrayNd&&) noexcept = default;
 		ArrayNd(const ArrayNd&) = delete;
 		ArrayNd& operator=(const ArrayNd&) = delete;
@@ -47,7 +50,6 @@ namespace array_nd {
 	class ArrayNd<T, 1> final {
 	private:
 		friend class ArrayNd<T, 2>;
-		ArrayNd() = default;
 
 	public:
 		ArrayNd(size_t last) : count_(last) {
@@ -55,6 +57,10 @@ namespace array_nd {
 			Memset(static_cast<T>(0));
 		}
 
+	private:
+		ArrayNd() = default;
+
+	public:
 		ArrayNd(ArrayNd&&) noexcept = default;
 		ArrayNd(const ArrayNd&) = delete;
 		ArrayNd& operator=(const ArrayNd&) = delete;
