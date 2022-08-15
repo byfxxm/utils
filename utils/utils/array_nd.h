@@ -62,17 +62,8 @@ namespace array_nd {
 				Memset(0);
 			}
 
-			ArrayNd(const ArrayNd& arr) {
-				assert(arr.mem_);
-				memcpy(this, &arr, sizeof(arr));
-				mem_ = new T[len_];
-				CopyMem(arr.mem_);
-			}
-
-			ArrayNd(ArrayNd&& arr) noexcept {
-				assert(arr.mem_);
-				memcpy(this, &arr, sizeof(arr));
-				arr.mem_ = nullptr;
+			decltype(auto) operator[](size_t idx) {
+				return BasePtr<N>(mem_.get(), &dims_.front(), &factors_.front())[idx];
 			}
 
 			template <typename T>
@@ -83,41 +74,12 @@ namespace array_nd {
 				}
 			}
 
-			decltype(auto) operator[](size_t idx) {
-				return BasePtr<N>(mem_.get(), &dims_.front(), &factors_.front())[idx];
-			}
-
-			ArrayNd& operator=(const ArrayNd& arr) {
-				if (this == &arr)
-					return *this;
-
-				assert(arr.mem_);
-				memcpy(this, &arr, sizeof(arr));
-				delete[] mem_;
-				mem_ = new T[len_];
-
-				for (size_t i = 0; i < len_; ++i)
-					new(mem_ + i) T(arr.mem_[i]);
-
-				return *this;
-			}
-
-			ArrayNd& operator=(ArrayNd&& arr) {
-				if (this == &arr)
-					return *this;
-
-				assert(arr.mem_);
-				memcpy(this, &arr, sizeof(arr));
-				arr.mem_ = nullptr;
-				return *this;
-			}
-
 		private:
 			template <typename... Args>
-			void SetDims(size_t idx, size_t first, Args... args) {
+			void SetDims(size_t idx, size_t first, Args&&... args) {
 				dims_[idx] = first;
 				if constexpr (sizeof...(args) > 0)
-					SetDims(idx + 1, args...);
+					SetDims(idx + 1, std::forward<Args>(args)...);
 			}
 
 		private:
