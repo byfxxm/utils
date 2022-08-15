@@ -51,14 +51,13 @@ namespace array_nd {
 		public:
 			template <class... Args, class = std::enable_if_t<sizeof...(Args) == N>>
 			ArrayNd(Args&&... args) : len_((... * args)), dims_{ static_cast<size_t>(args)... } {
+				mem_ = std::make_shared<T[]>(len_);
+				Memset(0);
 				for (size_t i = 0; i < N; ++i) {
 					factors_[i] = 1;
 					for (size_t j = i + 1; j < N; ++j)
 						factors_[i] *= dims_[j];
 				}
-
-				mem_ = std::make_shared<T[]>(len_);
-				Memset(0);
 			}
 
 			ArrayNd(const ArrayNd& arr) = delete;
