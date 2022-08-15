@@ -19,7 +19,7 @@ namespace array_nd {
 			public:
 				BasePtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d), factors_(f) {}
 
-				BasePtr<N - 1> operator[](size_t idx)&& {
+				BasePtr<N - 1> operator[](size_t idx) && {
 					assert(idx >= 0 && idx < dims_[0]);
 					return BasePtr<N - 1>(ptr_ + idx * factors_[0], dims_ + 1, factors_ + 1);
 				}
@@ -35,7 +35,7 @@ namespace array_nd {
 			public:
 				BasePtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d) {}
 
-				T& operator[](size_t idx)&& {
+				T& operator[](size_t idx) && {
 					assert(idx >= 0 && idx < dims_[0]);
 					return ptr_[idx];
 				}
@@ -94,13 +94,23 @@ namespace array_nd {
 					return *this;
 
 				assert(arr.mem_);
-				len_ = arr.len_;
-				memcpy(dims_, arr.dims_, sizeof(dims_));
-				memcpy(factors_, arr.factors_, sizeof(factors_));
-
+				memcpy(this, &arr, sizeof(arr));
 				delete[] mem_;
 				mem_ = new T[len_];
-				CopyMem(arr.mem_);
+
+				for (size_t i = 0; i < len_; ++i)
+					new(mem_ + i) T(arr.mem_[i]);
+
+				return *this;
+			}
+
+			ArrayNd& operator=(ArrayNd&& arr) {
+				if (this == &arr)
+					return *this;
+
+				assert(arr.mem_);
+				memcpy(this, &arr, sizeof(arr));
+				arr.mem_ = nullptr;
 				return *this;
 			}
 
@@ -110,14 +120,6 @@ namespace array_nd {
 				dims_[idx] = first;
 				if constexpr (sizeof...(args) > 0)
 					SetDims(idx + 1, args...);
-			}
-
-			void CopyMem(T* p) {
-				if constexpr (std::is_trivial_v<T>)
-					memcpy(mem_, p, len_ * sizeof(T));
-				else
-					for (size_t i = 0; i < len_; ++i)
-						mem_[i] = p[i];
 			}
 
 		private:
