@@ -143,8 +143,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="array_nd_cont.h" />
     <ClInclude Include="array_nd.h" />
+    <ClInclude Include="array_nd_1.h" />
     <ClInclude Include="asm.h" />
     <ClInclude Include="n_queens.h" />
     <ClInclude Include="hash_map.h" />

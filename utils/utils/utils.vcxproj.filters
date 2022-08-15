@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="array_nd_cont.h">
+    <ClInclude Include="array_nd.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ring_buffer.h">
@@ -42,7 +42,7 @@
     <ClInclude Include="asm.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="array_nd.h">
+    <ClInclude Include="array_nd_1.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

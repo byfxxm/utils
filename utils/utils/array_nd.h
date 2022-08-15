@@ -1,87 +1,129 @@
 #pragma once
 #include <type_traits>
-#include <memory>
+#include <cstring>
 #include <cassert>
 
 namespace array_nd {
-	template <class T, size_t N, class = std::enable_if_t<std::is_arithmetic_v<T> && (N > 0)>>
-	class ArrayNd final {
-	private:
-		using _Base = ArrayNd<T, N - 1>;
-		friend class ArrayNd<T, N + 1>;
+	/*
+	* 多维数组
+	* usage:
+	*		ArrayNd<char, 3> arr(7, 8, 9); // 构建对象（元素类型为 char，维数是 3，内存初始化为 0xff，第一、第二、第三维度分别是 7、8、9）
+	*		char c = arr[1][2][3]; // 随机访问数组，参数个数等于维数时，返回引用
+	*		arr.Memset(0xff); // 内存初始化，默认每个字节初始化为 0
+	*/
+	template <typename T, size_t N, typename = std::enable_if_t<(N > 0)>>
+		class ArrayNd final {
+		private:
+			template <size_t N>
+			class BasePtr {
+			public:
+				BasePtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d), factors_(f) {}
 
-	public:
-		template <class... Args, class = std::enable_if_t<sizeof...(Args) == N - 1>>
-		ArrayNd(size_t first, Args... args) : count_(first) {
-			base_addr_.reset(new _Base[count_]);
-			for (size_t i = 0; i < count_; ++i)
-				new(&base_addr_[i]) _Base(args...);
-		}
+				BasePtr<N - 1> operator[](size_t idx)&& {
+					assert(idx >= 0 && idx < dims_[0]);
+					return BasePtr<N - 1>(ptr_ + idx * factors_[0], dims_ + 1, factors_ + 1);
+				}
 
-	private:
-		ArrayNd() = default;
+			private:
+				T* ptr_{ nullptr };
+				const size_t* dims_{ nullptr };
+				const size_t* factors_{ nullptr };
+			};
 
-	public:
-		ArrayNd(ArrayNd&&) noexcept = default;
-		ArrayNd(const ArrayNd&) = delete;
-		ArrayNd& operator=(const ArrayNd&) = delete;
+			template <>
+			class BasePtr<1> {
+			public:
+				BasePtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d), factors_(f) {}
 
-		const _Base& operator[](size_t idx) const {
-			assert(idx >= 0 && idx < count_);
-			assert(base_addr_);
-			return base_addr_[idx];
-		}
+				T& operator[](size_t idx)&& {
+					return ptr_[idx];
+				}
 
-		explicit operator T* () const {
-			return static_cast<T*>(*base_addr_.get());
-		}
+			private:
+				T* ptr_{ nullptr };
+				const size_t* dims_{ nullptr };
+				const size_t* factors_{ nullptr };
+			};
 
-		void Memset(T val) const {
-			for (size_t i = 0; i < count_; ++i)
-				base_addr_[i].Memset(val);
-		}
+		public:
+			template <typename... Args, typename = std::enable_if_t<sizeof...(Args) == N>>
+			ArrayNd(Args&&... args) {
+				SetDims(0, std::forward<Args>(args)...);
+				for (size_t i = 0; i < N; ++i) {
+					len_ *= dims_[i];
+					factors_[i] = 1;
+					for (size_t j = i + 1; j < N; ++j)
+						factors_[i] *= dims_[j];
+				}
 
-	private:
-		std::shared_ptr<_Base[]> base_addr_;
-		size_t count_{ 0 };
-	};
+				mem_ = new T[len_];
+				Memset(0);
+			}
 
-	template <class T>
-	class ArrayNd<T, 1> final {
-	private:
-		friend class ArrayNd<T, 2>;
+			ArrayNd(const ArrayNd& arr) {
+				assert(arr.mem_);
+				memcpy(this, &arr, sizeof(arr));
+				mem_ = new T[len_];
+				CopyMem(arr.mem_);
+			}
 
-	public:
-		ArrayNd(size_t last) : count_(last) {
-			base_addr_ = std::make_shared<T[]>(count_);
-			Memset(static_cast<T>(0));
-		}
+			ArrayNd(ArrayNd&& arr) noexcept {
+				assert(arr.mem_);
+				memcpy(this, &arr, sizeof(arr));
+				arr.mem_ = nullptr;
+			}
 
-	private:
-		ArrayNd() = default;
+			~ArrayNd() {
+				delete[] mem_;
+			}
 
-	public:
-		ArrayNd(ArrayNd&&) noexcept = default;
-		ArrayNd(const ArrayNd&) = delete;
-		ArrayNd& operator=(const ArrayNd&) = delete;
+			template <typename T>
+			void Memset(T&& val) {
+				assert(mem_);
+				for (size_t i = 0; i < len_; ++i) {
+					mem_[i] = std::forward<T>(val);
+				}
+			}
 
-		T& operator[](size_t idx) const {
-			assert(idx >= 0 && idx < count_);
-			assert(base_addr_);
-			return base_addr_[idx];
-		}
+			BasePtr<N - 1> operator[](size_t idx) {
+				return BasePtr<N>(mem_, dims_, factors_)[idx];
+			}
 
-		explicit operator T* () const {
-			return base_addr_.get();
-		}
+			ArrayNd& operator=(const ArrayNd& arr) {
+				if (this == &arr)
+					return *this;
 
-		void Memset(T val) const {
-			for (size_t i = 0; i < count_; ++i)
-				base_addr_[i] = val;
-		}
+				assert(arr.mem_);
+				len_ = arr.len_;
+				memcpy(dims_, arr.dims_, sizeof(dims_));
+				memcpy(factors_, arr.factors_, sizeof(factors_));
 
-	private:
-		std::shared_ptr<T[]> base_addr_;
-		size_t count_{ 0 };
+				delete[] mem_;
+				mem_ = new T[len_];
+				CopyMem(arr.mem_);
+				return *this;
+			}
+
+		private:
+			template <typename... Args>
+			void SetDims(size_t idx, size_t first, Args... args) {
+				dims_[idx] = first;
+				if constexpr (sizeof...(args) > 0)
+					SetDims(idx + 1, args...);
+			}
+
+			void CopyMem(T* p) {
+				if constexpr (std::is_trivial_v<T>)
+					memcpy(mem_, p, len_ * sizeof(T));
+				else
+					for (size_t i = 0; i < len_; ++i)
+						mem_[i] = p[i];
+			}
+
+		private:
+			T* mem_{ nullptr };
+			size_t len_{ 1 };
+			size_t dims_[N]{};
+			size_t factors_[N]{};
 	};
 }

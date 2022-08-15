@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <condition_variable>
 #include "array_nd.h"
-#include "array_nd_cont.h"
+#include "array_nd_1.h"
 #include "variable_buffer.h"
 #include "hash_map.h"
 #include "ring_buffer.h"
@@ -13,8 +13,8 @@
 #include "n_queens.h"
 #include "asm.h"
 
-void TestArrayNdCont() {
-	ArrayNd<size_t, 3> a(7, 8, 9);
+void TestArrayNd() {
+	array_nd::ArrayNd<size_t, 3> a(7, 8, 9);
 	a.Memset(50);
 	for (size_t i = 0; i < 7; ++i)
 		for (size_t j = 0; j < 8; ++j)
@@ -24,8 +24,8 @@ void TestArrayNdCont() {
 	assert(&a[5][4][3] - &a[1][2][3] == 4 * 72 + 2 * 9);
 }
 
-void TestArrayNd() {
-	array_nd::ArrayNd<size_t, 3> a1(7, 8, 9);
+void TestArrayNd1() {
+	array_nd_1::ArrayNd<size_t, 3> a1(7, 8, 9);
 	a1.Memset(50);
 	for (size_t i = 0; i < 7; ++i)
 		for (size_t j = 0; j < 8; ++j)
@@ -46,7 +46,7 @@ void TestArrayNd() {
 	b.Memset(25);
 	assert(b[1][2][3] == 25);
 	
-	array_nd::ArrayNd<size_t, 1> c(5);
+	array_nd_1::ArrayNd<size_t, 1> c(5);
 	assert(c[1] == 0);
 }
 
@@ -194,14 +194,14 @@ void TestAsm() {
 }
 
 int main() {
-	TestArrayNdCont();
-	//TestArrayNd();
-	//TestVariableBuffer();
-	//TestHashMap();
-	//TestRingBuffer();
-	//TestWarrior();
-	//TestMetaprogramming();
-	//TestNQueens();
-	//TestAsm();
+	TestArrayNd();
+	TestArrayNd1();
+	TestVariableBuffer();
+	TestHashMap();
+	TestRingBuffer();
+	TestWarrior();
+	TestMetaprogramming();
+	TestNQueens();
+	TestAsm();
 	return 0;
 }
