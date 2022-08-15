@@ -72,7 +72,7 @@ namespace array_nd {
 					mem_[i] = arr.mem_[i];
 			}
 
-			ArrayNd(ArrayNd&&) = default;
+			ArrayNd(ArrayNd&&) noexcept = default;
 
 			decltype(auto) operator[](size_t idx) {
 				return BasePtr<N>(mem_.get(), &dims_.front(), &factors_.front())[idx];
