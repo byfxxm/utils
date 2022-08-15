@@ -2,6 +2,8 @@
 #include <type_traits>
 #include <cstring>
 #include <cassert>
+#include <array>
+#include <memory>
 
 namespace array_nd {
 	/*
@@ -56,7 +58,7 @@ namespace array_nd {
 						factors_[i] *= dims_[j];
 				}
 
-				mem_ = new T[len_];
+				mem_ = std::make_shared<T[]>(len_);
 				Memset(0);
 			}
 
@@ -73,10 +75,6 @@ namespace array_nd {
 				arr.mem_ = nullptr;
 			}
 
-			~ArrayNd() {
-				delete[] mem_;
-			}
-
 			template <typename T>
 			void Memset(T&& val) {
 				assert(mem_);
@@ -86,7 +84,7 @@ namespace array_nd {
 			}
 
 			decltype(auto) operator[](size_t idx) {
-				return BasePtr<N>(mem_, dims_, factors_)[idx];
+				return BasePtr<N>(mem_.get(), dims_, factors_)[idx];
 			}
 
 			ArrayNd& operator=(const ArrayNd& arr) {
@@ -123,7 +121,7 @@ namespace array_nd {
 			}
 
 		private:
-			T* mem_{ nullptr };
+			std::shared_ptr<T[]> mem_;
 			size_t len_{ 1 };
 			size_t dims_[N]{};
 			size_t factors_[N]{};
