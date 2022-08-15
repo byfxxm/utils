@@ -64,6 +64,7 @@ namespace array_nd {
 			ArrayNd(const ArrayNd& arr) = delete;
 			ArrayNd(ArrayNd&&) noexcept = default;
 			ArrayNd& operator=(const ArrayNd&) = delete;
+			ArrayNd& operator=(ArrayNd&&) noexcept = default;
 
 			decltype(auto) operator[](size_t idx) {
 				return BasePtr<N>(mem_.get(), &dims_.front(), &factors_.front())[idx];
