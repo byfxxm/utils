@@ -79,7 +79,7 @@ namespace array_nd {
 
 		private:
 			std::shared_ptr<T[]> mem_;
-			size_t len_{ 1 };
+			size_t len_{ 0 };
 			std::array<size_t, N> dims_;
 			std::array<size_t, N> factors_;
 	};
