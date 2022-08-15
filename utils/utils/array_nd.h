@@ -33,7 +33,7 @@ namespace array_nd {
 			template <>
 			class BasePtr<1> {
 			public:
-				BasePtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d), factors_(f) {}
+				BasePtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d) {}
 
 				T& operator[](size_t idx)&& {
 					assert(idx >= 0 && idx < dims_[0]);
@@ -43,7 +43,6 @@ namespace array_nd {
 			private:
 				T* ptr_{ nullptr };
 				const size_t* dims_{ nullptr };
-				const size_t* factors_{ nullptr };
 			};
 
 		public:
