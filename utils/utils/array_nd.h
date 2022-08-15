@@ -84,7 +84,7 @@ namespace array_nd {
 			}
 
 			decltype(auto) operator[](size_t idx) {
-				return BasePtr<N>(mem_.get(), dims_, factors_)[idx];
+				return BasePtr<N>(mem_.get(), &dims_.front(), &factors_.front())[idx];
 			}
 
 			ArrayNd& operator=(const ArrayNd& arr) {
@@ -123,7 +123,7 @@ namespace array_nd {
 		private:
 			std::shared_ptr<T[]> mem_;
 			size_t len_{ 1 };
-			size_t dims_[N]{};
-			size_t factors_[N]{};
+			std::array<size_t, N> dims_;
+			std::array<size_t, N> factors_;
 	};
 }
