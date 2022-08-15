@@ -1,6 +1,5 @@
 #pragma once
 #include <type_traits>
-#include <cstring>
 #include <cassert>
 #include <array>
 #include <memory>
