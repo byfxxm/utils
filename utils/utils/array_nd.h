@@ -1,8 +1,8 @@
 #pragma once
-#include <type_traits>
+#include <array>
 #include <cassert>
 #include <memory>
-#include <array>
+#include <type_traits>
 
 namespace array_nd {
 	/*
