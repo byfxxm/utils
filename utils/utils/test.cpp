@@ -31,8 +31,8 @@ void TestArrayNd() {
 
 	array_nd::ArrayNd<size_t, 3> a2(std::move(a));
 	assert(a2[5][5][5] == 50);
-
-	a[1][2][3];
+	a2[5][5][5] = 10;
+	assert(a2[5][5][5] == 10);
 }
 
 void TestArrayNd1() {
