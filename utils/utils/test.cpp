@@ -25,6 +25,14 @@ void TestArrayNd() {
 
 	array_nd::ArrayNd<size_t, 1> b(5);
 	assert(&b[4] - &b[0] == 4);
+
+	array_nd::ArrayNd<size_t, 3> a1(a);
+	assert(a1[5][5][5] == 50);
+
+	array_nd::ArrayNd<size_t, 3> a2(std::move(a));
+	assert(a2[5][5][5] == 50);
+
+	a[1][2][3];
 }
 
 void TestArrayNd1() {

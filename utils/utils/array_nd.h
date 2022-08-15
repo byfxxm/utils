@@ -19,7 +19,9 @@ namespace array_nd {
 			template <size_t N>
 			class BasePtr {
 			public:
-				BasePtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d), factors_(f) {}
+				BasePtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d), factors_(f) {
+					assert(ptr_);
+				}
 
 				BasePtr<N - 1> operator[](size_t idx) && {
 					assert(idx >= 0 && idx < dims_[0]);
@@ -61,6 +63,17 @@ namespace array_nd {
 				mem_ = std::make_shared<T[]>(len_);
 				Memset(0);
 			}
+
+			ArrayNd(const ArrayNd& arr) {
+				len_ = arr.len_;
+				dims_ = arr.dims_;
+				factors_ = arr.factors_;
+				mem_ = std::make_shared<T[]>(len_);
+				for (size_t i = 0; i < len_; ++i)
+					mem_[i] = arr.mem_[i];
+			}
+
+			ArrayNd(ArrayNd&&) = default;
 
 			decltype(auto) operator[](size_t idx) {
 				return BasePtr<N>(mem_.get(), &dims_.front(), &factors_.front())[idx];
