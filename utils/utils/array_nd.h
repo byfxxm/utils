@@ -50,8 +50,7 @@ namespace array_nd {
 
 		public:
 			template <typename... Args, typename = std::enable_if_t<sizeof...(Args) == N>>
-			ArrayNd(Args&&... args) {
-				SetDims(0, std::forward<Args>(args)...);
+			ArrayNd(Args&&... args) : dims_{ static_cast<size_t>(std::forward<Args>(args))... } {
 				for (size_t i = 0; i < N; ++i) {
 					len_ *= dims_[i];
 					factors_[i] = 1;
@@ -63,16 +62,9 @@ namespace array_nd {
 				Memset(0);
 			}
 
-			ArrayNd(const ArrayNd& arr) {
-				len_ = arr.len_;
-				dims_ = arr.dims_;
-				factors_ = arr.factors_;
-				mem_ = std::make_shared<T[]>(len_);
-				for (size_t i = 0; i < len_; ++i)
-					mem_[i] = arr.mem_[i];
-			}
-
+			ArrayNd(const ArrayNd& arr) = delete;
 			ArrayNd(ArrayNd&&) noexcept = default;
+			ArrayNd& operator=(const ArrayNd&) = delete;
 
 			decltype(auto) operator[](size_t idx) {
 				return BasePtr<N>(mem_.get(), &dims_.front(), &factors_.front())[idx];
@@ -83,14 +75,6 @@ namespace array_nd {
 				assert(mem_);
 				for (size_t i = 0; i < len_; ++i)
 					mem_[i] = std::forward<T>(val);
-			}
-
-		private:
-			template <typename... Args>
-			void SetDims(size_t idx, size_t first, Args&&... args) {
-				dims_[idx] = first;
-				if constexpr (sizeof...(args) > 0)
-					SetDims(idx + 1, std::forward<Args>(args)...);
 			}
 
 		private:
