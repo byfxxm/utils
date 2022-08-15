@@ -14,12 +14,14 @@
 #include "asm.h"
 
 void TestArrayNdCont() {
-	ArrayNd<size_t, 3> a1(7, 8, 9);
-	a1.Memset(50);
+	ArrayNd<size_t, 3> a(7, 8, 9);
+	a.Memset(50);
 	for (size_t i = 0; i < 7; ++i)
 		for (size_t j = 0; j < 8; ++j)
 			for (size_t k = 0; k < 9; ++k)
-				assert(a1[i][j][k] == 50);
+				assert(a[i][j][k] == 50);
+
+	assert(&a[5][4][3] - &a[1][2][3] == 4 * 72 + 2 * 9);
 }
 
 void TestArrayNd() {
@@ -193,13 +195,13 @@ void TestAsm() {
 
 int main() {
 	TestArrayNdCont();
-	TestArrayNd();
-	TestVariableBuffer();
-	TestHashMap();
-	TestRingBuffer();
-	TestWarrior();
-	TestMetaprogramming();
-	TestNQueens();
-	TestAsm();
+	//TestArrayNd();
+	//TestVariableBuffer();
+	//TestHashMap();
+	//TestRingBuffer();
+	//TestWarrior();
+	//TestMetaprogramming();
+	//TestNQueens();
+	//TestAsm();
 	return 0;
 }

@@ -18,22 +18,21 @@ private:
 	template <size_t N>
 	class BasePtr {
 	public:
-		BasePtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d), factors_(f) {}
+		BasePtr(T* p, const size_t* f) : ptr_(p), factors_(f) {}
 
 		BasePtr<N - 1> operator[](size_t idx) {
-			return BasePtr<N - 1>(&ptr_[dims_[0]], dims_ + 1, factors_ + 1);
+			return BasePtr<N - 1>(ptr_ + idx * factors_[0], factors_ + 1);
 		}
 
 	private:
 		T* ptr_{ nullptr };
-		const size_t* dims_{ nullptr };
 		const size_t* factors_{ nullptr };
 	};
 
 	template <>
 	class BasePtr<1> {
 	public:
-		BasePtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d), factors_(f) {}
+		BasePtr(T* p, const size_t* f) : ptr_(p), factors_(f) {}
 
 		T& operator[](size_t idx) {
 			return ptr_[idx];
@@ -41,7 +40,6 @@ private:
 
 	private:
 		T* ptr_{ nullptr };
-		const size_t* dims_{ nullptr };
 		const size_t* factors_{ nullptr };
 	};
 
@@ -86,7 +84,7 @@ public:
 	}
 
 	BasePtr<N - 1> operator[](size_t idx) {
-		return BasePtr<N>(mem_, dims_, factors_)[idx];
+		return BasePtr<N>(mem_, factors_)[idx];
 	}
 
 	ArrayNd& operator=(const ArrayNd& arr) {
