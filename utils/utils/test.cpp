@@ -15,6 +15,11 @@
 
 void TestArrayNdCont() {
 	ArrayNd<size_t, 3> a1(7, 8, 9);
+	a1.Memset(50);
+	for (size_t i = 0; i < 7; ++i)
+		for (size_t j = 0; j < 8; ++j)
+			for (size_t k = 0; k < 9; ++k)
+				assert(a1[i][j][k] == 50);
 }
 
 void TestArrayNd() {

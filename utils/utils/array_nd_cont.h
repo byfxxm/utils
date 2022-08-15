@@ -15,35 +15,37 @@
 template <typename T, size_t N, typename = std::enable_if_t<(N > 0)>>
 class ArrayNd final {
 private:
-	template <size_t N>
-	class BassPtr {
+	template <typename T, size_t N>
+	class BasePtr {
 	private:
-		using _Base = BassPtr<N - 1>;
+		using _Base = BasePtr<T, N - 1>;
 
 	public:
-		BassPtr(T* p, size_t(&d)[N]) : ptr_(p), dim_(d) {}
+		BasePtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dim_(d), factor_(f) {}
 
-		_Base& operator[](size_t idx) {
-			return _Base(&T[dim_[0]], static_cast<size_t[N - 1]>(dim_[1]));
+		_Base operator[](size_t idx) {
+			return _Base(&ptr_[dim_[0]], dim_ + 1, factor_ + 1);
 		}
 
 	private:
-		T ptr_{ nullptr };
-		size_t dim_[N]{};
+		T* ptr_{ nullptr };
+		const size_t* dim_{ nullptr };
+		const size_t* factor_{ nullptr };
 	};
 
-	template <>
-	class BassPtr<1> {
+	template <typename T>
+	class BasePtr<T, 1> {
 	public:
-		BassPtr(T* p, size_t(&d)[1]) : ptr_(p), dim_(d[0]) {}
+		BasePtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dim_(d), factor_(f) {}
 
 		T& operator[](size_t idx) {
-			return T[dim_];
+			return ptr_[idx];
 		}
 
 	private:
-		T ptr_{ nullptr };
-		size_t dim_{ 0 };
+		T* ptr_{ nullptr };
+		const size_t* dim_{ nullptr };
+		const size_t* factor_{ nullptr };
 	};
 
 public:
@@ -95,14 +97,8 @@ public:
 		return Index(0, ele_, std::forward<Ts>(ts)...);
 	}
 
-	//size_t operator[](size_t idx) const {
-	//	assert(idx >= 0 && idx < N);
-	//	assert(ele_);
-	//	return dim_[idx];
-	//}
-
-	BassPtr<N - 1>& operator[](size_t idx) {
-		return BassPtr<N - 1>(ele_, static_cast<size_t[N - 1]>(dim_[1]));
+	BasePtr<T, N - 1> operator[](size_t idx) {
+		return BasePtr<T, N - 1>(ele_ + factor_[0], &dim_[1], &factor_[1]);
 	}
 
 	ArrayNd& operator=(const ArrayNd& arr) {
@@ -140,10 +136,6 @@ private:
 	T* Index(size_t idx, T* p, T1&& t1, Ts&&... ts) const {
 		assert((size_t)t1 < dim_[idx]);
 		return Index(idx + 1, &p[factor_[idx] * t1], std::forward<Ts>(ts)...);
-	}
-
-	T* Index(size_t, T* p) const {
-		return p;
 	}
 
 	void CopyEle(T* p) {
