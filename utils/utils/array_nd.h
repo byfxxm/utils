@@ -81,9 +81,8 @@ namespace array_nd {
 			template <typename T>
 			void Memset(T&& val) {
 				assert(mem_);
-				for (size_t i = 0; i < len_; ++i) {
+				for (size_t i = 0; i < len_; ++i)
 					mem_[i] = std::forward<T>(val);
-				}
 			}
 
 		private:
