@@ -9,7 +9,7 @@ namespace array_nd {
 	* usage:
 	*		ArrayNd<char, 3> arr(7, 8, 9); // 构建对象（元素类型为 char，维数是 3，内存初始化为 0xff，第一、第二、第三维度分别是 7、8、9）
 	*		char c = arr[1][2][3]; // 随机访问数组，参数个数等于维数时，返回引用
-	*		arr.Memset(0xff); // 内存初始化，默认每个字节初始化为 0
+	*		arr.Memset('z'); // 内存初始化
 	*/
 	template <typename T, size_t N, typename = std::enable_if_t<(N > 0)>>
 		class ArrayNd final {
