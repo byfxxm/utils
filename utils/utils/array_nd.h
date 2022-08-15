@@ -36,6 +36,7 @@ namespace array_nd {
 				BasePtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d), factors_(f) {}
 
 				T& operator[](size_t idx)&& {
+					assert(idx >= 0 && idx < dims_[0]);
 					return ptr_[idx];
 				}
 
@@ -85,7 +86,7 @@ namespace array_nd {
 				}
 			}
 
-			BasePtr<N - 1> operator[](size_t idx) {
+			decltype(auto) operator[](size_t idx) {
 				return BasePtr<N>(mem_, dims_, factors_)[idx];
 			}
 

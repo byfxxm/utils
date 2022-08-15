@@ -22,6 +22,9 @@ void TestArrayNd() {
 				assert(a[i][j][k] == 50);
 
 	assert(&a[5][4][3] - &a[1][2][3] == 4 * 72 + 2 * 9);
+
+	array_nd::ArrayNd<size_t, 1> b(5);
+	assert(&b[4] - &b[0] == 4);
 }
 
 void TestArrayNd1() {
