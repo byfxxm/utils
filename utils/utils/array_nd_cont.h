@@ -15,16 +15,13 @@
 template <typename T, size_t N, typename = std::enable_if_t<(N > 0)>>
 class ArrayNd final {
 private:
-	template <typename T, size_t N>
+	template <size_t N>
 	class BasePtr {
-	private:
-		using _Base = BasePtr<T, N - 1>;
-
 	public:
 		BasePtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dim_(d), factor_(f) {}
 
-		_Base operator[](size_t idx) {
-			return _Base(&ptr_[dim_[0]], dim_ + 1, factor_ + 1);
+		BasePtr<N - 1> operator[](size_t idx) {
+			return BasePtr<N - 1>(&ptr_[dim_[0]], dim_ + 1, factor_ + 1);
 		}
 
 	private:
@@ -33,8 +30,8 @@ private:
 		const size_t* factor_{ nullptr };
 	};
 
-	template <typename T>
-	class BasePtr<T, 1> {
+	template <>
+	class BasePtr<1> {
 	public:
 		BasePtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dim_(d), factor_(f) {}
 
@@ -60,7 +57,7 @@ public:
 		}
 
 		ele_ = new T[ele_cnt_];
-		Memset();
+		Memset(0);
 	}
 
 	ArrayNd(const ArrayNd& arr) {
@@ -80,9 +77,12 @@ public:
 		delete[] ele_;
 	}
 
-	void Memset(unsigned char val = 0) {
+	template <typename T>
+	void Memset(T&& val) {
 		assert(ele_);
-		memset(ele_, val, ele_cnt_ * sizeof(T));
+		for (size_t i = 0; i < ele_cnt_; ++i) {
+			ele_[i] = std::forward<T>(val);
+		}
 	}
 
 	template <typename... Ts, typename = std::enable_if_t<sizeof...(Ts) == N>>
@@ -97,8 +97,8 @@ public:
 		return Index(0, ele_, std::forward<Ts>(ts)...);
 	}
 
-	BasePtr<T, N - 1> operator[](size_t idx) {
-		return BasePtr<T, N - 1>(ele_ + factor_[0], &dim_[1], &factor_[1]);
+	BasePtr<N - 1> operator[](size_t idx) {
+		return BasePtr<N>(ele_, dim_, factor_)[idx];
 	}
 
 	ArrayNd& operator=(const ArrayNd& arr) {
