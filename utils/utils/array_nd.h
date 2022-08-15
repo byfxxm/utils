@@ -16,13 +16,13 @@ namespace array_nd {
 		class ArrayNd final {
 		private:
 			template <size_t N>
-			class BasePtr {
+			class BasePtr final {
 			public:
 				BasePtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d), factors_(f) {
 					assert(ptr_);
 				}
 
-				BasePtr<N - 1> operator[](size_t idx) && {
+				BasePtr<N - 1> operator[](size_t idx) const&& {
 					assert(idx >= 0 && idx < dims_[0]);
 					return BasePtr<N - 1>(ptr_ + idx * factors_[0], dims_ + 1, factors_ + 1);
 				}
@@ -38,7 +38,7 @@ namespace array_nd {
 			public:
 				BasePtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d) {}
 
-				T& operator[](size_t idx) && {
+				T& operator[](size_t idx) const&& {
 					assert(idx >= 0 && idx < dims_[0]);
 					return ptr_[idx];
 				}
