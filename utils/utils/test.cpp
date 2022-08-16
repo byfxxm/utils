@@ -30,6 +30,7 @@ void TestArrayNd() {
 	assert(a2[5][5][5] == 50);
 	a2[5][5][5] = 10;
 	assert(a2[5][5][5] == 10);
+	assert(&a2[6][7][8] - &a2[0][0][0] == 7 * 8 * 9 - 1);
 }
 
 void TestArrayNd1() {
