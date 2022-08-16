@@ -69,8 +69,7 @@ namespace array_nd {
 				return BasePtr<N>(mem_.get(), &dims_.front(), &factors_.front())[idx];
 			}
 
-			template <class T>
-			void Memset(T&& val) {
+			void Memset(T val) {
 				assert(mem_);
 				for (size_t i = 0; i < len_; ++i)
 					mem_[i] = val;
