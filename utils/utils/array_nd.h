@@ -16,15 +16,15 @@ namespace array_nd {
 		class ArrayNd final {
 		private:
 			template <size_t N>
-			class BasePtr final {
+			class ViewPtr final {
 			public:
-				BasePtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d), factors_(f) {
+				ViewPtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d), factors_(f) {
 					assert(ptr_);
 				}
 
-				BasePtr<N - 1> operator[](size_t idx) const&& {
+				ViewPtr<N - 1> operator[](size_t idx) const&& {
 					assert(idx >= 0 && idx < dims_[0]);
-					return BasePtr<N - 1>(ptr_ + idx * factors_[0], dims_ + 1, factors_ + 1);
+					return ViewPtr<N - 1>(ptr_ + idx * factors_[0], dims_ + 1, factors_ + 1);
 				}
 
 			private:
@@ -34,9 +34,9 @@ namespace array_nd {
 			};
 
 			template <>
-			class BasePtr<1> {
+			class ViewPtr<1> {
 			public:
-				BasePtr(T* p, const size_t* d, const size_t*) : ptr_(p), dims_(d) {}
+				ViewPtr(T* p, const size_t* d, const size_t*) : ptr_(p), dims_(d) {}
 
 				T& operator[](size_t idx) const&& {
 					assert(idx >= 0 && idx < dims_[0]);
@@ -66,7 +66,7 @@ namespace array_nd {
 			ArrayNd& operator=(ArrayNd&&) noexcept = default;
 
 			decltype(auto) operator[](size_t idx) {
-				return BasePtr<N>(mem_.get(), &dims_.front(), &factors_.front())[idx];
+				return ViewPtr<N>(mem_.get(), &dims_.front(), &factors_.front())[idx];
 			}
 
 			void Memset(T val) {
