@@ -12,7 +12,7 @@ namespace array_nd {
 	*		char c = arr[1][2][3]; // 随机访问数组，参数个数等于维数时，返回引用
 	*		arr.Memset('z'); // 内存初始化
 	*/
-	template <class T, size_t N, class = std::enable_if_t<(N > 0)>>
+	template <class T, size_t N> requires (N > 0)
 		class ArrayNd final {
 		private:
 			template <size_t N>
@@ -49,7 +49,7 @@ namespace array_nd {
 			};
 
 		public:
-			template <class... Args, class = std::enable_if_t<sizeof...(Args) == N>>
+			template <class... Args> requires (sizeof...(Args) == N)
 			ArrayNd(Args&&... args) : len_((... * args)), dims_{ static_cast<size_t>(args)... } {
 				mem_ = std::make_shared<T[]>(len_);
 				Memset(0);
