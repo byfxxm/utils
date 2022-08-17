@@ -2,7 +2,6 @@
 #include <array>
 #include <cassert>
 #include <memory>
-#include <type_traits>
 
 namespace array_nd {
 	/*
