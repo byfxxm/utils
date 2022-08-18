@@ -49,8 +49,8 @@ namespace array_nd {
 
 		public:
 			template <class... Args> requires (sizeof...(Args) == N)
-			ArrayNd(Args&&... args) : len_((... * args)), dims_{ static_cast<size_t>(args)... } {
-				mem_ = std::make_shared<T[]>(len_);
+			ArrayNd(Args&&... args) : count_((... * args)), dims_{ static_cast<size_t>(args)... } {
+				data_ = std::make_shared<T[]>(count_);
 				Memset(0);
 				for (size_t i = 0; i < N; ++i) {
 					factors_[i] = 1;
@@ -65,18 +65,18 @@ namespace array_nd {
 			ArrayNd& operator=(ArrayNd&&) noexcept = default;
 
 			decltype(auto) operator[](size_t idx) {
-				return ViewPtr<N>(mem_.get(), &dims_.front(), &factors_.front())[idx];
+				return ViewPtr<N>(data_.get(), &dims_.front(), &factors_.front())[idx];
 			}
 
 			void Memset(T val) {
-				assert(mem_);
-				for (size_t i = 0; i < len_; ++i)
-					mem_[i] = val;
+				assert(data_);
+				for (size_t i = 0; i < count_; ++i)
+					data_[i] = val;
 			}
 
 		private:
-			std::shared_ptr<T[]> mem_;
-			size_t len_{ 0 };
+			std::shared_ptr<T[]> data_;
+			size_t count_{ 0 };
 			std::array<size_t, N> dims_;
 			std::array<size_t, N> factors_;
 	};
