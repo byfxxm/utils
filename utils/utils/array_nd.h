@@ -33,7 +33,7 @@ namespace array_nd {
 			};
 
 			template <>
-			class ViewPtr<1> {
+			class ViewPtr<1> final {
 			public:
 				ViewPtr(T* p, const size_t* d, const size_t*) : ptr_(p), dims_(d) {}
 
