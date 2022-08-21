@@ -59,7 +59,7 @@ namespace array_nd {
 				}
 			}
 
-			ArrayNd(const ArrayNd& arr) = delete;
+			ArrayNd(const ArrayNd&) = delete;
 			ArrayNd(ArrayNd&&) noexcept = default;
 			ArrayNd& operator=(const ArrayNd&) = delete;
 			ArrayNd& operator=(ArrayNd&&) noexcept = default;
