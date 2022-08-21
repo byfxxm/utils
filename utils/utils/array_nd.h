@@ -15,36 +15,36 @@ namespace array_nd {
 		requires (N > 0)
 	class ArrayNd final {
 	private:
-		template <size_t N>
+		template <class T1, size_t N1>
 		class ViewPtr final {
 		public:
-			ViewPtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d), factors_(f) {
+			ViewPtr(T1* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d), factors_(f) {
 				assert(ptr_);
 			}
 
-			ViewPtr<N - 1> operator[](size_t idx) const&& {
+			ViewPtr<T1, N1 - 1> operator[](size_t idx) const&& {
 				assert(idx >= 0 && idx < dims_[0]);
-				return ViewPtr<N - 1>(ptr_ + idx * factors_[0], dims_ + 1, factors_ + 1);
+				return ViewPtr<T1, N1 - 1>(ptr_ + idx * factors_[0], dims_ + 1, factors_ + 1);
 			}
 
 		private:
-			T* ptr_{ nullptr };
+			T1* ptr_{ nullptr };
 			const size_t* dims_{ nullptr };
 			const size_t* factors_{ nullptr };
 		};
 
-		template <>
-		class ViewPtr<1> final {
+		template <class T1>
+		class ViewPtr<T1, 1> final {
 		public:
-			ViewPtr(T* p, const size_t* d, const size_t*) : ptr_(p), dims_(d) {}
+			ViewPtr(T1* p, const size_t* d, const size_t*) : ptr_(p), dims_(d) {}
 
-			T& operator[](size_t idx) const&& {
+			T1& operator[](size_t idx) const&& {
 				assert(idx >= 0 && idx < dims_[0]);
 				return ptr_[idx];
 			}
 
 		private:
-			T* ptr_{ nullptr };
+			T1* ptr_{ nullptr };
 			const size_t* dims_{ nullptr };
 		};
 
@@ -67,7 +67,7 @@ namespace array_nd {
 		ArrayNd& operator=(ArrayNd&&) noexcept = default;
 
 		decltype(auto) operator[](size_t idx) {
-			return ViewPtr<N>(elems_.get(), &dims_.front(), &factors_.front())[idx];
+			return ViewPtr<T, N>(elems_.get(), &dims_.front(), &factors_.front())[idx];
 		}
 
 		void Memset(T val) {
