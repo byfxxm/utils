@@ -184,8 +184,11 @@ void TestMetaprogramming() {
 
 	struct B {};
 
-	static_assert(Meta::HasType_v<A>);
-	static_assert(!Meta::HasType_v<B>);
+	static_assert(Meta::HasType<A>);
+	static_assert(!Meta::HasType<B>);
+
+	static_assert(!Meta::IsCustomeClass<int>);
+	static_assert(Meta::IsCustomeClass<A>);
 }
 
 void TestNQueens() {

@@ -4,9 +4,8 @@ namespace Meta {
 	/// <summary>
 	/// 判断是否有子类型模板，利用SFINAE特性实现
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	template <class T, class = typename T::type>
-	constexpr bool _HasType(){
+	template <class T>
+	constexpr bool _HasType(typename T::type*){
 		return true;
 	}
 
@@ -14,12 +13,23 @@ namespace Meta {
 	constexpr bool _HasType(...) {
 		return false;
 	}
-	
-	template <class T>
-	struct HasType {
-		static constexpr bool value = _HasType<T>();
-	};
 
 	template <class T>
-	static constexpr bool HasType_v = HasType<T>::value;
+	static constexpr bool HasType = _HasType<T>(nullptr);
+
+	/// <summary>
+	/// 判断是否是自定义类型
+	/// </summary>
+	template <class>
+	constexpr bool _IsCustomeClass(...) {
+		return false;
+	}
+
+	template <class T>
+	constexpr bool _IsCustomeClass(int T::*) {
+		return true;
+	}
+
+	template <class T>
+	static constexpr bool IsCustomeClass = _IsCustomeClass<T>(nullptr);
 }
