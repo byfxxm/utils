@@ -4,14 +4,14 @@ namespace Meta {
 	/// <summary>
 	/// 判断是否有子类型模板，利用SFINAE特性实现
 	/// </summary>
-	template <class T>
-	constexpr bool _HasType(typename T::type*) {
-		return true;
-	}
-
 	template <class>
 	constexpr bool _HasType(...) {
 		return false;
+	}
+
+	template <class T>
+	constexpr bool _HasType(typename T::type*) {
+		return true;
 	}
 
 	template <class T>
