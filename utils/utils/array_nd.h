@@ -82,4 +82,9 @@ namespace array_nd {
 		std::array<size_t, N> dims_;
 		std::array<size_t, N> factors_;
 	};
+
+	template <class T, class... Args>
+	[[nodiscard]] auto MakeArrayNd(Args&&... args) {
+		return ArrayNd<T, sizeof...(Args)>(std::forward<Args>(args)...);
+	}
 }
