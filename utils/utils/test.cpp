@@ -14,7 +14,7 @@
 #include "asm.h"
 
 void TestArrayNd() {
-	auto a = array_nd::MakeArrayNd<size_t>(7, 8, 9);
+	auto a = byfxxm::MakeArrayNd<size_t>(7, 8, 9);
 	a.Memset(50);
 	for (size_t i = 0; i < 7; ++i)
 		for (size_t j = 0; j < 8; ++j)
@@ -23,10 +23,10 @@ void TestArrayNd() {
 
 	assert(&a[5][4][3] - &a[1][2][3] == 4 * 72 + 2 * 9);
 
-	array_nd::ArrayNd<size_t, 1> b(5);
+	byfxxm::ArrayNd<size_t, 1> b(5);
 	assert(&b[4] - &b[0] == 4);
 
-	array_nd::ArrayNd<size_t, 3> a2(std::move(a));
+	byfxxm::ArrayNd<size_t, 3> a2(std::move(a));
 	assert(a2[5][5][5] == 50);
 	a2[5][5][5] = 10;
 	assert(a2[5][5][5] == 10);

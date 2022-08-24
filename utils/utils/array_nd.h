@@ -3,7 +3,7 @@
 #include <cassert>
 #include <memory>
 
-namespace array_nd {
+namespace byfxxm {
 	/*
 	* ¶àÎ¬Êý×é
 	* usage:
