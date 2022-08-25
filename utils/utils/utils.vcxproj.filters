@@ -45,6 +45,9 @@
     <ClInclude Include="array_nd_1.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="reflection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test.cpp">

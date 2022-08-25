@@ -12,6 +12,7 @@
 #include "metaprogramming_practice.h"
 #include "n_queens.h"
 #include "asm.h"
+#include "reflection.h"
 
 void TestArrayNd() {
 	auto a = byfxxm::MakeArrayNd<size_t>(7, 8, 9);
@@ -205,6 +206,26 @@ void TestAsm() {
 	Memset(a, (int)2, 100);
 }
 
+void TestReflection() {
+	class Type1 : public byfxxm::ISerialize {
+	public:
+		virtual void Serialize() override {
+
+		}
+
+		virtual void Deserialize() override {
+
+		}
+
+	private:
+		int a_;
+		double b_;
+	};
+
+	byfxxm::ReflectionHelper::Instance().Serialize(Type1());
+	byfxxm::ReflectionHelper::Instance().Deserialize(Type1());
+}
+
 int main() {
 	TestArrayNd();
 	TestArrayNd1();
@@ -215,5 +236,6 @@ int main() {
 	TestMetaprogramming();
 	TestNQueens();
 	TestAsm();
+	TestReflection();
 	return 0;
 }

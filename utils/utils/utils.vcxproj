@@ -150,6 +150,7 @@
     <ClInclude Include="hash_map.h" />
     <ClInclude Include="metaprogramming_practice.h" />
     <ClInclude Include="rbtree_map.h" />
+    <ClInclude Include="reflection.h" />
     <ClInclude Include="ring_buffer.h" />
     <ClInclude Include="variable_buffer.h" />
     <ClInclude Include="warrior.h" />
