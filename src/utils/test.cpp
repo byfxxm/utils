@@ -185,14 +185,19 @@ void TestMetaprogramming() {
 
 	struct B {};
 
-	static_assert(Meta::HasType<A>);
-	static_assert(!Meta::HasType<B>);
+	static_assert(meta::HasType<A>);
+	static_assert(!meta::HasType<B>);
 
-	static_assert(!Meta::IsCustomeClass<int>);
-	static_assert(Meta::IsCustomeClass<A>);
+	static_assert(!meta::IsCustomeClass<int>);
+	static_assert(meta::IsCustomeClass<A>);
 
 	A a[5];
-	static_assert(Meta::Countof(a) == 5);
+	static_assert(meta::Countof(a) == 5);
+
+	static_assert(meta::prime::IsPrimeV<97>);
+	static_assert(!meta::prime::IsPrimeV<200>);
+	static_assert(!meta::prime::IsPrimeV<2>);
+	static_assert(!meta::prime::IsPrimeV<1>);
 }
 
 void TestNQueens() {
