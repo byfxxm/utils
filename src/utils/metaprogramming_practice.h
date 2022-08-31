@@ -76,17 +76,17 @@ namespace meta {
 			using type = Seq;
 		};
 
-		template <class, size_t>
+		template <class>
 		struct Upgrade;
 
-		template <size_t... Ns, size_t N>
-		struct Upgrade<Seq<Ns...>, N> {
-			using type = Seq<Ns..., N - 1>;
+		template <size_t... Ns>
+		struct Upgrade<Seq<Ns...>> {
+			using type = Seq<Ns..., sizeof...(Ns) + 2>;
 		};
 
 		template <size_t N>
 		struct Make {
-			using type = Upgrade<typename Make<N - 1>::type, N>::type;
+			using type = Upgrade<typename Make<N - 1>::type>::type;
 		};
 
 		template <>
