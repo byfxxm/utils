@@ -82,6 +82,7 @@ namespace meta {
 		};
 
 		template <size_t N>
+			requires (N > 0)
 		struct Make {
 			using type = Upgrade<typename Make<N - 1>::type, N>::type;
 		};
