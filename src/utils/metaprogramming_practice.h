@@ -67,6 +67,9 @@ namespace meta {
 		return N;
 	}
 
+	/// <summary>
+	/// ÅĞ¶ÏÊÇ·ñËØÊı
+	/// </summary>
 	namespace prime {
 		template <size_t... Ns>
 		struct Seq {
