@@ -109,6 +109,11 @@ namespace meta {
 			static constexpr bool value = false;
 		};
 
+		template <>
+		struct IsPrime<0> {
+			static constexpr bool value = false;
+		};
+
 		template <size_t N>
 		static constexpr bool IsPrimeV = IsPrime<N>::value;
 	}
