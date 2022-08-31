@@ -190,6 +190,9 @@ void TestMetaprogramming() {
 
 	static_assert(!Meta::IsCustomeClass<int>);
 	static_assert(Meta::IsCustomeClass<A>);
+
+	A a[5];
+	static_assert(Meta::Countof(a) == 5);
 }
 
 void TestNQueens() {

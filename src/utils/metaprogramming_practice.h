@@ -57,4 +57,12 @@ namespace Meta {
 	template <>
 	struct Make<0> : Seq<> {
 	};
+
+	/// <summary>
+	/// countof
+	/// </summary>
+	template <class T, size_t N>
+	constexpr size_t Countof(T(&)[N]) {
+		return N;
+	}
 }
