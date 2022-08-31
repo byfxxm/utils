@@ -102,11 +102,6 @@ namespace meta {
 		};
 
 		template <>
-		struct IsPrime<2> {
-			static constexpr bool value = true;
-		};
-
-		template <>
 		struct IsPrime<1> {
 			static constexpr bool value = false;
 		};
