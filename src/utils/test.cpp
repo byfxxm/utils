@@ -196,7 +196,7 @@ void TestMetaprogramming() {
 
 	static_assert(meta::prime::IsPrimeV<97>);
 	static_assert(!meta::prime::IsPrimeV<200>);
-	static_assert(!meta::prime::IsPrimeV<2>);
+	static_assert(meta::prime::IsPrimeV<2>);
 	static_assert(!meta::prime::IsPrimeV<1>);
 }
 

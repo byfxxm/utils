@@ -82,14 +82,8 @@ namespace meta {
 		};
 
 		template <size_t N>
-			requires (N > 0)
 		struct Make {
 			using type = Upgrade<typename Make<N - 1>::type, N>::type;
-		};
-
-		template <>
-		struct Make<1> {
-			using type = Seq<>::type;
 		};
 
 		template <>
@@ -99,15 +93,22 @@ namespace meta {
 
 		template <size_t... Ns>
 		constexpr bool _IsPrime(Seq<Ns...>) {
-			if constexpr (sizeof...(Ns) == 0)
-				return false;
-
 			return (... && ((sizeof...(Ns) + 2) % Ns != 0));
 		}
 
 		template <size_t N>
 		struct IsPrime {
 			static constexpr bool value = _IsPrime(typename Make<N>::type());
+		};
+
+		template <>
+		struct IsPrime<2> {
+			static constexpr bool value = true;
+		};
+
+		template <>
+		struct IsPrime<1> {
+			static constexpr bool value = false;
 		};
 
 		template <size_t N>
