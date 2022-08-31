@@ -61,8 +61,9 @@ namespace Meta {
 	/// <summary>
 	/// countof
 	/// </summary>
-	template <class T, size_t N>
-	constexpr size_t Countof(T(&)[N]) {
+	template <class T, auto N>
+	constexpr auto Countof(T(&)[N]) {
+		static_assert(std::is_same_v<decltype(N), size_t>);
 		return N;
 	}
 }
