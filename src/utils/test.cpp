@@ -199,6 +199,12 @@ void TestMetaprogramming() {
 	static_assert(meta::prime::IsPrimeV<2>);
 	static_assert(!meta::prime::IsPrimeV<1>);
 	static_assert(!meta::prime::IsPrimeV<0>);
+
+	static_assert(meta::prime::IsPrimeF(97));
+	static_assert(!meta::prime::IsPrimeF(200));
+	static_assert(meta::prime::IsPrimeF(2));
+	static_assert(!meta::prime::IsPrimeF(1));
+	static_assert(!meta::prime::IsPrimeF(0));
 }
 
 void TestNQueens() {

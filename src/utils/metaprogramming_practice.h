@@ -116,5 +116,19 @@ namespace meta {
 
 		template <size_t N>
 		static constexpr bool IsPrimeV = IsPrime<N>::value;
+
+		constexpr bool IsPrimeF(size_t n) {
+			if (n < 2)
+				return false;
+
+			bool ret = true;
+			for (size_t i = 2; i < n; ++i) {
+				ret = ret && (n % i);
+				if (!ret)
+					break;
+			}
+
+			return ret;
+		}
 	}
 }
