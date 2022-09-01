@@ -205,6 +205,13 @@ void TestMetaprogramming() {
 	static_assert(meta::prime::IsPrimeF(2));
 	static_assert(!meta::prime::IsPrimeF(1));
 	static_assert(!meta::prime::IsPrimeF(0));
+
+	struct C : public B {};
+	static_assert(meta::IsBaseOf<C, B>::value);
+	static_assert(!meta::IsBaseOf<C, A>::value);
+	static_assert(!meta::IsBaseOf<int, double>::value);
+	static_assert(!meta::IsBaseOf<B, C>::value);
+	static_assert(!meta::IsBaseOf<int, C>::value);
 }
 
 void TestNQueens() {

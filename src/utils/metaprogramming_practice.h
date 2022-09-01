@@ -131,4 +131,22 @@ namespace meta {
 			return ret;
 		}
 	}
+
+	/// <summary>
+	/// 判断类型是否是继承关系
+	/// </summary>
+	template <class T1, class T2>
+	constexpr auto _IsBaseOf(int T1::*, int T2::*, T2) {
+		return true;
+	}
+
+	template <class, class>
+	constexpr auto _IsBaseOf(...) {
+		return false;
+	}
+
+	template <class T1, class T2>
+	struct IsBaseOf {
+		static constexpr bool value = _IsBaseOf<T1, T2>(nullptr, nullptr, T1());
+	};
 }
