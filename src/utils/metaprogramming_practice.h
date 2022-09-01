@@ -135,8 +135,8 @@ namespace meta {
 	/// <summary>
 	/// 判断类型是否是继承关系
 	/// </summary>
-	template <class T1, class T2>
-	constexpr auto _IsBaseOf(int T1::*, int T2::*, T2) {
+	template <class Derived, class Base>
+	constexpr auto _IsBaseOf(int Derived::*, int Base::*, Base) {
 		return true;
 	}
 
@@ -145,8 +145,11 @@ namespace meta {
 		return false;
 	}
 
-	template <class T1, class T2>
+	template <class Derived, class Base>
 	struct IsBaseOf {
-		static constexpr bool value = _IsBaseOf<T1, T2>(nullptr, nullptr, T1());
+		static constexpr bool value = _IsBaseOf<Derived, Base>(nullptr, nullptr, Derived());
 	};
+
+	template <class Derived, class Base>
+	concept BaseOf = IsBaseOf<Derived, Base>::value;
 }

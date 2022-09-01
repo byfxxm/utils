@@ -1,7 +1,6 @@
 #include <vector>
 #include <thread>
 #include <iostream>
-#include <iomanip>
 #include <condition_variable>
 #include "array_nd.h"
 #include "array_nd_1.h"
