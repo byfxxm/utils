@@ -251,14 +251,14 @@ void TestReflection() {
 void TestCrtp() {
 	class Derived1 : public crtp::Base<Derived1> {
 	public:
-		void FuncImp() {
+		void Func() {
 			std::cout << "this is Derived1" << std::endl;
 		}
 	};
 
 	class Derived2 : public crtp::Base<Derived2> {
 	public:
-		void FuncImp() {
+		void Func() {
 			std::cout << "this is Derived2" << std::endl;
 		}
 	};

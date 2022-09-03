@@ -7,7 +7,7 @@ namespace crtp {
 	class Base {
 	public:
 		void Func() {
-			static_cast<Derived*>(this)->FuncImp();
+			static_cast<Derived*>(this)->Func();
 		}
 	};
 
