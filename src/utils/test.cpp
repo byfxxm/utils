@@ -12,6 +12,7 @@
 #include "n_queens.h"
 #include "asm.h"
 #include "reflection.h"
+#include "crtp.h"
 
 void TestArrayNd() {
 	auto a = byfxxm::MakeArrayNd<size_t>(7, 8, 9);
@@ -247,7 +248,30 @@ void TestReflection() {
 	byfxxm::ReflectionHelper::Instance().Deserialize(Type1());
 }
 
+void TestCrtp() {
+	class Derived1 : public crtp::Base<Derived1> {
+	public:
+		void FuncImp() {
+			std::cout << "this is Derived1" << std::endl;
+		}
+	};
+
+	class Derived2 : public crtp::Base<Derived2> {
+	public:
+		void FuncImp() {
+			std::cout << "this is Derived2" << std::endl;
+		}
+	};
+
+	Derived1 a;
+	Derived2 b;
+	Derived2 c;
+	crtp::Container<crtp::Base, Derived1, Derived2, Derived2> cont(&a, &b, &c);
+	cont.Func();
+}
+
 int main() {
+#if 0
 	TestArrayNd();
 	TestArrayNd1();
 	TestVariableBuffer();
@@ -258,5 +282,7 @@ int main() {
 	TestNQueens();
 	TestAsm();
 	TestReflection();
+#endif
+	TestCrtp();
 	return 0;
 }
