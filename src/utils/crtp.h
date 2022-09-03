@@ -27,9 +27,8 @@ namespace crtp {
 			(sizeof...(Ders) == sizeof...(Ders1) + 1);
 			typename std::enable_if_t<(... && std::is_pointer_v<Ders1>)>;
 		}
-		Container(First&& first, Ders1&&... ders) {
+		Container(First&& first, Ders1&&... ders) : Container(std::forward<Ders1>(ders)...) {
 			objs_[sizeof...(Ders) - sizeof...(Ders1) - 1] = static_cast<void*>(first);
-			Container(std::forward<Ders1>(ders)...);
 		}
 
 		Container() = default;
