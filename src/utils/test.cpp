@@ -268,6 +268,7 @@ void TestCrtp() {
 	Derived2 c;
 	crtp::Container<crtp::Base, Derived1, Derived2, Derived2> cont(&a, &b, &c);
 	cont.Func();
+	Func(a);
 }
 
 int main() {

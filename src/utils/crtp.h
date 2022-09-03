@@ -11,6 +11,11 @@ namespace crtp {
 		}
 	};
 
+	template <class Derived>
+	inline void Func(Base<Derived>& obj) {
+		obj.Func();
+	}
+
 	template <template <class> class Base, class... Ders>
 		requires requires(Ders... ders) {
 		(... , static_cast<Base<Ders>>(ders));
