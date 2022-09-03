@@ -40,7 +40,7 @@ namespace crtp {
 	private:
 		template <class First, class... Ders1>
 		void _Func() {
-			static_cast<First*>(objs_[sizeof...(Ders) == sizeof...(Ders1) + 1])->Func();
+			static_cast<First*>(objs_[sizeof...(Ders) - sizeof...(Ders1) - 1])->Func();
 			if constexpr (sizeof...(Ders1) != 0)
 				_Func<Ders1...>();
 		}
