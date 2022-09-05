@@ -42,6 +42,7 @@ void TestArrayNd() {
 	assert(c[0][0][1] == 2);
 	assert(c[0][1][1] == 5);
 	assert(c[1][2][0] == 22);
+	assert(c[0][2][2] == 0);
 }
 
 void TestArrayNd1() {
