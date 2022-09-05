@@ -33,9 +33,15 @@ void TestArrayNd() {
 	assert(a2[5][5][5] == 10);
 	assert(&a2[6][7][8] - &a2[0][0][0] == 7 * 8 * 9 - 1);
 
-	byfxxm::ArrayNd<int, 3> c = { { {1, 2, 3}, {4, 5} } };
+	byfxxm::ArrayNd<int, 3> c =
+	{
+		{ {1, 2, 3}, {4, 5} },
+		{ {13, 14}, {6, 7, 8, 9}, {22} }
+	};
+
 	assert(c[0][0][1] == 2);
 	assert(c[0][1][1] == 5);
+	assert(c[1][2][0] == 22);
 }
 
 void TestArrayNd1() {
