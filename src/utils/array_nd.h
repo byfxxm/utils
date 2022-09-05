@@ -58,20 +58,20 @@ namespace byfxxm {
 			GenerateFactors();
 		}
 
-		template <size_t N>
+		template <class T, size_t N>
 		struct InitializerList {
-			using type = std::initializer_list<typename InitializerList<N - 1>::type>;
+			using type = std::initializer_list<typename InitializerList<T, N - 1>::type>;
 		};
 
-		template <>
-		struct InitializerList<1> {
-			using type = std::initializer_list<Ty>;
+		template <class T>
+		struct InitializerList<T, 1> {
+			using type = std::initializer_list<T>;
 		};
 
-		template <size_t N>
-		using InitializerList_t = InitializerList<N>::type;
+		template <class T, size_t N>
+		using InitializerList_t = InitializerList<T, N>::type;
 
-		ArrayNd(InitializerList_t<Num> list) {
+		ArrayNd(InitializerList_t<Ty, Num> list) {
 			GenerateDims(list, 0);
 			count_ = 1;
 			for (auto it : dims_)
