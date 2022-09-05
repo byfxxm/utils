@@ -80,7 +80,7 @@ namespace byfxxm {
 			elems_ = std::make_shared<Ty[]>(count_);
 			Memset(0);
 			GenerateFactors();
-			Assignment(list);
+			Assignment(list, 0);
 		}
 
 		ArrayNd(const ArrayNd&) = delete;
@@ -110,7 +110,7 @@ namespace byfxxm {
 				dims_[idx] = list_size;
 
 			for (auto& it : list)
-				_ArrayNd<N - 1>(it);
+				GenerateDims<N - 1>(it);
 		}
 
 		void GenerateFactors() {
@@ -122,14 +122,16 @@ namespace byfxxm {
 		}
 
 		template <class T>
-		void Assignment(std::initializer_list<T> list) {
-
+		void Assignment(std::initializer_list<T> list, size_t idx) {
+			for (auto it = list.begin(); it != list.end(); ++it) {
+				//elems_[idx + (it - list.begin())] = *it;
+			}
 		}
 
 		template <class T, size_t N>
-		void Assignment(InitializerList_t<T, N> list) {
-			for (auto& it : list)
-				Assignment<N - 1>(it);
+		void Assignment(InitializerList_t<T, N> list, size_t idx) {
+			for (auto it = list.begin(); it != list.end(); ++it)
+				Assignment<N - 1>(*it, idx + (it - list.begin) * factors_[Num - N]);
 		}
 
 	private:
