@@ -55,11 +55,7 @@ namespace byfxxm {
 		ArrayNd(Args&&... args) : count_((... * args)), dims_{ static_cast<size_t>(args)... } {
 			elems_ = std::make_shared<Ty[]>(count_);
 			Memset(0);
-			for (size_t i = 0; i < Num; ++i) {
-				factors_[i] = 1;
-				for (size_t j = i + 1; j < Num; ++j)
-					factors_[i] *= dims_[j];
-			}
+			GenerateFactors();
 		}
 
 		template <class T, size_t N>
@@ -76,7 +72,10 @@ namespace byfxxm {
 		using InitializerList_t = InitializerList<T, N>::type;
 
 		ArrayNd(InitializerList_t<Ty, Num> list) {
+			elems_ = std::make_shared<Ty[]>(count_);
+			Memset(0);
 			_ArrayNd(list);
+			GenerateFactors();
 		}
 
 		ArrayNd(const ArrayNd&) = delete;
@@ -102,12 +101,21 @@ namespace byfxxm {
 
 		template <class T, size_t N>
 		void _ArrayNd(InitializerList_t<T, N> list) {
-			if constexpr (N == 1) {
-				return;
-			}
+			constexpr auto idx = Num - N;
+			auto list_size = list.size();
+			if (list_size > dims_[idx])
+				dims_[idx] = list_size;
 
-			for (auto i : list)
+			for (auto& i : list)
 				_ArrayNd<N - 1>(i);
+		}
+
+		void GenerateFactors() {
+			for (size_t i = 0; i < Num; ++i) {
+				factors_[i] = 1;
+				for (size_t j = i + 1; j < Num; ++j)
+					factors_[i] *= dims_[j];
+			}
 		}
 
 	private:
