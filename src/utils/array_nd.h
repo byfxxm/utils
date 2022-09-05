@@ -2,6 +2,7 @@
 #include <array>
 #include <cassert>
 #include <memory>
+#include <vector>
 
 namespace byfxxm {
 	/*
@@ -11,8 +12,8 @@ namespace byfxxm {
 	*		char c = arr[1][2][3]; // 随机访问数组，参数个数等于维数时，返回引用
 	*		arr.Memset('z'); // 内存初始化
 	*/
-	template <class Ty, size_t Ct>
-		requires (Ct > 0)
+	template <class Ty, size_t Num>
+		requires (Num > 0)
 	class ArrayNd final {
 	private:
 		template <class T, size_t N>
@@ -50,13 +51,13 @@ namespace byfxxm {
 
 	public:
 		template <class... Args>
-			requires (sizeof...(Args) == Ct)
+			requires (sizeof...(Args) == Num)
 		ArrayNd(Args&&... args) : count_((... * args)), dims_{ static_cast<size_t>(args)... } {
 			elems_ = std::make_shared<Ty[]>(count_);
 			Memset(0);
-			for (size_t i = 0; i < Ct; ++i) {
+			for (size_t i = 0; i < Num; ++i) {
 				factors_[i] = 1;
-				for (size_t j = i + 1; j < Ct; ++j)
+				for (size_t j = i + 1; j < Num; ++j)
 					factors_[i] *= dims_[j];
 			}
 		}
@@ -74,7 +75,7 @@ namespace byfxxm {
 		template <class T, size_t N>
 		using InitializerList_t = InitializerList<T, N>::type;
 
-		ArrayNd(InitializerList_t<Ty, Ct> list) {
+		ArrayNd(InitializerList_t<Ty, Num> list) {
 			_ArrayNd(list);
 		}
 
@@ -84,7 +85,7 @@ namespace byfxxm {
 		ArrayNd& operator=(ArrayNd&&) noexcept = default;
 
 		decltype(auto) operator[](size_t idx) {
-			return ViewPtr<Ty, Ct>(elems_.get(), &dims_.front(), &factors_.front())[idx];
+			return ViewPtr<Ty, Num>(elems_.get(), &dims_.front(), &factors_.front())[idx];
 		}
 
 		void Memset(Ty val) {
@@ -112,8 +113,8 @@ namespace byfxxm {
 	private:
 		std::shared_ptr<Ty[]> elems_;
 		size_t count_{ 0 };
-		std::array<size_t, Ct> dims_;
-		std::array<size_t, Ct> factors_;
+		std::array<size_t, Num> dims_;
+		std::array<size_t, Num> factors_;
 	};
 
 	template <class Ty, class... Args>
