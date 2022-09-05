@@ -72,10 +72,15 @@ namespace byfxxm {
 		using InitializerList_t = InitializerList<T, N>::type;
 
 		ArrayNd(InitializerList_t<Ty, Num> list) {
+			GenerateDims(list);
+			count_ = 1;
+			for (auto it : dims_)
+				count_ *= it;
+
 			elems_ = std::make_shared<Ty[]>(count_);
 			Memset(0);
-			_ArrayNd(list);
 			GenerateFactors();
+			Assignment(list);
 		}
 
 		ArrayNd(const ArrayNd&) = delete;
@@ -95,19 +100,17 @@ namespace byfxxm {
 
 	private:
 		template <class T>
-		void _ArrayNd(std::initializer_list<T> list) {
-
-		}
+		void GenerateDims(std::initializer_list<T> list) {}
 
 		template <class T, size_t N>
-		void _ArrayNd(InitializerList_t<T, N> list) {
+		void GenerateDims(InitializerList_t<T, N> list) {
 			constexpr auto idx = Num - N;
 			auto list_size = list.size();
 			if (list_size > dims_[idx])
 				dims_[idx] = list_size;
 
-			for (auto& i : list)
-				_ArrayNd<N - 1>(i);
+			for (auto& it : list)
+				_ArrayNd<N - 1>(it);
 		}
 
 		void GenerateFactors() {
@@ -116,6 +119,17 @@ namespace byfxxm {
 				for (size_t j = i + 1; j < Num; ++j)
 					factors_[i] *= dims_[j];
 			}
+		}
+
+		template <class T>
+		void Assignment(std::initializer_list<T> list) {
+
+		}
+
+		template <class T, size_t N>
+		void Assignment(InitializerList_t<T, N> list) {
+			for (auto& it : list)
+				Assignment<N - 1>(it);
 		}
 
 	private:
