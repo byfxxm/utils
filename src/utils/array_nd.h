@@ -53,7 +53,7 @@ namespace byfxxm {
 		template <class... Args>
 			requires (sizeof...(Args) == Num)
 		ArrayNd(Args&&... args) : count_((... * args)), dims_{ static_cast<size_t>(args)... } {
-			elems_ = std::make_shared<Ty[]>(count_);
+			elems_ = std::make_unique<Ty[]>(count_);
 			Memset(0);
 			GenerateFactors();
 		}
@@ -77,7 +77,7 @@ namespace byfxxm {
 			for (auto it : dims_)
 				count_ *= it;
 
-			elems_ = std::make_shared<Ty[]>(count_);
+			elems_ = std::make_unique<Ty[]>(count_);
 			Memset(0);
 			GenerateFactors();
 			Assignment(list, 0, 0);
@@ -135,7 +135,7 @@ namespace byfxxm {
 		}
 
 	private:
-		std::shared_ptr<Ty[]> elems_;
+		std::unique_ptr<Ty[]> elems_;
 		size_t count_{ 0 };
 		std::array<size_t, Num> dims_;
 		std::array<size_t, Num> factors_;
