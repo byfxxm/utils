@@ -33,7 +33,9 @@ void TestArrayNd() {
 	assert(a2[5][5][5] == 10);
 	assert(&a2[6][7][8] - &a2[0][0][0] == 7 * 8 * 9 - 1);
 
-	byfxxm::ArrayNd<int, 3> c = { { {1, 2, 3} } };
+	byfxxm::ArrayNd<int, 3> c = { { {1, 2, 3}, {4, 5} } };
+	assert(c[0][0][1] == 2);
+	assert(c[0][1][1] == 5);
 }
 
 void TestArrayNd1() {
@@ -276,8 +278,8 @@ void TestCrtp() {
 }
 
 int main() {
-#if 0
 	TestArrayNd();
+#if 0
 	TestArrayNd1();
 	TestVariableBuffer();
 	TestHashMap();
@@ -287,7 +289,7 @@ int main() {
 	TestNQueens();
 	TestAsm();
 	TestReflection();
-#endif
 	TestCrtp();
+#endif
 	return 0;
 }

@@ -72,7 +72,7 @@ namespace byfxxm {
 		using InitializerList_t = InitializerList<T, N>::type;
 
 		ArrayNd(InitializerList_t<Ty, Num> list) {
-			GenerateDims(list);
+			GenerateDims(list, 0);
 			count_ = 1;
 			for (auto it : dims_)
 				count_ *= it;
@@ -99,18 +99,20 @@ namespace byfxxm {
 		}
 
 	private:
-		template <class T>
-		void GenerateDims(std::initializer_list<T> list) {}
+		void GenerateDims(std::initializer_list<Ty> list, size_t idx) {
+			auto list_size = list.size();
+			if (list_size > dims_[idx])
+				dims_[idx] = list_size;
+		}
 
-		template <class T, size_t N>
-		void GenerateDims(InitializerList_t<T, N> list) {
-			constexpr auto idx = Num - N;
+		template <class T>
+		void GenerateDims(T list, size_t idx) {
 			auto list_size = list.size();
 			if (list_size > dims_[idx])
 				dims_[idx] = list_size;
 
 			for (auto& it : list)
-				GenerateDims<N - 1>(it);
+				GenerateDims(it, idx + 1);
 		}
 
 		void GenerateFactors() {
@@ -121,17 +123,15 @@ namespace byfxxm {
 			}
 		}
 
-		template <class T>
-		void Assignment(std::initializer_list<T> list, size_t idx) {
-			for (auto it = list.begin(); it != list.end(); ++it) {
-				//elems_[idx + (it - list.begin())] = *it;
-			}
+		void Assignment(std::initializer_list<Ty> list, size_t idx) {
+			for (auto it = list.begin(); it != list.end(); ++it)
+				elems_[idx + (it - list.begin())] = *it;
 		}
 
-		template <class T, size_t N>
-		void Assignment(InitializerList_t<T, N> list, size_t idx) {
+		template <class T>
+		void Assignment(T list, size_t idx) {
 			for (auto it = list.begin(); it != list.end(); ++it)
-				Assignment<N - 1>(*it, idx + (it - list.begin) * factors_[Num - N]);
+				Assignment(*it, idx + (it - list.begin()) * factors_[idx + 1]);
 		}
 
 	private:
