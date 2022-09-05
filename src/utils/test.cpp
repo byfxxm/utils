@@ -34,10 +34,6 @@ void TestArrayNd() {
 	assert(&a2[6][7][8] - &a2[0][0][0] == 7 * 8 * 9 - 1);
 
 	byfxxm::ArrayNd<int, 3> c = { { {1, 2, 3} } };
-
-	std::initializer_list<double> aa;
-	auto it = aa.begin();
-	double x = *it;
 }
 
 void TestArrayNd1() {
