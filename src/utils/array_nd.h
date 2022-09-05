@@ -99,6 +99,14 @@ namespace byfxxm {
 		}
 
 	private:
+		void GenerateFactors() {
+			for (size_t i = 0; i < Num; ++i) {
+				factors_[i] = 1;
+				for (size_t j = i + 1; j < Num; ++j)
+					factors_[i] *= dims_[j];
+			}
+		}
+
 		void GenerateDims(std::initializer_list<Ty> list, size_t idx) {
 			auto list_size = list.size();
 			if (list_size > dims_[idx])
@@ -113,14 +121,6 @@ namespace byfxxm {
 
 			for (auto& it : list)
 				GenerateDims(it, idx + 1);
-		}
-
-		void GenerateFactors() {
-			for (size_t i = 0; i < Num; ++i) {
-				factors_[i] = 1;
-				for (size_t j = i + 1; j < Num; ++j)
-					factors_[i] *= dims_[j];
-			}
 		}
 
 		void Assignment(std::initializer_list<Ty> list, size_t idx) {
