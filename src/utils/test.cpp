@@ -53,6 +53,9 @@ void TestArrayNd() {
 
 	byfxxm::ArrayNd<int, 2> d{ {0, 1}, {2, 3, 4} };
 	assert(d[1][1] == 3);
+
+	byfxxm::ArrayNd<int, 1> e = { 1, 2, 3, 4 };
+	assert(e[3] == 4);
 }
 
 void TestArrayNd1() {
