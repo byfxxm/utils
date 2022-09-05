@@ -61,6 +61,23 @@ namespace byfxxm {
 			}
 		}
 
+		template <class T, size_t N>
+		struct InitializerList {
+			using type = std::initializer_list<typename InitializerList<T, N - 1>::type>;
+		};
+
+		template <class T>
+		struct InitializerList<T, 1> {
+			using type = std::initializer_list<T>;
+		};
+
+		template <class T, size_t N>
+		using InitializerList_t = InitializerList<T, N>::type;
+
+		ArrayNd(InitializerList_t<Ty, Ct> list) {
+			_ArrayNd(list);
+		}
+
 		ArrayNd(const ArrayNd&) = delete;
 		ArrayNd(ArrayNd&&) noexcept = default;
 		ArrayNd& operator=(const ArrayNd&) = delete;
@@ -74,6 +91,22 @@ namespace byfxxm {
 			assert(elems_);
 			for (size_t i = 0; i < count_; ++i)
 				elems_[i] = val;
+		}
+
+	private:
+		template <class T>
+		void _ArrayNd(std::initializer_list<T> list) {
+
+		}
+
+		template <class T, size_t N>
+		void _ArrayNd(InitializerList_t<T, N> list) {
+			if constexpr (N == 1) {
+				return;
+			}
+
+			for (auto i : list)
+				_ArrayNd<N - 1>(i);
 		}
 
 	private:
