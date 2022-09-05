@@ -15,36 +15,36 @@ namespace byfxxm {
 		requires (Ct > 0)
 	class ArrayNd final {
 	private:
-		template <class T1, size_t N1>
+		template <class T, size_t N>
 		class ViewPtr final {
 		public:
-			ViewPtr(T1* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d), factors_(f) {
+			ViewPtr(T* p, const size_t* d, const size_t* f) : ptr_(p), dims_(d), factors_(f) {
 				assert(ptr_);
 			}
 
-			ViewPtr<T1, N1 - 1> operator[](size_t idx) const&& {
+			ViewPtr<T, N - 1> operator[](size_t idx) const&& {
 				assert(idx >= 0 && idx < dims_[0]);
-				return ViewPtr<T1, N1 - 1>(ptr_ + idx * factors_[0], dims_ + 1, factors_ + 1);
+				return ViewPtr<T, N - 1>(ptr_ + idx * factors_[0], dims_ + 1, factors_ + 1);
 			}
 
 		private:
-			T1* ptr_{ nullptr };
+			T* ptr_{ nullptr };
 			const size_t* dims_{ nullptr };
 			const size_t* factors_{ nullptr };
 		};
 
-		template <class T1>
-		class ViewPtr<T1, 1> final {
+		template <class T>
+		class ViewPtr<T, 1> final {
 		public:
-			ViewPtr(T1* p, const size_t* d, const size_t*) : ptr_(p), dims_(d) {}
+			ViewPtr(T* p, const size_t* d, const size_t*) : ptr_(p), dims_(d) {}
 
-			T1& operator[](size_t idx) const&& {
+			T& operator[](size_t idx) const&& {
 				assert(idx >= 0 && idx < dims_[0]);
 				return ptr_[idx];
 			}
 
 		private:
-			T1* ptr_{ nullptr };
+			T* ptr_{ nullptr };
 			const size_t* dims_{ nullptr };
 		};
 
