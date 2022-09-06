@@ -23,9 +23,9 @@ namespace byfxxm {
 				assert(ptr_);
 			}
 
-			ViewPtr<T, N - 1> operator[](size_t idx) const&& {
-				assert(idx >= 0 && idx < shape_[0]);
-				return ViewPtr<T, N - 1>(ptr_ + idx * factor_[0], shape_ + 1, factor_ + 1);
+			ViewPtr<T, N - 1> operator[](size_t index) const&& {
+				assert(index >= 0 && index < shape_[0]);
+				return ViewPtr<T, N - 1>(ptr_ + index * factor_[0], shape_ + 1, factor_ + 1);
 			}
 
 		private:
@@ -39,9 +39,9 @@ namespace byfxxm {
 		public:
 			ViewPtr(T* p, const size_t* shape, const size_t*) : ptr_(p), shape_(shape) {}
 
-			T& operator[](size_t idx) const&& {
-				assert(idx >= 0 && idx < shape_[0]);
-				return ptr_[idx];
+			T& operator[](size_t index) const&& {
+				assert(index >= 0 && index < shape_[0]);
+				return ptr_[index];
 			}
 
 		private:
@@ -88,8 +88,8 @@ namespace byfxxm {
 		ArrayNd& operator=(const ArrayNd&) = delete;
 		ArrayNd& operator=(ArrayNd&&) noexcept = default;
 
-		decltype(auto) operator[](size_t idx) {
-			return ViewPtr<Ty, Num>(elems_.get(), &shapes_.front(), &factors_.front())[idx];
+		decltype(auto) operator[](size_t index) {
+			return ViewPtr<Ty, Num>(elems_.get(), &shapes_.front(), &factors_.front())[index];
 		}
 
 		void Memset(Ty val) {
@@ -107,31 +107,31 @@ namespace byfxxm {
 			}
 		}
 
-		void InitializeShapes(std::initializer_list<Ty> list, size_t idx) {
+		void InitializeShapes(std::initializer_list<Ty> list, size_t index) {
 			auto list_size = list.size();
-			if (list_size > shapes_[idx])
-				shapes_[idx] = list_size;
+			if (list_size > shapes_[index])
+				shapes_[index] = list_size;
 		}
 
 		template <class T>
-		void InitializeShapes(T list, size_t idx) {
+		void InitializeShapes(T list, size_t index) {
 			auto list_size = list.size();
-			if (list_size > shapes_[idx])
-				shapes_[idx] = list_size;
+			if (list_size > shapes_[index])
+				shapes_[index] = list_size;
 
 			for (auto& it : list)
-				InitializeShapes(it, idx + 1);
+				InitializeShapes(it, index + 1);
 		}
 
-		void Assignment(std::initializer_list<Ty> list, size_t idx, size_t off) {
+		void Assignment(std::initializer_list<Ty> list, size_t index, size_t offset) {
 			for (auto it = list.begin(); it != list.end(); ++it)
-				elems_[off + (it - list.begin())] = *it;
+				elems_[offset + (it - list.begin())] = *it;
 		}
 
 		template <class T>
-		void Assignment(T list, size_t idx, size_t off) {
+		void Assignment(T list, size_t index, size_t offset) {
 			for (auto it = list.begin(); it != list.end(); ++it)
-				Assignment(*it, idx + 1, off + (it - list.begin()) * factors_[idx]);
+				Assignment(*it, index + 1, offset + (it - list.begin()) * factors_[index]);
 		}
 
 	private:
