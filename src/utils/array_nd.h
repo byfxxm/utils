@@ -19,40 +19,40 @@ namespace byfxxm {
 		template <class T, size_t N>
 		class ViewPtr final {
 		public:
-			ViewPtr(T* p, const size_t* d, const size_t* f) : ptr_(p), p_dims_(d), p_factors_(f) {
+			ViewPtr(T* p, const size_t* shape, const size_t* factor) : ptr_(p), shape_(shape), factor_(factor) {
 				assert(ptr_);
 			}
 
 			ViewPtr<T, N - 1> operator[](size_t idx) const&& {
-				assert(idx >= 0 && idx < p_dims_[0]);
-				return ViewPtr<T, N - 1>(ptr_ + idx * p_factors_[0], p_dims_ + 1, p_factors_ + 1);
+				assert(idx >= 0 && idx < shape_[0]);
+				return ViewPtr<T, N - 1>(ptr_ + idx * factor_[0], shape_ + 1, factor_ + 1);
 			}
 
 		private:
 			T* ptr_{ nullptr };
-			const size_t* p_dims_{ nullptr };
-			const size_t* p_factors_{ nullptr };
+			const size_t* shape_{ nullptr };
+			const size_t* factor_{ nullptr };
 		};
 
 		template <class T>
 		class ViewPtr<T, 1> final {
 		public:
-			ViewPtr(T* p, const size_t* d, const size_t*) : ptr_(p), p_dims_(d) {}
+			ViewPtr(T* p, const size_t* shape, const size_t*) : ptr_(p), shape_(shape) {}
 
 			T& operator[](size_t idx) const&& {
-				assert(idx >= 0 && idx < p_dims_[0]);
+				assert(idx >= 0 && idx < shape_[0]);
 				return ptr_[idx];
 			}
 
 		private:
 			T* ptr_{ nullptr };
-			const size_t* p_dims_{ nullptr };
+			const size_t* shape_{ nullptr };
 		};
 
 	public:
 		template <class... Args>
 			requires (sizeof...(Args) == Num)
-		ArrayNd(Args&&... args) : count_((... * args)), dims_{ static_cast<size_t>(args)... } {
+		ArrayNd(Args&&... args) : count_((... * args)), shapes_{ static_cast<size_t>(args)... } {
 			elems_ = std::make_unique<Ty[]>(count_);
 			Memset(0);
 			GenerateFactors();
@@ -74,7 +74,7 @@ namespace byfxxm {
 		ArrayNd(InitializerList_t<Ty, Num> list) {
 			GenerateDims(list, 0);
 			count_ = 1;
-			for (auto it : dims_)
+			for (auto it : shapes_)
 				count_ *= it;
 
 			elems_ = std::make_unique<Ty[]>(count_);
@@ -89,7 +89,7 @@ namespace byfxxm {
 		ArrayNd& operator=(ArrayNd&&) noexcept = default;
 
 		decltype(auto) operator[](size_t idx) {
-			return ViewPtr<Ty, Num>(elems_.get(), &dims_.front(), &factors_.front())[idx];
+			return ViewPtr<Ty, Num>(elems_.get(), &shapes_.front(), &factors_.front())[idx];
 		}
 
 		void Memset(Ty val) {
@@ -103,21 +103,21 @@ namespace byfxxm {
 			for (size_t i = 0; i < Num; ++i) {
 				factors_[i] = 1;
 				for (size_t j = i + 1; j < Num; ++j)
-					factors_[i] *= dims_[j];
+					factors_[i] *= shapes_[j];
 			}
 		}
 
 		void GenerateDims(std::initializer_list<Ty> list, size_t idx) {
 			auto list_size = list.size();
-			if (list_size > dims_[idx])
-				dims_[idx] = list_size;
+			if (list_size > shapes_[idx])
+				shapes_[idx] = list_size;
 		}
 
 		template <class T>
 		void GenerateDims(T list, size_t idx) {
 			auto list_size = list.size();
-			if (list_size > dims_[idx])
-				dims_[idx] = list_size;
+			if (list_size > shapes_[idx])
+				shapes_[idx] = list_size;
 
 			for (auto& it : list)
 				GenerateDims(it, idx + 1);
@@ -137,7 +137,7 @@ namespace byfxxm {
 	private:
 		std::unique_ptr<Ty[]> elems_;
 		size_t count_{ 0 };
-		std::array<size_t, Num> dims_;
+		std::array<size_t, Num> shapes_;
 		std::array<size_t, Num> factors_;
 	};
 
