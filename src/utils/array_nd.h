@@ -72,7 +72,7 @@ namespace byfxxm {
 		using InitializerList_t = InitializerList<T, N>::type;
 
 		ArrayNd(InitializerList_t<Ty, Num> list) {
-			GenerateDims(list, 0);
+			GenerateShapes(list, 0);
 			count_ = 1;
 			for (auto it : shapes_)
 				count_ *= it;
@@ -107,20 +107,20 @@ namespace byfxxm {
 			}
 		}
 
-		void GenerateDims(std::initializer_list<Ty> list, size_t idx) {
+		void GenerateShapes(std::initializer_list<Ty> list, size_t idx) {
 			auto list_size = list.size();
 			if (list_size > shapes_[idx])
 				shapes_[idx] = list_size;
 		}
 
 		template <class T>
-		void GenerateDims(T list, size_t idx) {
+		void GenerateShapes(T list, size_t idx) {
 			auto list_size = list.size();
 			if (list_size > shapes_[idx])
 				shapes_[idx] = list_size;
 
 			for (auto& it : list)
-				GenerateDims(it, idx + 1);
+				GenerateShapes(it, idx + 1);
 		}
 
 		void Assignment(std::initializer_list<Ty> list, size_t idx, size_t off) {
