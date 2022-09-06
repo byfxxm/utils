@@ -55,7 +55,7 @@ namespace byfxxm {
 		ArrayNd(Args&&... args) : count_((... * args)), shapes_{ static_cast<size_t>(args)... } {
 			elems_ = std::make_unique<Ty[]>(count_);
 			Memset(0);
-			GenerateFactors();
+			InitializeFactors();
 		}
 
 		template <class T, size_t N>
@@ -72,14 +72,14 @@ namespace byfxxm {
 		using InitializerList_t = InitializerList<T, N>::type;
 
 		ArrayNd(InitializerList_t<Ty, Num> list) {
-			GenerateShapes(list, 0);
+			InitializeShapes(list, 0);
 			count_ = 1;
 			for (auto it : shapes_)
 				count_ *= it;
 
 			elems_ = std::make_unique<Ty[]>(count_);
 			Memset(0);
-			GenerateFactors();
+			InitializeFactors();
 			Assignment(list, 0, 0);
 		}
 
@@ -99,7 +99,7 @@ namespace byfxxm {
 		}
 
 	private:
-		void GenerateFactors() {
+		void InitializeFactors() {
 			for (size_t i = 0; i < Num; ++i) {
 				factors_[i] = 1;
 				for (size_t j = i + 1; j < Num; ++j)
@@ -107,20 +107,20 @@ namespace byfxxm {
 			}
 		}
 
-		void GenerateShapes(std::initializer_list<Ty> list, size_t idx) {
+		void InitializeShapes(std::initializer_list<Ty> list, size_t idx) {
 			auto list_size = list.size();
 			if (list_size > shapes_[idx])
 				shapes_[idx] = list_size;
 		}
 
 		template <class T>
-		void GenerateShapes(T list, size_t idx) {
+		void InitializeShapes(T list, size_t idx) {
 			auto list_size = list.size();
 			if (list_size > shapes_[idx])
 				shapes_[idx] = list_size;
 
 			for (auto& it : list)
-				GenerateShapes(it, idx + 1);
+				InitializeShapes(it, idx + 1);
 		}
 
 		void Assignment(std::initializer_list<Ty> list, size_t idx, size_t off) {
