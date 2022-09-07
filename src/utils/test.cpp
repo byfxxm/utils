@@ -33,6 +33,7 @@ void TestArrayNd() {
 	assert(a2[5][5][5] == 10);
 	assert(&a2[6][7][8] - &a2[0][0][0] == 7 * 8 * 9 - 1);
 
+	int x = 22;
 	byfxxm::ArrayNd<int, 3> c =
 	{
 		{
@@ -42,7 +43,7 @@ void TestArrayNd() {
 		{
 			{ 13, 14 },
 			{ 6, 7, 8, 9 },
-			{ 22 }
+			{ x }
 		}
 	};
 
