@@ -23,7 +23,7 @@ namespace byfxxm {
 				assert(ptr_);
 			}
 
-			ViewPtr<T, N - 1> operator[](size_t index) const&& {
+			const ViewPtr<T, N - 1> operator[](size_t index) const&& {
 				assert(index >= 0 && index < shape_[0]);
 				return ViewPtr<T, N - 1>(ptr_ + index * factor_[0], shape_ + 1, factor_ + 1);
 			}
