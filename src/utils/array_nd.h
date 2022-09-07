@@ -120,7 +120,7 @@ namespace byfxxm {
 		}
 
 		template <class T>
-		void InitializeShapes(T list, size_t index) {
+		void InitializeShapes(T&& list, size_t index) {
 			auto list_size = list.size();
 			if (list_size > shapes_[index])
 				shapes_[index] = list_size;
@@ -135,7 +135,7 @@ namespace byfxxm {
 		}
 
 		template <class T>
-		void Assignment(T list, size_t index, size_t offset) {
+		void Assignment(T&& list, size_t index, size_t offset) {
 			for (auto it = list.begin(); it != list.end(); ++it)
 				Assignment(*it, index + 1, offset + (it - list.begin()) * factors_[index]);
 		}
