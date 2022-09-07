@@ -44,13 +44,18 @@ void TestArrayNd() {
 			{ 13, 14 },
 			{ 6, 7, 8, 9 },
 			{ x }
-		}
+		},
+		{},
 	};
 
 	assert(c[0][0][1] == 2);
 	assert(c[0][1][1] == 5);
 	assert(c[1][2][0] == 22);
 	assert(c[0][2][2] == 0);
+
+	for (size_t i = 0; i < c.GetShape<1>(); ++i)
+		for (size_t j = 0; j < c.GetShape<2>(); ++j)
+			assert(c[2][i][j] == 0);
 
 	byfxxm::ArrayNd<int, 2> d{ {0, 1}, {2, 3, 4} };
 	assert(d[1][1] == 3);

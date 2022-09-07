@@ -98,6 +98,12 @@ namespace byfxxm {
 				elems_[i] = val;
 		}
 
+		template <size_t N>
+			requires (N < Num)
+		auto GetShape() {
+			return shapes_[N];
+		}
+
 	private:
 		void InitializeFactors() {
 			for (size_t i = 0; i < Num; ++i) {
