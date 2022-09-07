@@ -100,7 +100,7 @@ namespace byfxxm {
 
 		template <size_t N>
 			requires (N < Num)
-		auto GetShape() {
+		auto Shape() {
 			return shapes_[N];
 		}
 
