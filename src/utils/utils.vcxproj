@@ -146,6 +146,7 @@
     <ClInclude Include="array_nd.h" />
     <ClInclude Include="array_nd_1.h" />
     <ClInclude Include="asm.h" />
+    <ClInclude Include="coroutine.h" />
     <ClInclude Include="crtp.h" />
     <ClInclude Include="n_queens.h" />
     <ClInclude Include="hash_map.h" />

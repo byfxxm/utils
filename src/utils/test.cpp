@@ -13,6 +13,7 @@
 #include "asm.h"
 #include "reflection.h"
 #include "crtp.h"
+#include "coroutine.h"
 
 void TestArrayNd() {
 	auto a = byfxxm::MakeArrayNd((size_t)7, 8, 9);
@@ -303,9 +304,22 @@ void TestCrtp() {
 	crtp::Func(b);
 }
 
+void TestCoroutine() {
+	Coroutine::test();
+	std::cout << "10.main():come back to caller becuase of co_await awaiter\n";
+	std::this_thread::sleep_for(std::chrono::seconds(1));
+
+	std::cout << "-----------------------------------" << std::endl;
+
+	auto coro = Coroutine::my_coroutine();
+	std::cout << "5.main():call coro.get()" << std::endl;
+	auto result = coro.get();
+	std::cout << "14.main():The coroutine result: " << result << std::endl;
+}
+
 int main() {
-	TestArrayNd();
 #if 0
+	TestArrayNd();
 	TestArrayNd1();
 	TestVariableBuffer();
 	TestHashMap();
@@ -317,5 +331,7 @@ int main() {
 	TestReflection();
 	TestCrtp();
 #endif
+	TestCoroutine();
+
 	return 0;
 }
