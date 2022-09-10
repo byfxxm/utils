@@ -13,7 +13,7 @@ namespace byfxxm {
 	*		ArrayNd<int, 2> arr1{{0, 1}, {2, 3, 4}}; // 支持初始化列表
 	*/
 	template <class Ty, size_t Num>
-		requires (Num > 0)
+		requires std::is_trivially_copyable_v<Ty> && (Num > 0)
 	class ArrayNd final {
 	private:
 		template <class T, size_t N>
@@ -83,9 +83,16 @@ namespace byfxxm {
 			Assignment(list, 0, 0);
 		}
 
-		ArrayNd(const ArrayNd&) = delete;
+		ArrayNd(const ArrayNd& arr) : shapes_(arr.shapes_), factors_(arr.factors_), count_(arr.count_), elems_(std::make_unique<Ty[]>(count_)) {
+			*this = arr;
+		}
+
+		ArrayNd& operator=(const ArrayNd& arr) {
+			memcpy(elems_.get(), arr.elems_.get(), count_ * sizeof(Ty));
+			return *this;
+		}
+
 		ArrayNd(ArrayNd&&) noexcept = default;
-		ArrayNd& operator=(const ArrayNd&) = delete;
 		ArrayNd& operator=(ArrayNd&&) noexcept = default;
 
 		decltype(auto) operator[](size_t pos) {
@@ -141,10 +148,10 @@ namespace byfxxm {
 		}
 
 	private:
-		std::unique_ptr<Ty[]> elems_;
-		size_t count_{ 0 };
 		std::array<size_t, Num> shapes_;
 		std::array<size_t, Num> factors_;
+		size_t count_{ 0 };
+		std::unique_ptr<Ty[]> elems_;
 	};
 
 	template <class First, class... Args>

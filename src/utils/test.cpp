@@ -28,7 +28,7 @@ void TestArrayNd() {
 	byfxxm::ArrayNd<size_t, 1> b(5);
 	assert(&b[4] - &b[0] == 4);
 
-	byfxxm::ArrayNd<size_t, 3> a2(std::move(a));
+	byfxxm::ArrayNd<size_t, 3> a2(a);
 	assert(a2[5][5][5] == 50);
 	a2[5][5][5] = 10;
 	assert(a2[5][5][5] == 10);
