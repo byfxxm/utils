@@ -318,8 +318,8 @@ void TestCoroutine() {
 }
 
 int main() {
-#if 0
 	TestArrayNd();
+#if 0
 	TestArrayNd1();
 	TestVariableBuffer();
 	TestHashMap();
@@ -330,8 +330,8 @@ int main() {
 	TestReflection();
 	TestCrtp();
 	TestCoroutine();
-#endif
 	TestRingBuffer();
+#endif
 
 	return 0;
 }
