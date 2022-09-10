@@ -92,7 +92,7 @@ void TestArrayNd1() {
 }
 
 void TestVariableBuffer() {
-	VariableBuffer<20> vbuf;
+	byfxxm::VariableBuffer<20> vbuf;
 	double x = 3.1415926;
 	int y = -999;
 	short z = 66;
@@ -142,7 +142,7 @@ void TestVariableBuffer() {
 	th1.join();
 	th2.join();
 
-	VariableBuffer<1000> vbuf1;
+	byfxxm::VariableBuffer<1000> vbuf1;
 	double d[100]{};
 	for (auto& i : d)
 		i = x;
