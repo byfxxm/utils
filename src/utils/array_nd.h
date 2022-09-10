@@ -23,9 +23,9 @@ namespace byfxxm {
 				assert(ptr_);
 			}
 
-			const ViewPtr<T, N - 1> operator[](size_t index) const&& {
-				assert(index >= 0 && index < shape_[0]);
-				return ViewPtr<T, N - 1>(ptr_ + index * factor_[0], shape_ + 1, factor_ + 1);
+			const ViewPtr<T, N - 1> operator[](size_t pos) const&& {
+				assert(pos >= 0 && pos < shape_[0]);
+				return ViewPtr<T, N - 1>(ptr_ + pos * factor_[0], shape_ + 1, factor_ + 1);
 			}
 
 		private:
@@ -39,9 +39,9 @@ namespace byfxxm {
 		public:
 			ViewPtr(T* p, const size_t* shape, const size_t*) : ptr_(p), shape_(shape) {}
 
-			T& operator[](size_t index) const&& {
-				assert(index >= 0 && index < shape_[0]);
-				return ptr_[index];
+			T& operator[](size_t pos) const&& {
+				assert(pos >= 0 && pos < shape_[0]);
+				return ptr_[pos];
 			}
 
 		private:
@@ -88,8 +88,8 @@ namespace byfxxm {
 		ArrayNd& operator=(const ArrayNd&) = delete;
 		ArrayNd& operator=(ArrayNd&&) noexcept = default;
 
-		decltype(auto) operator[](size_t index) {
-			return ViewPtr<Ty, Num>(elems_.get(), &shapes_.front(), &factors_.front())[index];
+		decltype(auto) operator[](size_t pos) {
+			return ViewPtr<Ty, Num>(elems_.get(), &shapes_.front(), &factors_.front())[pos];
 		}
 
 		void Memset(Ty val) {
@@ -129,7 +129,7 @@ namespace byfxxm {
 				InitializeShapes(it, index + 1);
 		}
 
-		void Assignment(std::initializer_list<Ty> list, size_t index, size_t offset) {
+		void Assignment(std::initializer_list<Ty> list, size_t, size_t offset) {
 			for (auto it = list.begin(); it != list.end(); ++it)
 				elems_[offset + (it - list.begin())] = *it;
 		}
