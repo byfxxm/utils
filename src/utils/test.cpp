@@ -173,7 +173,7 @@ void TestHashMap() {
 void TestRingBuffer() {
 	byfxxm::RingBuffer<int, 1024> rb1;
 	byfxxm::RingBuffer<int, 1023> rb2;
-	int temp;
+	int temp{ 0 };
 
 	auto time1 = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < 10000; ++i) {
