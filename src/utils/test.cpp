@@ -323,15 +323,15 @@ int main() {
 	TestArrayNd1();
 	TestVariableBuffer();
 	TestHashMap();
-	TestRingBuffer();
 	TestWarrior();
 	TestMetaprogramming();
 	TestNQueens();
 	TestAsm();
 	TestReflection();
 	TestCrtp();
-#endif
 	TestCoroutine();
+#endif
+	TestRingBuffer();
 
 	return 0;
 }
