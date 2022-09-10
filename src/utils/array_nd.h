@@ -83,7 +83,7 @@ namespace byfxxm {
 			Assignment(list, 0, 0);
 		}
 
-		ArrayNd(const ArrayNd& arr) : count_(arr.count_), elems_(std::make_unique<Ty[]>(count_)), shapes_(arr.shapes_), factors_(arr.factors_) {
+		ArrayNd(const ArrayNd& arr) : count_(arr.count_), elems_(std::make_unique<Ty[]>(arr.count_)), shapes_(arr.shapes_), factors_(arr.factors_) {
 			*this = arr;
 		}
 
