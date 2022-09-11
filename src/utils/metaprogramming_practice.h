@@ -6,7 +6,7 @@ namespace meta {
 	/// </summary>
 	template <class T>
 	struct HasType {
-		static constexpr bool value = requires {
+		static constexpr auto value = requires {
 			typename T::type;
 		};
 	};
