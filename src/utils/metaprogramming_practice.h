@@ -19,7 +19,7 @@ namespace meta {
 	/// </summary>
 	template <class T>
 	struct IsCustomeClass {
-		static constexpr auto value = requires (T t) {
+		static constexpr auto value = requires {
 			static_cast<int T::*>(nullptr);
 		};
 	};
