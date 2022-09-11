@@ -2,36 +2,30 @@
 
 namespace meta {
 	/// <summary>
-	/// 判断是否有子类型模板，利用SFINAE特性实现
+	/// 判断是否有子类型模板
 	/// </summary>
-	template <class>
-	constexpr bool _HasType(...) {
-		return false;
-	}
+	template <class T>
+	struct HasType {
+		static constexpr bool value = requires {
+			typename T::type;
+		};
+	};
 
 	template <class T>
-	constexpr bool _HasType(typename T::type*) {
-		return true;
-	}
-
-	template <class T>
-	inline constexpr bool HasType = _HasType<T>(nullptr);
+	inline constexpr bool HasType_v = HasType<T>::value;
 
 	/// <summary>
 	/// 判断是否是自定义类型
 	/// </summary>
-	template <class>
-	constexpr bool _IsCustomeClass(...) {
-		return false;
-	}
+	template <class T>
+	struct IsCustomeClass {
+		static constexpr auto value = requires (T t) {
+			static_cast<int T::*>(nullptr);
+		};
+	};
 
 	template <class T>
-	constexpr bool _IsCustomeClass(int T::*) {
-		return true;
-	}
-
-	template <class T>
-	inline constexpr bool IsCustomeClass = _IsCustomeClass<T>(nullptr);
+	inline constexpr bool IsCustomeClass_v = IsCustomeClass<T>::value;
 
 	/// <summary>
 	/// N->(0, ... , N - 1)
