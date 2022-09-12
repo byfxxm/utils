@@ -71,8 +71,5 @@ namespace meta {
 	};
 
 	template <class Derived, class Base>
-	inline constexpr bool IsBaseOf_v = IsBaseOf<Derived, Base>::value;
-
-	template <class Derived, class Base>
-	concept BaseOf = IsBaseOf_v<Derived, Base>;
+	concept BaseOf = IsBaseOf<Derived, Base>::value;
 }
