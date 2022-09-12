@@ -32,9 +32,7 @@ namespace meta {
 	/// </summary>
 	/// <typeparam name="...N"></typeparam>
 	template <size_t... N>
-	struct Seq {
-		using type = Seq;
-	};
+	struct Seq {};
 
 	template <class>
 	struct Upgrade;

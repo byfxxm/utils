@@ -247,6 +247,7 @@ void TestMetaprogramming() {
 
 	[]<size_t... Ns>(meta::Seq<Ns...> seq) {
 		static_assert((... + Ns) == 10);
+		(std::cout << ... << (std::to_string(Ns) + "\n")) << std::endl;
 	}(meta::Make<5>::type{});
 }
 
