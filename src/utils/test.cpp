@@ -244,6 +244,10 @@ void TestMetaprogramming() {
 	static_assert(!meta::IsBaseOf<int, double>::value);
 	static_assert(!meta::IsBaseOf<B, C>::value);
 	static_assert(!meta::IsBaseOf<int, C>::value);
+
+	[]<size_t... Ns>(meta::Seq<Ns...> seq) {
+		static_assert((... + Ns) == 10);
+	}(meta::Make<5>::type{});
 }
 
 void TestNQueens() {

@@ -45,11 +45,13 @@ namespace meta {
 	};
 
 	template <size_t N>
-	struct Make : Upgrade<typename Make<N - 1>::type>::type {
+	struct Make {
+		using type = Upgrade<typename Make<N - 1>::type>::type;
 	};
 
 	template <>
-	struct Make<0> : Seq<> {
+	struct Make<0> {
+		using type = Seq<>;
 	};
 
 	/// <summary>
