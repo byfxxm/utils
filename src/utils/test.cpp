@@ -227,11 +227,11 @@ void TestMetaprogramming() {
 	static_assert(meta::Countof(a) == 5);
 
 	struct C : public B {};
-	static_assert(meta::IsBaseOf<C, B>::value);
-	static_assert(!meta::IsBaseOf<C, A>::value);
-	static_assert(!meta::IsBaseOf<int, double>::value);
-	static_assert(!meta::IsBaseOf<B, C>::value);
-	static_assert(!meta::IsBaseOf<int, C>::value);
+	static_assert(meta::IsBaseOf_v<C, B>);
+	static_assert(!meta::IsBaseOf_v<C, A>);
+	static_assert(!meta::IsBaseOf_v<int, double>);
+	static_assert(!meta::IsBaseOf_v<B, C>);
+	static_assert(!meta::IsBaseOf_v<int, C>);
 
 	[]<size_t... Ns>(meta::Seq<Ns...> seq) {
 		static_assert((... + Ns) == 10);

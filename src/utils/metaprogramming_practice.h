@@ -65,13 +65,13 @@ namespace meta {
 	/// </summary>
 	template <class Derived, class Base>
 	struct IsBaseOf {
-		static constexpr auto value = IsCustomeClass_v<Derived> && IsCustomeClass_v<Base> && requires {
+		static constexpr bool value = IsCustomeClass_v<Derived> && IsCustomeClass_v<Base> && requires {
 			[](Base&&) {}(Derived{});
 		};
 	};
 
 	template <class Derived, class Base>
-	inline bool IsBaseOf_v = IsBaseOf<Derived, Base>::value;
+	inline constexpr bool IsBaseOf_v = IsBaseOf<Derived, Base>::value;
 
 	template <class Derived, class Base>
 	concept BaseOf = IsBaseOf_v<Derived, Base>;
