@@ -5,27 +5,17 @@ namespace meta {
 	/// 判断是否有子类型模板
 	/// </summary>
 	template <class T>
-	struct HasType {
-		static constexpr auto value = requires {
-			typename T::type;
-		};
+	concept HasType = requires {
+		typename T::type;
 	};
-
-	template <class T>
-	inline constexpr bool HasType_v = HasType<T>::value;
 
 	/// <summary>
 	/// 判断是否是自定义类型
 	/// </summary>
 	template <class T>
-	struct IsCustomeClass {
-		static constexpr auto value = requires {
-			static_cast<int T::*>(nullptr);
-		};
+	concept IsCustomeClass = requires {
+		static_cast<int T::*>(nullptr);
 	};
-
-	template <class T>
-	inline constexpr bool IsCustomeClass_v = IsCustomeClass<T>::value;
 
 	/// <summary>
 	/// N->(0, ... , N - 1)
@@ -64,12 +54,7 @@ namespace meta {
 	/// 判断类型是否是继承关系
 	/// </summary>
 	template <class Derived, class Base>
-	struct IsBaseOf {
-		static constexpr bool value = IsCustomeClass_v<Derived> && IsCustomeClass_v<Base> && requires {
-			[](Base&&) {}(Derived{});
-		};
+	concept BaseOf = IsCustomeClass<Derived> && IsCustomeClass<Base> && requires {
+		[](Base&&) {}(Derived{});
 	};
-
-	template <class Derived, class Base>
-	concept BaseOf = IsBaseOf<Derived, Base>::value;
 }

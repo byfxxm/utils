@@ -217,11 +217,11 @@ void TestMetaprogramming() {
 
 	struct B {};
 
-	static_assert(meta::HasType_v<A>);
-	static_assert(!meta::HasType_v<B>);
+	static_assert(meta::HasType<A>);
+	static_assert(!meta::HasType<B>);
 
-	static_assert(!meta::IsCustomeClass_v<int>);
-	static_assert(meta::IsCustomeClass_v<A>);
+	static_assert(!meta::IsCustomeClass<int>);
+	static_assert(meta::IsCustomeClass<A>);
 
 	A a[5];
 	static_assert(meta::Countof(a) == 5);
