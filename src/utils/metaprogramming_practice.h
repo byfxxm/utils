@@ -55,7 +55,7 @@ namespace meta {
 	/// <summary>
 	/// countof
 	/// </summary>
-	template <class T, auto N>
+	template <class T, size_t N>
 	constexpr auto Countof(T(&)[N]) {
 		return N;
 	}
