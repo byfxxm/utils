@@ -19,7 +19,7 @@ namespace byfxxm {
 		template <class T, size_t N>
 		class ViewPtr final {
 		public:
-			ViewPtr(T* p, const size_t* shape, const size_t* factor) : ptr_(p), shape_(shape), factor_(factor) {
+			ViewPtr(T* ptr, const size_t* shape, const size_t* factor) : ptr_(ptr), shape_(shape), factor_(factor) {
 				assert(ptr_);
 			}
 
@@ -37,7 +37,7 @@ namespace byfxxm {
 		template <class T>
 		class ViewPtr<T, 1> final {
 		public:
-			ViewPtr(T* p, const size_t* shape, const size_t*) : ptr_(p), shape_(shape) {}
+			ViewPtr(T* ptr, const size_t* shape, const size_t*) : ptr_(ptr), shape_(shape) {}
 
 			T& operator[](size_t pos) const&& {
 				assert(pos >= 0 && pos < shape_[0]);
