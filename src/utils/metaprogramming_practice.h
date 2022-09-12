@@ -54,7 +54,7 @@ namespace meta {
 	/// 判断类型是否是继承关系
 	/// </summary>
 	template <class Derived, class Base>
-	concept BaseOf = IsCustomeClass<Derived> && IsCustomeClass<Base> && requires {
+	concept IsBaseOf = IsCustomeClass<Derived> && IsCustomeClass<Base> && requires {
 		[](Base&&) {}(Derived{});
 	};
 }
