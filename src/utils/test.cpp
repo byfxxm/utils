@@ -226,18 +226,6 @@ void TestMetaprogramming() {
 	A a[5];
 	static_assert(meta::Countof(a) == 5);
 
-	static_assert(meta::prime::IsPrimeV<97>);
-	static_assert(!meta::prime::IsPrimeV<200>);
-	static_assert(meta::prime::IsPrimeV<2>);
-	static_assert(!meta::prime::IsPrimeV<1>);
-	static_assert(!meta::prime::IsPrimeV<0>);
-
-	static_assert(meta::prime::IsPrimeF(97));
-	static_assert(!meta::prime::IsPrimeF(200));
-	static_assert(meta::prime::IsPrimeF(2));
-	static_assert(!meta::prime::IsPrimeF(1));
-	static_assert(!meta::prime::IsPrimeF(0));
-
 	struct C : public B {};
 	static_assert(meta::IsBaseOf<C, B>::value);
 	static_assert(!meta::IsBaseOf<C, A>::value);
