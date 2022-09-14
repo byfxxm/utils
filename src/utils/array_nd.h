@@ -100,6 +100,12 @@ namespace byfxxm {
 			return View<Ty, Num>(elems_.get(), &shapes_.front(), &factors_.front())[pos];
 		}
 
+		template <class Predicate>
+		void Each(Predicate pred) {
+			for (size_t i = 0; i < count_; ++i)
+				elems_[i] = pred(elems_[i]);
+		}
+
 		void Memset(Ty val) {
 			assert(elems_);
 			for (size_t i = 0; i < count_; ++i)

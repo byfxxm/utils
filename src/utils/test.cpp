@@ -64,6 +64,8 @@ void TestArrayNd() {
 
 	byfxxm::ArrayNd<int, 1> e = { 1, 2, 3, 4 };
 	assert(e[3] == 4);
+	e.Each([](int x) { return x * 20; });
+	assert(e[2] = 60);
 }
 
 void TestArrayNd1() {
