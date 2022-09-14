@@ -101,7 +101,7 @@ namespace byfxxm {
 		}
 
 		template <class Predicate>
-		void Each(Predicate pred) {
+		void ForEach(Predicate pred) {
 			for (size_t i = 0; i < count_; ++i)
 				elems_[i] = pred(elems_[i]);
 		}
