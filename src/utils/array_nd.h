@@ -17,15 +17,15 @@ namespace byfxxm {
 	class ArrayNd final {
 	private:
 		template <class T, size_t N>
-		class ViewPtr final {
+		class View final {
 		public:
-			ViewPtr(T* ptr, const size_t* shape, const size_t* factor) : ptr_(ptr), shape_(shape), factor_(factor) {
+			View(T* ptr, const size_t* shape, const size_t* factor) : ptr_(ptr), shape_(shape), factor_(factor) {
 				assert(ptr_);
 			}
 
-			const ViewPtr<T, N - 1> operator[](size_t pos) const&& {
+			const View<T, N - 1> operator[](size_t pos) const&& {
 				assert(pos >= 0 && pos < shape_[0]);
-				return ViewPtr<T, N - 1>(ptr_ + pos * factor_[0], shape_ + 1, factor_ + 1);
+				return View<T, N - 1>(ptr_ + pos * factor_[0], shape_ + 1, factor_ + 1);
 			}
 
 		private:
@@ -35,9 +35,9 @@ namespace byfxxm {
 		};
 
 		template <class T>
-		class ViewPtr<T, 1> final {
+		class View<T, 1> final {
 		public:
-			ViewPtr(T* ptr, const size_t* shape, const size_t*) : ptr_(ptr), shape_(shape) {}
+			View(T* ptr, const size_t* shape, const size_t*) : ptr_(ptr), shape_(shape) {}
 
 			T& operator[](size_t pos) const&& {
 				assert(pos >= 0 && pos < shape_[0]);
@@ -97,7 +97,7 @@ namespace byfxxm {
 		ArrayNd& operator=(ArrayNd&&) noexcept = default;
 
 		decltype(auto) operator[](size_t pos) {
-			return ViewPtr<Ty, Num>(elems_.get(), &shapes_.front(), &factors_.front())[pos];
+			return View<Ty, Num>(elems_.get(), &shapes_.front(), &factors_.front())[pos];
 		}
 
 		void Memset(Ty val) {
