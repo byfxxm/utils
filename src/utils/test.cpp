@@ -64,8 +64,17 @@ void TestArrayNd() {
 
 	byfxxm::ArrayNd<int, 1> e = { 1, 2, 3, 4 };
 	assert(e[3] == 4);
-	e.Each([](int x) { return x * 20; });
-	assert(e[2] = 60);
+	e.Each([](auto&& x) { return x * 20; });
+	assert(e[2] == 60);
+
+	class X {
+	public:
+		auto operator()(auto&& n) {
+			return n * 20;
+		}
+	};
+	e.Each(X{});
+	assert(e[1] == 800);
 }
 
 void TestArrayNd1() {
