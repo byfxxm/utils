@@ -55,6 +55,6 @@ namespace meta {
 	/// </summary>
 	template <class Derived, class Base>
 	concept IsBaseOf = IsCustomeClass<Derived> && IsCustomeClass<Base> && requires {
-		[](Base&&) {}(Derived{});
+		[](Base&&) {}(std::declval<Derived>());
 	};
 }
