@@ -18,17 +18,19 @@ namespace byfxxm {
 	private:
 		template <class T, size_t N>
 		class View final {
-		public:
+		private:
 			View(T* ptr, const size_t* shape, const size_t* factor) : ptr_(ptr), shape_(shape), factor_(factor) {
 				assert(ptr_);
 			}
 
+		public:
 			const View<T, N - 1> operator[](size_t pos) const&& {
 				assert(pos >= 0 && pos < shape_[0]);
 				return View<T, N - 1>(ptr_ + pos * factor_[0], shape_ + 1, factor_ + 1);
 			}
 
 		private:
+			friend class ArrayNd;
 			T* ptr_{ nullptr };
 			const size_t* shape_{ nullptr };
 			const size_t* factor_{ nullptr };
@@ -36,15 +38,17 @@ namespace byfxxm {
 
 		template <class T>
 		class View<T, 1> final {
-		public:
+		private:
 			View(T* ptr, const size_t* shape, const size_t*) : ptr_(ptr), shape_(shape) {}
 
+		public:
 			T& operator[](size_t pos) const&& {
 				assert(pos >= 0 && pos < shape_[0]);
 				return ptr_[pos];
 			}
 
 		private:
+			friend class ArrayNd;
 			T* ptr_{ nullptr };
 			const size_t* shape_{ nullptr };
 		};
