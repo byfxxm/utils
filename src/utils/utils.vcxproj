@@ -154,6 +154,7 @@
     <ClInclude Include="rbtree_map.h" />
     <ClInclude Include="reflection.h" />
     <ClInclude Include="ring_buffer.h" />
+    <ClInclude Include="static_n_queens.h" />
     <ClInclude Include="variable_buffer.h" />
     <ClInclude Include="warrior.h" />
   </ItemGroup>

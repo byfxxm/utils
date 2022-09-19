@@ -15,6 +15,7 @@
 #include "reflection.h"
 #include "crtp.h"
 #include "coroutine.h"
+#include "static_n_queens.h"
 
 void TestArrayNd() {
 	auto a = byfxxm::MakeArrayNd((size_t)7, 8, 9);
