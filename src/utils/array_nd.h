@@ -73,7 +73,6 @@ namespace byfxxm {
 
 		ArrayNd(InitializerList_t<Ty, Num> list) {
 			InitializeShapes(list, 0);
-			count_ = 1;
 			for (auto it : shapes_)
 				count_ *= it;
 
@@ -155,7 +154,7 @@ namespace byfxxm {
 		}
 
 	private:
-		size_t count_{ 0 };
+		size_t count_{ 1 };
 		std::unique_ptr<Ty[]> elems_;
 		std::array<size_t, Num> shapes_;
 		std::array<size_t, Num> factors_;
