@@ -73,11 +73,7 @@ namespace byfxxm {
 
 		ArrayNd(InitializerList_t<Ty, Num> list) {
 			InitializeShapes(list, 0);
-			count_ = 1;
-			for (auto it : shapes_)
-				count_ *= it;
-			elems_ = std::make_unique<Ty[]>(count_);
-			Memset(0);
+			InitializeElems();
 			InitializeFactors();
 			Assignment(list, 0, 0);
 		}
@@ -118,14 +114,6 @@ namespace byfxxm {
 		}
 
 	private:
-		void InitializeFactors() {
-			for (size_t i = 0; i < Num; ++i) {
-				factors_[i] = 1;
-				for (size_t j = i + 1; j < Num; ++j)
-					factors_[i] *= shapes_[j];
-			}
-		}
-
 		void InitializeShapes(std::initializer_list<Ty> list, size_t index) {
 			auto list_size = list.size();
 			if (list_size > shapes_[index])
@@ -140,6 +128,23 @@ namespace byfxxm {
 
 			for (auto& it : list)
 				InitializeShapes(it, index + 1);
+		}
+
+		void InitializeElems() {
+			count_ = 1;
+			for (auto it : shapes_)
+				count_ *= it;
+
+			elems_ = std::make_unique<Ty[]>(count_);
+			Memset(0);
+		}
+
+		void InitializeFactors() {
+			for (size_t i = 0; i < Num; ++i) {
+				factors_[i] = 1;
+				for (size_t j = i + 1; j < Num; ++j)
+					factors_[i] *= shapes_[j];
+			}
 		}
 
 		void Assignment(std::initializer_list<Ty> list, size_t, size_t offset) {
