@@ -75,7 +75,6 @@ namespace byfxxm {
 			InitializeShapes(list, 0);
 			for (auto it : shapes_)
 				count_ *= it;
-
 			elems_ = std::make_unique<Ty[]>(count_);
 			Memset(0);
 			InitializeFactors();
