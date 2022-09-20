@@ -103,14 +103,16 @@ namespace byfxxm {
 
 		template <class Predicate>
 		void ForEach(Predicate pred) {
-			for (size_t i = 0; i < count_; ++i)
+			for (size_t i = 0; i < count_; ++i) {
 				elems_[i] = pred(elems_[i]);
+			}
 		}
 
 		void Memset(Ty val) {
 			assert(elems_);
-			for (size_t i = 0; i < count_; ++i)
+			for (size_t i = 0; i < count_; ++i) {
 				elems_[i] = val;
+			}
 		}
 
 		template <size_t N>
@@ -122,37 +124,43 @@ namespace byfxxm {
 	private:
 		void InitializeShapes(std::initializer_list<Ty> list, size_t index) {
 			auto list_size = list.size();
-			if (list_size > shapes_[index])
+			if (list_size > shapes_[index]) {
 				shapes_[index] = list_size;
+			}
 		}
 
 		template <class T>
 		void InitializeShapes(T&& list, size_t index) {
 			auto list_size = list.size();
-			if (list_size > shapes_[index])
+			if (list_size > shapes_[index]) {
 				shapes_[index] = list_size;
+			}
 
-			for (auto& it : list)
+			for (auto& it : list) {
 				InitializeShapes(it, index + 1);
+			}
 		}
 
 		void InitializeFactors() {
 			for (size_t i = 0; i < Num; ++i) {
 				factors_[i] = 1;
-				for (size_t j = i + 1; j < Num; ++j)
+				for (size_t j = i + 1; j < Num; ++j) {
 					factors_[i] *= shapes_[j];
+				}
 			}
 		}
 
 		void Assignment(std::initializer_list<Ty> list, size_t, size_t offset) {
-			for (auto it = list.begin(); it != list.end(); ++it)
+			for (auto it = list.begin(); it != list.end(); ++it) {
 				elems_[offset + (it - list.begin())] = *it;
+			}
 		}
 
 		template <class T>
 		void Assignment(T&& list, size_t index, size_t offset) {
-			for (auto it = list.begin(); it != list.end(); ++it)
+			for (auto it = list.begin(); it != list.end(); ++it) {
 				Assignment(*it, index + 1, offset + (it - list.begin()) * factors_[index]);
+			}
 		}
 
 	private:
