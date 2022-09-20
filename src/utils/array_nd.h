@@ -74,8 +74,10 @@ namespace byfxxm {
 		ArrayNd(InitializerList_t<Ty, Num> list) {
 			InitializeShapes(list, 0);
 			count_ = 1;
-			for (auto it : shapes_)
+			for (auto it : shapes_) {
 				count_ *= it;
+			}
+
 			elems_ = std::make_unique<Ty[]>(count_);
 			Memset(0);
 			InitializeFactors();
