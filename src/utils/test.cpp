@@ -324,9 +324,9 @@ void TestCoroutine() {
 
 int main() {
 	TestCrtp();
-#if 0
 	TestArrayNd();
 	TestMetaprogramming();
+#if 0
 	TestArrayNd1();
 	TestVariableBuffer();
 	TestHashMap();
