@@ -84,13 +84,16 @@ namespace byfxxm {
 			Assignment(list, 0, 0);
 		}
 
-		ArrayNd(const ArrayNd& arr) : count_(arr.count_), shapes_(arr.shapes_), factors_(arr.factors_) {
-			elems_ = std::make_unique<Ty[]>(count_);
-			memcpy(elems_.get(), arr.elems_.get(), count_ * sizeof(Ty));
+		ArrayNd(const ArrayNd& arr) {
+			*this = arr;
 		}
 
 		ArrayNd& operator=(const ArrayNd& arr) {
-			new(this) ArrayNd(arr);
+			count_ = arr.count_;
+			shapes_ = arr.shapes_;
+			factors_ = arr.factors_;
+			elems_ = std::make_unique<Ty[]>(count_);
+			memcpy(elems_.get(), arr.elems_.get(), count_ * sizeof(Ty));
 			return *this;
 		}
 
