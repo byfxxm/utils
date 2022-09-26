@@ -2,6 +2,7 @@
 #include <thread>
 #include <iostream>
 #include <condition_variable>
+#include <type_traits>
 
 #include "array_nd.h"
 #include "array_nd_1.h"
@@ -309,6 +310,8 @@ void TestCrtp() {
 	crtp::Func(b);
 
 	crtp::Container<crtp::Base, Derived1, Derived2> cont(a, b);
+	cont.Get<0>()->Func();
+	cont.Get<1>()->Func();
 }
 
 void TestCoroutine() {
