@@ -307,6 +307,8 @@ void TestCrtp() {
 	Derived2 b;
 	crtp::Func(a);
 	crtp::Func(b);
+
+	crtp::Container<crtp::Base, Derived1, Derived2> cont(a, b);
 }
 
 void TestCoroutine() {

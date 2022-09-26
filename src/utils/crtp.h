@@ -16,38 +16,15 @@ namespace crtp {
 		obj.Func();
 	}
 
-#if 0
-	template <template <class> class Base, class... Ders>
-		requires requires(Ders... ders) {
-		(... , static_cast<Base<Ders>>(ders));
-	}
+	template <template <class> class Base, class... Deriveds>
+		requires (... && std::is_base_of_v<Base<Deriveds>, Deriveds>)
 	class Container {
 	public:
-		template <class First, class... Ders1>
-			requires requires{
-			(sizeof...(Ders) == sizeof...(Ders1) + 1);
-			typename std::enable_if_t<(... && std::is_pointer_v<Ders1>)>;
-		}
-		Container(First&& first, Ders1&&... ders) : Container(std::forward<Ders1>(ders)...) {
-			objs_[sizeof...(Ders) - sizeof...(Ders1) - 1] = static_cast<void*>(first);
-		}
-
-		Container() = default;
-
-		void Func() {
-			_Func<Ders...>();
-		}
+		template <class... Ders>
+			requires (... && std::is_same_v<Deriveds, Ders>)
+		Container(Ders&... ders) : objs_{ &ders... } {}
 
 	private:
-		template <class First, class... Ders1>
-		void _Func() {
-			static_cast<First*>(objs_[sizeof...(Ders) - sizeof...(Ders1) - 1])->Func();
-			if constexpr (sizeof...(Ders1) != 0)
-				_Func<Ders1...>();
-		}
-
-	private:
-		void* objs_[sizeof...(Ders)];
+		void* objs_[sizeof...(Deriveds)];
 	};
-#endif
 }
