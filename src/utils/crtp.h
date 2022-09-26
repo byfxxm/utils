@@ -9,20 +9,11 @@ namespace crtp {
 		void Func() {
 			static_cast<Derived*>(this)->Func();
 		}
-
-		int Func1(int n1, double n2) {
-			return static_cast<Derived*>(this)->Func1(n1, n2);
-		}
 	};
 
-	template <class Derived>
+	template <template <class> class Base, class Derived>
 	inline void Func(Base<Derived>& obj) {
 		obj.Func();
-	}
-
-	template <class Derived>
-	inline int Func1(Base<Derived>& obj, int n1, double n2) {
-		return obj.Func1(n1, n2);
 	}
 
 #if 0
