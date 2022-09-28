@@ -17,7 +17,7 @@ namespace crtp {
 	}
 
 	template <template <class> class Base, class... Deriveds>
-		requires (... && std::is_base_of_v<Base<Deriveds>, Deriveds>)
+		requires (std::conjunction_v<std::is_base_of<Base<Deriveds>, Deriveds>...>)
 	class Container {
 	private:
 		template <size_t Index, class First, class... Ders>
