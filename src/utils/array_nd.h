@@ -2,6 +2,7 @@
 #include <array>
 #include <cassert>
 #include <memory>
+#include <type_traits>
 
 namespace byfxxm {
 	/*
@@ -13,7 +14,7 @@ namespace byfxxm {
 	*		ArrayNd<int, 2> arr1{{0, 1}, {2, 3, 4}}; // 支持初始化列表
 	*/
 	template <class Ty, size_t Num>
-		requires std::is_trivially_copyable_v<Ty> && (Num > 0)
+		requires std::is_trivial_v<Ty> && (Num > 0)
 	class ArrayNd final {
 	private:
 		template <class T, size_t N>
