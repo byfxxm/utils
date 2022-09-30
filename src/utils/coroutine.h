@@ -55,7 +55,7 @@ namespace Coroutine {
 		co_return;
 	}
 
-	void SwitchToCoroutine(Task& task) {
+	void SwitchToCoroutine(Task task) {
 		task.handle_.resume();
 	}
 }
