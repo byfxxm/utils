@@ -315,22 +315,37 @@ void TestCrtp() {
 }
 
 void TestCoroutine() {
-	Coroutine::test();
-	std::cout << "10.main():come back to caller becuase of co_await awaiter\n";
-	std::this_thread::sleep_for(std::chrono::seconds(1));
+	auto f1= [](void* p, Coroutine::Task main) -> Coroutine::Task {
+		while (1) {
+			std::cout << p << std::endl;
+			co_await std::suspend_always{};
+		}
+	};
 
-	std::cout << "-----------------------------------" << std::endl;
+	auto f2 = [](void* p, Coroutine::Task main) -> Coroutine::Task {
+		while (1) {
+			std::cout << p << std::endl;
+			co_await std::suspend_always{};
+		}
+	};
 
-	auto coro = Coroutine::my_coroutine();
-	std::cout << "5.main():call coro.get()" << std::endl;
-	auto result = coro.get();
-	std::cout << "14.main():The coroutine result: " << result << std::endl;
+	Coroutine::Task co_main;
+	auto co1 = f1(nullptr, co_main);
+	auto co2 = f2(new int(5), co_main);
+	auto mf = [&]() -> Coroutine::Task {
+		while (1) {
+			co1.handle_.resume();
+			co2.handle_.resume();
+		}
+	};
+	
+	co_main = mf();
+	co_main.handle_.resume();
 }
 
 int main() {
-	TestCrtp();
-	TestArrayNd();
-	TestMetaprogramming();
+	TestCoroutine();
+
 #if 0
 	TestArrayNd1();
 	TestVariableBuffer();
@@ -339,8 +354,10 @@ int main() {
 	TestNQueens();
 	TestAsm();
 	TestReflection();
-	TestCoroutine();
 	TestRingBuffer();
+	TestCrtp();
+	TestArrayNd();
+	TestMetaprogramming();
 #endif
 
 	return 0;
