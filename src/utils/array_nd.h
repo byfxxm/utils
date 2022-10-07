@@ -1,10 +1,14 @@
 #pragma once
 #include <array>
 #include <cassert>
+#include <concepts>
 #include <memory>
 #include <type_traits>
 
 namespace byfxxm {
+	template <class T>
+	concept ArrayNdConcept = std::convertible_to<T, double>;
+
 	/*
 	* 多维数组
 	* usage:
@@ -13,11 +17,11 @@ namespace byfxxm {
 	*		arr.Memset('z');	 // 内存初始化
 	*		ArrayNd<int, 2> arr1{{0, 1}, {2, 3, 4}}; // 支持初始化列表
 	*/
-	template <class Ty, size_t Num>
-		requires std::is_trivial_v<Ty> && (Num > 0)
+	template <ArrayNdConcept Ty, size_t Num>
+		requires (Num > 0)
 	class ArrayNd final {
 	private:
-		template <class T, size_t N>
+		template <ArrayNdConcept T, size_t N>
 		class View final {
 		public:
 			View(T* ptr, const size_t* shape, const size_t* factor) : ptr_(ptr), shape_(shape), factor_(factor) {
@@ -35,7 +39,7 @@ namespace byfxxm {
 			const size_t* factor_{ nullptr };
 		};
 
-		template <class T>
+		template <ArrayNdConcept T>
 		class View<T, 1> final {
 		public:
 			View(T* ptr, const size_t* shape, const size_t*) : ptr_(ptr), shape_(shape) {}
@@ -51,7 +55,7 @@ namespace byfxxm {
 		};
 
 	public:
-		template <class... Args>
+		template <ArrayNdConcept... Args>
 			requires (sizeof...(Args) == Num)
 		ArrayNd(Args&&... args) : count_((... * args)), shapes_{ static_cast<size_t>(args)... } {
 			elems_ = std::make_unique<Ty[]>(count_);
@@ -59,17 +63,17 @@ namespace byfxxm {
 			InitializeFactors();
 		}
 
-		template <class T, size_t N>
+		template <ArrayNdConcept T, size_t N>
 		struct InitializerList {
 			using type = std::initializer_list<typename InitializerList<T, N - 1>::type>;
 		};
 
-		template <class T>
+		template <ArrayNdConcept T>
 		struct InitializerList<T, 1> {
 			using type = std::initializer_list<T>;
 		};
 
-		template <class T, size_t N>
+		template <ArrayNdConcept T, size_t N>
 		using InitializerList_t = InitializerList<T, N>::type;
 
 		ArrayNd(InitializerList_t<Ty, Num> list) {
@@ -174,7 +178,7 @@ namespace byfxxm {
 		std::array<size_t, Num> factors_;
 	};
 
-	template <class First, class... Args>
+	template <ArrayNdConcept First, ArrayNdConcept... Args>
 	[[nodiscard]] auto MakeArrayNd(First&& first, Args&&... args) {
 		return ArrayNd<First, sizeof...(Args) + 1>(std::forward<First>(first), std::forward<Args>(args)...);
 	}
