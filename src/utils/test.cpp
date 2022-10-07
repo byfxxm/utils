@@ -315,32 +315,30 @@ void TestCrtp() {
 }
 
 void TestCoroutine() {
-	auto f1= [](void* p, Coroutine::Task main) -> Coroutine::Task {
+	auto f1= [](void* p) -> Coroutine::Task {
 		while (1) {
 			std::cout << p << std::endl;
 			co_await std::suspend_always{};
 		}
 	};
 
-	auto f2 = [](void* p, Coroutine::Task main) -> Coroutine::Task {
+	auto f2 = [](void* p) -> Coroutine::Task {
 		while (1) {
 			std::cout << p << std::endl;
 			co_await std::suspend_always{};
 		}
 	};
 
-	Coroutine::Task co_main;
-	auto co1 = f1(nullptr, co_main);
-	auto co2 = f2(new int(5), co_main);
-	auto mf = [&]() -> Coroutine::Task {
+	auto co1 = f1(nullptr);
+	auto co2 = f2(new int(5));
+	auto mf = [&]() {
 		while (1) {
 			co1.handle_.resume();
 			co2.handle_.resume();
 		}
 	};
 	
-	co_main = mf();
-	co_main.handle_.resume();
+	mf();
 }
 
 int main() {
