@@ -7,7 +7,7 @@
 
 namespace byfxxm {
 	template <class T>
-	concept ArrayNdType = std::convertible_to<T, double>;
+	concept ArrayNdType = std::is_trivial_v<T> && std::convertible_to<T, double>;
 
 	/*
 	* ¶àÎ¬Êý×é
