@@ -342,7 +342,7 @@ void TestCoroutine() {
 }
 
 int main() {
-	TestCoroutine();
+	TestArrayNd();
 
 #if 0
 	TestArrayNd1();
@@ -354,8 +354,8 @@ int main() {
 	TestReflection();
 	TestRingBuffer();
 	TestCrtp();
-	TestArrayNd();
 	TestMetaprogramming();
+	TestCoroutine();
 #endif
 
 	return 0;
