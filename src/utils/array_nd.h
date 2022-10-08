@@ -179,7 +179,7 @@ namespace byfxxm {
 	};
 
 	template <ElementType First, ElementType... Rest>
-	[[nodiscard]] auto MakeArrayNd(First&& first, Rest&&... args) {
-		return ArrayNd<First, sizeof...(Rest) + 1>(std::forward<First>(first), std::forward<Rest>(args)...);
+	[[nodiscard]] auto MakeArrayNd(First&& first, Rest&&... rest) {
+		return ArrayNd<First, sizeof...(Rest) + 1>(std::forward<First>(first), std::forward<Rest>(rest)...);
 	}
 }
