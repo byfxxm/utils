@@ -2,7 +2,7 @@
 #include <coroutine>
 #include <thread>
 
-namespace Coroutine {
+namespace coroutine {
 	struct Task {
 		struct promise_type {
 			promise_type() {

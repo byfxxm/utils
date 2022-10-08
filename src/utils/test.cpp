@@ -315,14 +315,14 @@ void TestCrtp() {
 }
 
 void TestCoroutine() {
-	auto f1= [](void* p) -> Coroutine::Task {
+	auto f1= [](void* p) -> coroutine::Task {
 		while (1) {
 			std::cout << p << std::endl;
 			co_await std::suspend_always{};
 		}
 	};
 
-	auto f2 = [](void* p) -> Coroutine::Task {
+	auto f2 = [](void* p) -> coroutine::Task {
 		while (1) {
 			std::cout << p << std::endl;
 			co_await std::suspend_always{};
