@@ -178,8 +178,6 @@ namespace byfxxm {
 		std::array<size_t, Num> factors_;
 	};
 
-	template <ElementType First, ElementType... Rest>
-	[[nodiscard]] auto MakeArrayNd(First&& first, Rest&&... rest) {
-		return ArrayNd<First, sizeof...(Rest) + 1>(std::forward<First>(first), std::forward<Rest>(rest)...);
-	}
+	template <class First, class... Rest>
+	ArrayNd(First, Rest...)->ArrayNd<First, sizeof...(Rest) + 1>;
 }

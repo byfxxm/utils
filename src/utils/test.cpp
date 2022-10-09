@@ -18,7 +18,7 @@
 #include "coroutine.h"
 
 void TestArrayNd() {
-	auto a = byfxxm::MakeArrayNd((size_t)7, 8, 9);
+	byfxxm::ArrayNd a((size_t)7, 8, 9);
 	a.Memset(50);
 	for (size_t i = 0; i < 7; ++i)
 		for (size_t j = 0; j < 8; ++j)
