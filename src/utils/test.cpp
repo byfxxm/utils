@@ -27,10 +27,10 @@ void TestArrayNd() {
 
 	assert(&a[5][4][3] - &a[1][2][3] == 4 * 72 + 2 * 9);
 
-	byfxxm::ArrayNd<size_t, 1> b(5);
+	byfxxm::ArrayNd b(5);
 	assert(&b[4] - &b[0] == 4);
 
-	byfxxm::ArrayNd<size_t, 3> a2(a);
+	byfxxm::ArrayNd a2(a);
 	assert(a2[5][5][5] == 50);
 	a2[5][5][5] = 10;
 	assert(a2[5][5][5] == 10);
