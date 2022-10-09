@@ -21,7 +21,7 @@ namespace byfxxm {
 		requires (Num > 0)
 	class ArrayNd final {
 	private:
-		template <ElementType T, size_t N>
+		template <class T, size_t N>
 		class View final {
 		public:
 			View(T* ptr, const size_t* shape, const size_t* factor) : ptr_(ptr), shape_(shape), factor_(factor) {
@@ -39,7 +39,7 @@ namespace byfxxm {
 			const size_t* factor_{ nullptr };
 		};
 
-		template <ElementType T>
+		template <class T>
 		class View<T, 1> final {
 		public:
 			View(T* ptr, const size_t* shape, const size_t*) : ptr_(ptr), shape_(shape) {}
@@ -63,17 +63,17 @@ namespace byfxxm {
 			InitializeFactors();
 		}
 
-		template <ElementType T, size_t N>
+		template <class T, size_t N>
 		struct InitializerList {
 			using type = std::initializer_list<typename InitializerList<T, N - 1>::type>;
 		};
 
-		template <ElementType T>
+		template <class T>
 		struct InitializerList<T, 1> {
 			using type = std::initializer_list<T>;
 		};
 
-		template <ElementType T, size_t N>
+		template <class T, size_t N>
 		using InitializerList_t = InitializerList<T, N>::type;
 
 		ArrayNd(InitializerList_t<Ty, Num> list) {
