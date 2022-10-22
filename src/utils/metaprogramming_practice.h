@@ -58,9 +58,9 @@ namespace meta {
 		[](Base&&) {}(std::declval<Derived>());
 	};
 
-	template <class First, class... Rest>
+	template <class T, class First, class... Rest>
 	consteval auto Max(First first, Rest... rest) {
-		double max = first;
+		T max = first;
 		(..., (max = (rest > max) ? static_cast<decltype(max)>(rest) : max));
 		return max;
 	}
