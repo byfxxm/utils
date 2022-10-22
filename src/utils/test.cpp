@@ -249,6 +249,9 @@ void TestMetaprogramming() {
 		static_assert((... + Ns) == 10);
 		(std::cout << ... << (std::to_string(Ns) + "\n")) << std::endl;
 	}(meta::Make<5>::type{});
+
+	constexpr double a1 = 15.5;
+	static_assert(meta::Max(1, 3, 2, a1, 12) == 15.5);
 }
 
 void TestNQueens() {
@@ -343,6 +346,7 @@ void TestCoroutine() {
 
 int main() {
 	TestArrayNd();
+	TestMetaprogramming();
 
 #if 0
 	TestArrayNd1();
@@ -354,7 +358,6 @@ int main() {
 	TestReflection();
 	TestRingBuffer();
 	TestCrtp();
-	TestMetaprogramming();
 	TestCoroutine();
 #endif
 
