@@ -251,7 +251,7 @@ void TestMetaprogramming() {
 	}(meta::Make<5>::type{});
 
 	constexpr double a1 = 15.5;
-	static_assert(meta::Max<double>(1, 3, 2, a1, 12) == 15.5);
+	static_assert(meta::Max(1, 3, 2, a1, 12) == 15.5);
 }
 
 void TestNQueens() {

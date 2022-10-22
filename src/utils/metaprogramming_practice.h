@@ -67,7 +67,7 @@ namespace meta {
 	/// <param name="first"></param>
 	/// <param name="...rest"></param>
 	/// <returns></returns>
-	template <class T, class First, class... Rest>
+	template <class T = double, class First, class... Rest>
 	consteval T Max(First first, Rest... rest) {
 		auto max = static_cast<T>(first);
 		(..., (max = (rest > max) ? static_cast<T>(rest) : max));
