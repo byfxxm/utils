@@ -58,6 +58,15 @@ namespace meta {
 		[](Base&&) {}(std::declval<Derived>());
 	};
 
+	/// <summary>
+	/// 求最大值
+	/// </summary>
+	/// <typeparam name="...Rest"></typeparam>
+	/// <typeparam name="First"></typeparam>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="first"></param>
+	/// <param name="...rest"></param>
+	/// <returns></returns>
 	template <class T, class First, class... Rest>
 	consteval auto Max(First first, Rest... rest) {
 		T max = first;
