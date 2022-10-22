@@ -68,9 +68,9 @@ namespace meta {
 	/// <param name="...rest"></param>
 	/// <returns></returns>
 	template <class T, class First, class... Rest>
-	consteval auto Max(First first, Rest... rest) {
-		T max = first;
-		(..., (max = (rest > max) ? static_cast<decltype(max)>(rest) : max));
+	consteval T Max(First first, Rest... rest) {
+		auto max = static_cast<T>(first);
+		(..., (max = (rest > max) ? static_cast<T>(rest) : max));
 		return max;
 	}
 }
