@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="addressing.h" />
     <ClInclude Include="array_nd.h" />
     <ClInclude Include="array_nd_1.h" />
     <ClInclude Include="asm.h" />

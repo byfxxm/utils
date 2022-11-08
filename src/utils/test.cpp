@@ -16,6 +16,7 @@
 #include "reflection.h"
 #include "crtp.h"
 #include "coroutine.h"
+#include "addressing.h"
 
 void TestArrayNd() {
 	byfxxm::ArrayNd a((size_t)7, 8, 9);
@@ -344,11 +345,27 @@ void TestCoroutine() {
 	mf();
 }
 
+void TestAddressing() {
+	struct A {
+		int a;
+		double b;
+		std::string c;
+	};
+
+	auto inst = byfxxm::Addressing::Instance();
+	static A sa{ 1, 2, "hello" };
+	inst->Register("sa.a", &sa.a);
+	auto v = inst->Get("sa.a");
+	//if (v.t == byfxxm::Addressing::Type::INT)
+
+}
+
 int main() {
+	TestAddressing();
+#if 0
 	TestArrayNd();
 	TestMetaprogramming();
 
-#if 0
 	TestArrayNd1();
 	TestVariableBuffer();
 	TestHashMap();
