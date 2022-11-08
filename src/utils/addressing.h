@@ -48,11 +48,34 @@ namespace byfxxm {
 				dictionary_.insert({ k, {v, Type::STRING} });
 		}
 
-		std::optional<Addr> Get(Key k) {
+		Addr Get(Key k) {
 			if (dictionary_.find(k) == dictionary_.end())
-				return std::nullopt;
+				throw std::exception();
 
 			return dictionary_[k];
+		}
+
+		void Set(Key k, auto&& v) {
+			if (dictionary_.find(k) == dictionary_.end())
+				throw std::exception();
+
+			auto [p, t] = dictionary_[k];
+			switch (t) {
+			case Type::INT:
+				*static_cast<int*>(p) = v;
+				break;
+			case Type::DOUBLE:
+				*static_cast<double*>(p) = v;
+				break;
+			case Type::BOOL:
+				*static_cast<bool*>(p) = v;
+				break;
+			case Type::STRING:
+				*static_cast<std::string*>(p) = v;
+				break;
+			default:
+				break;
+			}
 		}
 
 	private:

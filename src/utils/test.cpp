@@ -355,9 +355,8 @@ void TestAddressing() {
 	auto inst = byfxxm::Addressing::Instance();
 	static A sa{ 1, 2, "hello" };
 	inst->Register("sa.a", &sa.a);
+	inst->Set("sa.a", 55);
 	auto v = inst->Get("sa.a");
-	//if (v.t == byfxxm::Addressing::Type::INT)
-
 }
 
 int main() {
