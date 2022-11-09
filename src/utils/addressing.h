@@ -8,6 +8,11 @@ namespace byfxxm {
 	template <class T>
 	concept AddrType = std::_Is_any_of_v<T, int, double, bool, std::string>;
 
+	class AddressNoRegisterException : public std::exception {
+	public:
+		AddressNoRegisterException(const std::string& s) : std::exception(s.c_str()) {}
+	};
+
 	class Addressing {
 	private:
 		Addressing() = default;
@@ -56,14 +61,14 @@ namespace byfxxm {
 
 		Value Get(Key k) {
 			if (dictionary_.find(k) == dictionary_.end())
-				throw std::exception();
+				throw AddressNoRegisterException("Addressing get failure");
 
 			return dictionary_[k]->Get();
 		}
 
 		void Set(Key k, auto&& v) {
 			if (dictionary_.find(k) == dictionary_.end())
-				throw std::exception();
+				throw AddressNoRegisterException("Addressing set failure");
 
 			dictionary_[k]->Set(v);
 		}
