@@ -355,8 +355,11 @@ void TestAddressing() {
 	auto inst = byfxxm::Addressing::Instance();
 	static A sa{ 1, 2, "hello" };
 	inst->Register("sa.a", &sa.a);
+	inst->Register("sa.c", &sa.c);
 	inst->Set("sa.a", 55);
+	inst->Set("sa.c", "world");
 	auto v = inst->Get("sa.a");
+	auto v1 = inst->Get("sa.c");
 }
 
 int main() {
