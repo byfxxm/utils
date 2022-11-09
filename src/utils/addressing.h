@@ -76,7 +76,7 @@ namespace byfxxm {
 			return dictionary_[k]->Get();
 		}
 
-		void Set(Key k, auto&& v) {
+		void Set(Key k, Value v) {
 			if (dictionary_.find(k) == dictionary_.end())
 				throw AddressingException("Set failure");
 
