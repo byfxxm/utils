@@ -8,9 +8,9 @@ namespace byfxxm {
 	template <class T>
 	concept AddrType = std::_Is_any_of_v<T, int, double, bool, std::string>;
 
-	class AddressNoRegisterException : public std::exception {
+	class AddressingException : public std::exception {
 	public:
-		AddressNoRegisterException(const std::string& s) : std::exception(s.c_str()) {}
+		AddressingException(const std::string& s) : std::exception(s.c_str()) {}
 	};
 
 	class Addressing {
@@ -56,19 +56,29 @@ namespace byfxxm {
 
 		template <AddrType T>
 		void Register(Key k, T* v) {
+			if (dictionary_.find(k) != dictionary_.end())
+				throw AddressingException("Register failure");
+
 			dictionary_.insert({ k, std::make_shared<LeafD<T>>(v) });
+		}
+
+		void Unregister(Key k) {
+			if (dictionary_.find(k) == dictionary_.end())
+				throw AddressingException("Unregister failure");
+
+			dictionary_.erase(k);
 		}
 
 		Value Get(Key k) {
 			if (dictionary_.find(k) == dictionary_.end())
-				throw AddressNoRegisterException("Addressing get failure");
+				throw AddressingException("Get failure");
 
 			return dictionary_[k]->Get();
 		}
 
 		void Set(Key k, auto&& v) {
 			if (dictionary_.find(k) == dictionary_.end())
-				throw AddressNoRegisterException("Addressing set failure");
+				throw AddressingException("Set failure");
 
 			dictionary_[k]->Set(v);
 		}

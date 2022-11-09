@@ -348,19 +348,26 @@ void TestCoroutine() {
 void TestAddressing() {
 	class A {
 	public:
-		A(std::string name) {
-			byfxxm::Addressing::Instance()->Register(name + ".a", &a);
-			byfxxm::Addressing::Instance()->Register(name + ".b", &b);
-			byfxxm::Addressing::Instance()->Register(name + ".c", &c);
+		A(std::string name) : name_(name) {
+			byfxxm::Addressing::Instance()->Register(name_ + ".a", &a);
+			byfxxm::Addressing::Instance()->Register(name_ + ".b", &b);
+			byfxxm::Addressing::Instance()->Register(name_ + ".c", &c);
+		}
+
+		~A() {
+			byfxxm::Addressing::Instance()->Unregister(name_ + ".a");
+			byfxxm::Addressing::Instance()->Unregister(name_ + ".b");
+			byfxxm::Addressing::Instance()->Unregister(name_ + ".c");
 		}
 
 	private:
+		std::string name_;
 		int a = 0;
 		double b = 0;
 		std::string c;
 	};
 
-	static A sa{ "sa" };
+	A sa{ "sa" };
 	auto inst = byfxxm::Addressing::Instance();
 	inst->Set("sa.a", 404);
 	inst->Set("sa.c", "hello world");
