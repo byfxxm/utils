@@ -6,7 +6,7 @@
 
 namespace byfxxm {
 	template <class T>
-	concept Leaf = std::_Is_any_of_v<T, int, double, bool, std::string>;
+	concept AddrType = std::_Is_any_of_v<T, int, double, bool, std::string>;
 
 	class Addressing {
 	private:
@@ -30,17 +30,17 @@ namespace byfxxm {
 			void* p_;
 		};
 
-		template <Leaf L>
+		template <AddrType T>
 		class LeafD : public LeafB {
 		public:
 			LeafD(void* p) : LeafB(p) {}
 
 			virtual Value Get() override {
-				return { *static_cast<L*>(p_) };
+				return { *static_cast<T*>(p_) };
 			}
 
 			virtual void Set(Value v) override {
-				*static_cast<L*>(p_) = std::get<L>(v);
+				*static_cast<T*>(p_) = std::get<T>(v);
 			}
 		};
 
@@ -49,9 +49,9 @@ namespace byfxxm {
 			return &addr;
 		}
 
-		template <Leaf L>
-		void Register(Key k, L* v) {
-			dictionary_.insert({ k, std::make_shared<LeafD<L>>(v) });
+		template <AddrType T>
+		void Register(Key k, T* v) {
+			dictionary_.insert({ k, std::make_shared<LeafD<T>>(v) });
 		}
 
 		Value Get(Key k) {
