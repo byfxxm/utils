@@ -3,6 +3,7 @@
 #include <type_traits>
 #include <unordered_map>
 #include <variant>
+#include <mutex>
 
 namespace byfxxm {
 	template <class T>
@@ -56,6 +57,7 @@ namespace byfxxm {
 
 		template <AddrType T>
 		void Register(Key k, T* v) {
+			std::lock_guard lock(mtx_);
 			if (dictionary_.find(k) != dictionary_.end())
 				throw AddressingException("Register failure");
 
@@ -63,6 +65,7 @@ namespace byfxxm {
 		}
 
 		void Unregister(Key k) {
+			std::lock_guard lock(mtx_);
 			if (dictionary_.find(k) == dictionary_.end())
 				throw AddressingException("Unregister failure");
 
@@ -70,6 +73,7 @@ namespace byfxxm {
 		}
 
 		Value Get(Key k) {
+			std::lock_guard lock(mtx_);
 			if (dictionary_.find(k) == dictionary_.end())
 				throw AddressingException("Get failure");
 
@@ -77,6 +81,7 @@ namespace byfxxm {
 		}
 
 		void Set(Key k, Value v) {
+			std::lock_guard lock(mtx_);
 			if (dictionary_.find(k) == dictionary_.end())
 				throw AddressingException("Set failure");
 
@@ -85,5 +90,6 @@ namespace byfxxm {
 
 	private:
 		std::unordered_map<Key, std::shared_ptr<LeafB>> dictionary_;
+		std::mutex mtx_;
 	};
 }
