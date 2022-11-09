@@ -346,20 +346,26 @@ void TestCoroutine() {
 }
 
 void TestAddressing() {
-	struct A {
-		int a;
-		double b;
+	class A {
+	public:
+		A(std::string name) {
+			byfxxm::Addressing::Instance()->Register(name + ".a", &a);
+			byfxxm::Addressing::Instance()->Register(name + ".b", &b);
+			byfxxm::Addressing::Instance()->Register(name + ".c", &c);
+		}
+
+	private:
+		int a = 0;
+		double b = 0;
 		std::string c;
 	};
 
+	static A sa{ "sa" };
 	auto inst = byfxxm::Addressing::Instance();
-	static A sa{ 1, 2, "hello" };
-	inst->Register("sa.a", &sa.a);
-	inst->Register("sa.c", &sa.c);
-	inst->Set("sa.a", 55);
-	inst->Set("sa.c", "world");
-	auto v = inst->Get("sa.a");
-	auto v1 = inst->Get("sa.c");
+	inst->Set("sa.a", 404);
+	inst->Set("sa.c", "hello world");
+	std::cout << std::get<int>(inst->Get("sa.a")) << std::endl;
+	std::cout << std::get<std::string>(inst->Get("sa.c")) << std::endl;
 }
 
 int main() {
