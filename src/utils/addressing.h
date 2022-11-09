@@ -7,7 +7,7 @@
 
 namespace byfxxm {
 	template <class T>
-	concept AddrType = std::is_same_v<T, int> || std::is_same_v<T, double> || std::is_same_v<T, bool> || std::is_same_v<T, std::string>;
+	concept AddrType = std::_Is_any_of_v<T, int, double, bool, std::string>;
 
 	class Addressing {
 	private:
