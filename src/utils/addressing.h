@@ -7,7 +7,7 @@
 
 namespace byfxxm {
 	template <class T>
-	concept AddrType = std::_Is_any_of_v<T, int, double, bool, std::string>;
+	concept AddrType = std::_Is_any_of_v<std::decay_t<T>, int, double, bool, std::string>;
 
 	class AddressingException : public std::exception {
 	public:
