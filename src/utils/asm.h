@@ -3,7 +3,7 @@
 
 template <class T, class = std::enable_if_t<sizeof(T) == 4>>
 inline void Memset(T* p, T v, int c) {
-#ifndef _WIN64
+#if defined _WIN32 && !defined _WIN64
 	__asm {
 		mov ecx, c
 		mov edi, p
