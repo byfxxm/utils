@@ -95,14 +95,14 @@ namespace byfxxm {
 		}
 
 		~ArrayNd() {
-			delete elems_;
+			delete[] elems_;
 		}
 
 		ArrayNd& operator=(const ArrayNd& arr) {
 			count_ = arr.count_;
 			shapes_ = arr.shapes_;
 			factors_ = arr.factors_;
-			delete elems_;
+			delete[] elems_;
 			elems_ = new Ty[count_];
 			memcpy(elems_, arr.elems_, count_ * sizeof(Ty));
 			return *this;
