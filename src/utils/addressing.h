@@ -7,7 +7,10 @@
 
 namespace byfxxm {
 	template <class T>
-	concept AddrType = std::_Is_any_of_v<std::decay_t<T>, int, double, bool, std::string>;
+	concept AddrType = std::is_same_v<std::decay_t<T>, int>
+		|| std::is_same_v<std::decay_t<T>, double>
+		|| std::is_same_v<std::decay_t<T>, bool>
+		|| std::is_same_v<std::decay_t<T>, std::string>;
 
 	class AddressingException : public std::exception {
 	public:
