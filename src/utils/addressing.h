@@ -17,7 +17,7 @@ namespace byfxxm {
 	public:
 		AddressingException(const std::string& s) : wh_(s){}
 
-		virtual const char* what() const override {
+		virtual const char* what() const noexcept override {
 			return wh_.c_str();
 		}
 
