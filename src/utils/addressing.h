@@ -15,7 +15,14 @@ namespace byfxxm {
 
 	class AddressingException : public std::exception {
 	public:
-		AddressingException(const std::string& s) : std::exception(s.c_str()) {}
+		AddressingException(const std::string& s) : wh_(s){}
+
+		virtual const char* what() const override {
+			return wh_.c_str();
+		}
+
+	private:
+		std::string wh_;
 	};
 
 	class Addressing {
