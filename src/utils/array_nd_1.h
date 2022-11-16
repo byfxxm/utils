@@ -53,7 +53,7 @@ namespace array_nd_1 {
 
 	public:
 		ArrayNd(size_t last) : count_(last) {
-			base_addr_ = std::make_shared<T[]>(count_);
+			base_addr_ = std::make_shared<T>(count_);
 			Memset(static_cast<T>(0));
 		}
 
@@ -68,7 +68,7 @@ namespace array_nd_1 {
 		T& operator[](size_t idx) const {
 			assert(idx >= 0 && idx < count_);
 			assert(base_addr_);
-			return base_addr_[idx];
+			return base_addr_.get()[idx];
 		}
 
 		explicit operator T* () const {
@@ -77,11 +77,11 @@ namespace array_nd_1 {
 
 		void Memset(T val) const {
 			for (size_t i = 0; i < count_; ++i)
-				base_addr_[i] = val;
+				base_addr_.get()[i] = val;
 		}
 
 	private:
-		std::shared_ptr<T[]> base_addr_;
+		std::shared_ptr<T> base_addr_;
 		size_t count_{ 0 };
 	};
 }
