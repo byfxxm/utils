@@ -59,7 +59,7 @@ namespace byfxxm {
 		template <ElementType... Args>
 			requires (sizeof...(Args) == Num)
 		ArrayNd(Args&&... args) : count_((... * args)), shapes_{ static_cast<size_t>(args)... } {
-			elems_ = std::make_unique<Ty>(count_);
+			elems_ = new Ty[count_];
 			Memset(0);
 			InitializeFactors();
 		}
@@ -84,7 +84,7 @@ namespace byfxxm {
 				count_ *= it;
 			}
 
-			elems_ = std::make_unique<Ty>(count_);
+			elems_ = new Ty[count_];
 			Memset(0);
 			InitializeFactors();
 			Assignment(list, 0, 0);
@@ -94,33 +94,47 @@ namespace byfxxm {
 			*this = arr;
 		}
 
+		~ArrayNd() {
+			delete elems_;
+		}
+
 		ArrayNd& operator=(const ArrayNd& arr) {
 			count_ = arr.count_;
 			shapes_ = arr.shapes_;
 			factors_ = arr.factors_;
-			elems_ = std::make_unique<Ty>(count_);
-			memcpy(elems_.get(), arr.elems_.get(), count_ * sizeof(Ty));
+			delete elems_;
+			elems_ = new Ty[count_];
+			memcpy(elems_, arr.elems_, count_ * sizeof(Ty));
 			return *this;
 		}
 
-		ArrayNd(ArrayNd&&) noexcept = default;
-		ArrayNd& operator=(ArrayNd&&) noexcept = default;
+		ArrayNd(ArrayNd&& arr) noexcept {
+			*this = std::move(arr);
+		}
+
+		ArrayNd& operator=(ArrayNd&& arr) noexcept {
+			count_ = arr.count_;
+			shapes_ = arr.shapes_;
+			factors_ = arr.factors_;
+			elems_ = arr.elems_;
+			elems_ = nullptr;
+		}
 
 		decltype(auto) operator[](size_t pos) {
-			return View<Ty, Num>(elems_.get(), &shapes_.front(), &factors_.front())[pos];
+			return View<Ty, Num>(elems_, &shapes_.front(), &factors_.front())[pos];
 		}
 
 		template <class Predicate>
 		void ForEach(Predicate&& pred) {
 			for (size_t i = 0; i < count_; ++i) {
-				elems_.get()[i] = pred(elems_.get()[i]);
+				elems_[i] = pred(elems_[i]);
 			}
 		}
 
 		void Memset(Ty val) {
 			assert(elems_);
 			for (size_t i = 0; i < count_; ++i) {
-				elems_.get()[i] = val;
+				elems_[i] = val;
 			}
 		}
 
@@ -161,7 +175,7 @@ namespace byfxxm {
 
 		void Assignment(std::initializer_list<Ty> list, size_t, size_t offset) {
 			for (auto it = list.begin(); it != list.end(); ++it) {
-				elems_.get()[offset + (it - list.begin())] = *it;
+				elems_[offset + (it - list.begin())] = *it;
 			}
 		}
 
@@ -174,7 +188,7 @@ namespace byfxxm {
 
 	private:
 		size_t count_{ 0 };
-		std::unique_ptr<Ty> elems_;
+		Ty* elems_{ nullptr };
 		std::array<size_t, Num> shapes_;
 		std::array<size_t, Num> factors_;
 	};

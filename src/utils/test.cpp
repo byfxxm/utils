@@ -5,7 +5,6 @@
 #include <type_traits>
 
 #include "array_nd.h"
-#include "array_nd_1.h"
 #include "variable_buffer.h"
 #include "hash_map.h"
 #include "ring_buffer.h"
@@ -73,6 +72,7 @@ void TestArrayNd() {
 	assert(e[1] == 800);
 }
 
+#if 0
 void TestArrayNd1() {
 	array_nd_1::ArrayNd<size_t, 3> a1(7, 8, 9);
 	a1.Memset(50);
@@ -98,6 +98,7 @@ void TestArrayNd1() {
 	array_nd_1::ArrayNd<size_t, 1> c(5);
 	assert(c[1] == 0);
 }
+#endif
 
 void TestVariableBuffer() {
 	byfxxm::VariableBuffer<20> vbuf;
@@ -371,11 +372,8 @@ void TestAddressing() {
 
 int main() {
 	TestAddressing();
-#if 0
 	TestArrayNd();
 	TestMetaprogramming();
-
-	TestArrayNd1();
 	TestVariableBuffer();
 	TestHashMap();
 	TestWarrior();
@@ -384,6 +382,7 @@ int main() {
 	TestReflection();
 	TestRingBuffer();
 	TestCrtp();
+#if 0
 	TestCoroutine();
 #endif
 
