@@ -98,7 +98,7 @@ namespace byfxxm {
 			shapes_ = arr.shapes_;
 			factors_ = arr.factors_;
 			elems_ = std::make_unique<Ty[]>(count_);
-			std::memcpy(elems_.get(), arr.elems_.get(), count_ * sizeof(Ty));
+			::memcpy(elems_.get(), arr.elems_.get(), count_ * sizeof(Ty));
 			return *this;
 		}
 
