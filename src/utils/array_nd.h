@@ -61,7 +61,7 @@ namespace byfxxm {
 		ArrayNd(Args&&... args) : count_((... * args)), shapes_{ static_cast<size_t>(args)... } {
 			elems_ = std::make_unique<Ty[]>(count_);
 			Memset(0);
-			InitializeFactors_();
+			InitializeFactors();
 		}
 
 		template <class T, size_t N>
@@ -79,7 +79,7 @@ namespace byfxxm {
 
 		ArrayNd(InitializerList_t<Ty, Num> list) {
 			shapes_.fill(0);
-			InitializeShapes_(list, 0);
+			InitializeShapes(list, 0);
 			count_ = 1;
 			for (auto it : shapes_) {
 				count_ *= it;
@@ -87,8 +87,8 @@ namespace byfxxm {
 
 			elems_ = std::make_unique<Ty[]>(count_);
 			Memset(0);
-			InitializeFactors_();
-			Assignment_(list, 0, 0);
+			InitializeFactors();
+			Assignment(list, 0, 0);
 		}
 
 		ArrayNd(const ArrayNd& arr) {
@@ -132,24 +132,24 @@ namespace byfxxm {
 		}
 
 	private:
-		void InitializeShapes_(std::initializer_list<Ty> list, size_t index) {
+		void InitializeShapes(std::initializer_list<Ty> list, size_t index) {
 			if (auto list_size = list.size(); list_size > shapes_[index]) {
 				shapes_[index] = list_size;
 			}
 		}
 
 		template <class List>
-		void InitializeShapes_(List&& list, size_t index) {
+		void InitializeShapes(List&& list, size_t index) {
 			if (auto list_size = list.size(); list_size > shapes_[index]) {
 				shapes_[index] = list_size;
 			}
 
 			for (auto& it : list) {
-				InitializeShapes_(it, index + 1);
+				InitializeShapes(it, index + 1);
 			}
 		}
 
-		void InitializeFactors_() {
+		void InitializeFactors() {
 			for (size_t i = 0; i < Num; ++i) {
 				factors_[i] = 1;
 				for (size_t j = i + 1; j < Num; ++j) {
@@ -158,16 +158,16 @@ namespace byfxxm {
 			}
 		}
 
-		void Assignment_(std::initializer_list<Ty> list, size_t, size_t offset) {
+		void Assignment(std::initializer_list<Ty> list, size_t, size_t offset) {
 			for (auto it = list.begin(); it != list.end(); ++it) {
 				elems_[offset + (it - list.begin())] = *it;
 			}
 		}
 
 		template <class List>
-		void Assignment_(List&& list, size_t index, size_t offset) {
+		void Assignment(List&& list, size_t index, size_t offset) {
 			for (auto it = list.begin(); it != list.end(); ++it) {
-				Assignment_(*it, index + 1, offset + (it - list.begin()) * factors_[index]);
+				Assignment(*it, index + 1, offset + (it - list.begin()) * factors_[index]);
 			}
 		}
 
