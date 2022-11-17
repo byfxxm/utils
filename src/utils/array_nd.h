@@ -78,6 +78,7 @@ namespace byfxxm {
 		using InitializerList_t = InitializerList<T, N>::type;
 
 		ArrayNd(InitializerList_t<Ty, Num> list) {
+			shapes_.fill(0);
 			InitializeShapes(list, 0);
 			count_ = 1;
 			for (auto it : shapes_) {
