@@ -133,16 +133,14 @@ namespace byfxxm {
 
 	private:
 		void InitializeShapes_(std::initializer_list<Ty> list, size_t index) {
-			auto list_size = list.size();
-			if (list_size > shapes_[index]) {
+			if (auto list_size = list.size(); list_size > shapes_[index]) {
 				shapes_[index] = list_size;
 			}
 		}
 
 		template <class List>
 		void InitializeShapes_(List&& list, size_t index) {
-			auto list_size = list.size();
-			if (list_size > shapes_[index]) {
+			if (auto list_size = list.size(); list_size > shapes_[index]) {
 				shapes_[index] = list_size;
 			}
 
