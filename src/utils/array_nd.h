@@ -59,7 +59,7 @@ namespace byfxxm {
 		template <ElementType... Args>
 			requires (sizeof...(Args) == Num)
 		ArrayNd(Args&&... args) : count_((... * args)), shapes_{ static_cast<size_t>(args)... } {
-			elems_ = new Ty[count_];
+			elems_ = std::make_unique<Ty[]>(count_);
 			Memset(0);
 			InitializeFactors_();
 		}
@@ -85,7 +85,7 @@ namespace byfxxm {
 				count_ *= it;
 			}
 
-			elems_ = new Ty[count_];
+			elems_ = std::make_unique<Ty[]>(count_);
 			Memset(0);
 			InitializeFactors_();
 			Assignment_(list, 0, 0);
@@ -95,34 +95,20 @@ namespace byfxxm {
 			*this = arr;
 		}
 
-		~ArrayNd() {
-			delete[] elems_;
-		}
-
 		ArrayNd& operator=(const ArrayNd& arr) {
 			count_ = arr.count_;
 			shapes_ = arr.shapes_;
 			factors_ = arr.factors_;
-			delete[] elems_;
-			elems_ = new Ty[count_];
-			memcpy(elems_, arr.elems_, count_ * sizeof(Ty));
+			elems_ = std::make_unique<Ty[]>(count_);
+			memcpy(elems_.get(), arr.elems_.get(), count_ * sizeof(Ty));
 			return *this;
 		}
 
-		ArrayNd(ArrayNd&& arr) noexcept {
-			*this = std::move(arr);
-		}
-
-		ArrayNd& operator=(ArrayNd&& arr) noexcept {
-			count_ = arr.count_;
-			shapes_ = arr.shapes_;
-			factors_ = arr.factors_;
-			elems_ = arr.elems_;
-			elems_ = nullptr;
-		}
+		ArrayNd(ArrayNd&& arr) noexcept = default;
+		ArrayNd& operator=(ArrayNd&& arr) noexcept = default;
 
 		decltype(auto) operator[](size_t pos) {
-			return View<Ty, Num>(elems_, &shapes_.front(), &factors_.front())[pos];
+			return View<Ty, Num>(elems_.get(), &shapes_.front(), &factors_.front())[pos];
 		}
 
 		template <class Predicate>
@@ -189,7 +175,7 @@ namespace byfxxm {
 
 	private:
 		size_t count_{ 0 };
-		Ty* elems_{ nullptr };
+		std::unique_ptr<Ty[]> elems_;
 		std::array<size_t, Num> shapes_;
 		std::array<size_t, Num> factors_;
 	};
