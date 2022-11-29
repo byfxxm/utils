@@ -56,9 +56,9 @@ namespace byfxxm {
 		};
 
 	public:
-		template <ElementType... Args>
+		template <std::integral... Args>
 			requires (sizeof...(Args) == Num)
-		ArrayNd(Args&&... args) : count_((... * args)), shapes_{ static_cast<size_t>(args)... } {
+		ArrayNd(Args... args) : count_((... * args)), shapes_{ static_cast<size_t>(args)... } {
 			elems_ = std::make_unique<Ty[]>(count_);
 			Memset(0);
 			InitializeFactors();
