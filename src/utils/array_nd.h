@@ -127,7 +127,7 @@ namespace byfxxm {
 
 		template <size_t N>
 			requires (N < Num)
-		auto Shape() const {
+		size_t Shape() const {
 			return shapes_[N];
 		}
 
