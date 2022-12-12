@@ -107,7 +107,7 @@ namespace byfxxm {
 		ArrayNd(ArrayNd&& arr) noexcept = default;
 		ArrayNd& operator=(ArrayNd&& arr) noexcept = default;
 
-		decltype(auto) operator[](size_t pos) {
+		decltype(auto) operator[](size_t pos) const {
 			return View<Ty, Num>(elems_.get(), &shapes_.front(), &factors_.front())[pos];
 		}
 
