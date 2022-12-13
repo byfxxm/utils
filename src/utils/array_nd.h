@@ -45,28 +45,15 @@ namespace byfxxm {
 		public:
 			View(T* ptr, const size_t* shape, const size_t*) : ptr_(ptr), shape_(shape) {}
 
-			T& operator[](size_t pos) const {
-				assert(pos >= 0 && pos < shape_[0]);
-				return ptr_[pos];
+			auto& operator[](size_t pos) const {
+				if constexpr (RO)
+					return static_cast<const T&>(ptr_[pos]);
+				else
+					return static_cast<T&>(ptr_[pos]);
 			}
 
 		private:
 			T* ptr_{ nullptr };
-			const size_t* shape_{ nullptr };
-		};
-
-		template <class T>
-		class View<T, 1, true> {
-		public:
-			View(T* ptr, const size_t* shape, const size_t*) : ptr_(ptr), shape_(shape) {}
-
-			const T& operator[](size_t pos) const {
-				assert(pos >= 0 && pos < shape_[0]);
-				return ptr_[pos];
-			}
-
-		private:
-			const T* ptr_{ nullptr };
 			const size_t* shape_{ nullptr };
 		};
 
