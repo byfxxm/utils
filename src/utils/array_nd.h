@@ -29,7 +29,7 @@ namespace byfxxm {
 				assert(ptr_);
 			}
 
-			const View<T, N - 1> operator[](size_t pos) const&& {
+			const View<T, N - 1> operator[](size_t pos) const {
 				assert(pos >= 0 && pos < shape_[0]);
 				return View<T, N - 1>(ptr_ + pos * factor_[0], shape_ + 1, factor_ + 1);
 			}
@@ -45,7 +45,7 @@ namespace byfxxm {
 		public:
 			View(T* ptr, const size_t* shape, const size_t*) : ptr_(ptr), shape_(shape) {}
 
-			T& operator[](size_t pos) const&& {
+			T& operator[](size_t pos) const {
 				assert(pos >= 0 && pos < shape_[0]);
 				return ptr_[pos];
 			}
@@ -58,10 +58,10 @@ namespace byfxxm {
 	public:
 		template <std::integral... Args>
 			requires (sizeof...(Args) == Num)
-		ArrayNd(Args... args) : count_((... * args)), shapes_{ static_cast<size_t>(args)... } {
-			elems_ = std::make_unique<Ty[]>(count_);
+		ArrayNd(Args... args) : _count((... * args)), _shapes{ static_cast<size_t>(args)... } {
+			_elems = std::make_unique<Ty[]>(_count);
 			Memset(0);
-			InitializeFactors();
+			_InitializeFactors();
 		}
 
 		template <class T, size_t N>
@@ -78,17 +78,17 @@ namespace byfxxm {
 		using InitializerList_t = InitializerList<T, N>::type;
 
 		ArrayNd(InitializerList_t<Ty, Num> list) {
-			shapes_.fill(0);
-			InitializeShapes(list, 0);
-			count_ = 1;
-			for (auto it : shapes_) {
-				count_ *= it;
+			_shapes.fill(0);
+			_InitializeShapes(list, 0);
+			_count = 1;
+			for (auto it : _shapes) {
+				_count *= it;
 			}
 
-			elems_ = std::make_unique<Ty[]>(count_);
+			_elems = std::make_unique<Ty[]>(_count);
 			Memset(0);
-			InitializeFactors();
-			Assignment(list, 0, 0);
+			_InitializeFactors();
+			_Assignment(list, 0, 0);
 		}
 
 		ArrayNd(const ArrayNd& arr) {
@@ -96,11 +96,11 @@ namespace byfxxm {
 		}
 
 		ArrayNd& operator=(const ArrayNd& arr) {
-			count_ = arr.count_;
-			shapes_ = arr.shapes_;
-			factors_ = arr.factors_;
-			elems_ = std::make_unique<Ty[]>(count_);
-			memcpy(elems_.get(), arr.elems_.get(), count_ * sizeof(Ty));
+			_count = arr._count;
+			_shapes = arr._shapes;
+			_factors = arr._factors;
+			_elems = std::make_unique<Ty[]>(_count);
+			memcpy(_elems.get(), arr._elems.get(), _count * sizeof(Ty));
 			return *this;
 		}
 
@@ -108,74 +108,74 @@ namespace byfxxm {
 		ArrayNd& operator=(ArrayNd&& arr) noexcept = default;
 
 		decltype(auto) operator[](size_t pos) const {
-			return View<Ty, Num>(elems_.get(), &shapes_.front(), &factors_.front())[pos];
+			return View<Ty, Num>(_elems.get(), &_shapes.front(), &_factors.front())[pos];
 		}
 
 		template <class Predicate>
 		void ForEach(Predicate&& pred) {
-			for (size_t i = 0; i < count_; ++i) {
-				elems_[i] = pred(elems_[i]);
+			for (size_t i = 0; i < _count; ++i) {
+				_elems[i] = pred(_elems[i]);
 			}
 		}
 
 		void Memset(Ty val) {
-			assert(elems_);
-			for (size_t i = 0; i < count_; ++i) {
-				elems_[i] = val;
+			assert(_elems);
+			for (size_t i = 0; i < _count; ++i) {
+				_elems[i] = val;
 			}
 		}
 
 		template <size_t N>
 			requires (N < Num)
 		size_t Shape() const {
-			return shapes_[N];
+			return _shapes[N];
 		}
 
 	private:
-		void InitializeShapes(std::initializer_list<Ty> list, size_t index) {
-			if (auto list_size = list.size(); list_size > shapes_[index]) {
-				shapes_[index] = list_size;
+		void _InitializeShapes(std::initializer_list<Ty> list, size_t index) {
+			if (auto list_size = list.size(); list_size > _shapes[index]) {
+				_shapes[index] = list_size;
 			}
 		}
 
 		template <class List>
-		void InitializeShapes(List&& list, size_t index) {
-			if (auto list_size = list.size(); list_size > shapes_[index]) {
-				shapes_[index] = list_size;
+		void _InitializeShapes(List&& list, size_t index) {
+			if (auto list_size = list.size(); list_size > _shapes[index]) {
+				_shapes[index] = list_size;
 			}
 
 			for (auto& it : list) {
-				InitializeShapes(it, index + 1);
+				_InitializeShapes(it, index + 1);
 			}
 		}
 
-		void InitializeFactors() {
+		void _InitializeFactors() {
 			for (size_t i = 0; i < Num; ++i) {
-				factors_[i] = 1;
+				_factors[i] = 1;
 				for (size_t j = i + 1; j < Num; ++j) {
-					factors_[i] *= shapes_[j];
+					_factors[i] *= _shapes[j];
 				}
 			}
 		}
 
-		void Assignment(std::initializer_list<Ty> list, size_t, size_t offset) {
+		void _Assignment(std::initializer_list<Ty> list, size_t, size_t offset) {
 			for (auto it = list.begin(); it != list.end(); ++it) {
-				elems_[offset + (it - list.begin())] = *it;
+				_elems[offset + (it - list.begin())] = *it;
 			}
 		}
 
 		template <class List>
-		void Assignment(List&& list, size_t index, size_t offset) {
+		void _Assignment(List&& list, size_t index, size_t offset) {
 			for (auto it = list.begin(); it != list.end(); ++it) {
-				Assignment(*it, index + 1, offset + (it - list.begin()) * factors_[index]);
+				_Assignment(*it, index + 1, offset + (it - list.begin()) * _factors[index]);
 			}
 		}
 
 	private:
-		size_t count_{ 0 };
-		std::unique_ptr<Ty[]> elems_;
-		std::array<size_t, Num> shapes_;
-		std::array<size_t, Num> factors_;
+		size_t _count{ 0 };
+		std::unique_ptr<Ty[]> _elems;
+		std::array<size_t, Num> _shapes;
+		std::array<size_t, Num> _factors;
 	};
 
 	template <class First, class... Rest>
