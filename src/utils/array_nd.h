@@ -25,36 +25,36 @@ namespace byfxxm {
 		template <class T, size_t N, bool RO>
 		class View {
 		public:
-			View(T* ptr, const size_t* shape, const size_t* factor) : ptr_(ptr), shape_(shape), factor_(factor) {
-				assert(ptr_);
+			View(T* ptr, const size_t* shape, const size_t* factor) : _ptr(ptr), _shape(shape), _factor(factor) {
+				assert(_ptr);
 			}
 
 			const View<T, N - 1, RO> operator[](size_t pos) const {
-				assert(pos >= 0 && pos < shape_[0]);
-				return View<T, N - 1, RO>(ptr_ + pos * factor_[0], shape_ + 1, factor_ + 1);
+				assert(pos >= 0 && pos < _shape[0]);
+				return View<T, N - 1, RO>(_ptr + pos * _factor[0], _shape + 1, _factor + 1);
 			}
 
 		private:
-			T* ptr_{ nullptr };
-			const size_t* shape_{ nullptr };
-			const size_t* factor_{ nullptr };
+			T* _ptr{ nullptr };
+			const size_t* _shape{ nullptr };
+			const size_t* _factor{ nullptr };
 		};
 
 		template <class T, bool RO>
 		class View<T, 1, RO> {
 		public:
-			View(T* ptr, const size_t* shape, const size_t*) : ptr_(ptr), shape_(shape) {}
+			View(T* ptr, const size_t* shape, const size_t*) : _ptr(ptr), _shape(shape) {}
 
 			auto& operator[](size_t pos) const {
 				if constexpr (RO)
-					return static_cast<const T&>(ptr_[pos]);
+					return static_cast<const T&>(_ptr[pos]);
 				else
-					return static_cast<T&>(ptr_[pos]);
+					return static_cast<T&>(_ptr[pos]);
 			}
 
 		private:
-			T* ptr_{ nullptr };
-			const size_t* shape_{ nullptr };
+			T* _ptr{ nullptr };
+			const size_t* _shape{ nullptr };
 		};
 
 	public:
