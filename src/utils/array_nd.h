@@ -23,15 +23,15 @@ namespace byfxxm {
 	class ArrayNd final {
 	private:
 		template <class T, size_t N, bool RO>
-		class View {
+		class Proxy {
 		public:
-			View(T* ptr, const size_t* shape, const size_t* factor) : _ptr(ptr), _shape(shape), _factor(factor) {
+			Proxy(T* ptr, const size_t* shape, const size_t* factor) : _ptr(ptr), _shape(shape), _factor(factor) {
 				assert(_ptr);
 			}
 
-			const View<T, N - 1, RO> operator[](size_t pos) const {
+			const Proxy<T, N - 1, RO> operator[](size_t pos) const {
 				assert(pos >= 0 && pos < _shape[0]);
-				return View<T, N - 1, RO>(_ptr + pos * _factor[0], _shape + 1, _factor + 1);
+				return Proxy<T, N - 1, RO>(_ptr + pos * _factor[0], _shape + 1, _factor + 1);
 			}
 
 		private:
@@ -41,9 +41,9 @@ namespace byfxxm {
 		};
 
 		template <class T, bool RO>
-		class View<T, 1, RO> {
+		class Proxy<T, 1, RO> {
 		public:
-			View(T* ptr, const size_t* shape, const size_t*) : _ptr(ptr), _shape(shape) {}
+			Proxy(T* ptr, const size_t* shape, const size_t*) : _ptr(ptr), _shape(shape) {}
 
 			auto& operator[](size_t pos) const {
 				if constexpr (RO)
@@ -98,6 +98,9 @@ namespace byfxxm {
 		}
 
 		ArrayNd& operator=(const ArrayNd& arr) {
+			if (this == &arr)
+				return *this;
+
 			_count = arr._count;
 			_shapes = arr._shapes;
 			_factors = arr._factors;
@@ -110,11 +113,11 @@ namespace byfxxm {
 		ArrayNd& operator=(ArrayNd&& arr) noexcept = default;
 
 		decltype(auto) operator[](size_t pos) const {
-			return View<Ty, Num, true>(_elems.get(), &_shapes.front(), &_factors.front())[pos];
+			return Proxy<Ty, Num, true>(_elems.get(), &_shapes.front(), &_factors.front())[pos];
 		}
 
 		decltype(auto) operator[](size_t pos) {
-			return View<Ty, Num, false>(_elems.get(), &_shapes.front(), &_factors.front())[pos];
+			return Proxy<Ty, Num, false>(_elems.get(), &_shapes.front(), &_factors.front())[pos];
 		}
 
 		template <class Predicate>
