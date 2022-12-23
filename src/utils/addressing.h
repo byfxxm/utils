@@ -15,14 +15,14 @@ namespace byfxxm {
 
 	class AddressingException : public std::exception {
 	public:
-		AddressingException(const std::string& s) : wh_(s){}
+		AddressingException(const std::string& s) : _wh(s){}
 
 		virtual const char* what() const noexcept override {
-			return wh_.c_str();
+			return _wh.c_str();
 		}
 
 	private:
-		std::string wh_;
+		std::string _wh;
 	};
 
 	class Addressing {
@@ -38,13 +38,13 @@ namespace byfxxm {
 
 		class LeafB {
 		public:
-			LeafB(void* p) : p_(p) {}
+			LeafB(void* p) : _p(p) {}
 			virtual ~LeafB() = default;
 			virtual Value Get() = 0;
 			virtual void Set(Value) = 0;
 
 		protected:
-			void* p_;
+			void* _p;
 		};
 
 		template <AddrType T>
@@ -53,11 +53,11 @@ namespace byfxxm {
 			LeafD(void* p) : LeafB(p) {}
 
 			virtual Value Get() override {
-				return { *static_cast<T*>(p_) };
+				return { *static_cast<T*>(_p) };
 			}
 
 			virtual void Set(Value v) override {
-				*static_cast<T*>(p_) = std::get<T>(v);
+				*static_cast<T*>(_p) = std::get<T>(v);
 			}
 		};
 
