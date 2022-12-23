@@ -68,39 +68,39 @@ namespace byfxxm {
 
 		template <AddrType T>
 		void Register(Key k, T* v) {
-			std::lock_guard lock(mtx_);
-			if (dictionary_.find(k) != dictionary_.end())
+			std::lock_guard lock(_mtx);
+			if (_dictionary.find(k) != _dictionary.end())
 				throw AddressingException("Register failure");
 
-			dictionary_.insert({ k, std::make_shared<LeafD<T>>(v) });
+			_dictionary.insert({ k, std::make_shared<LeafD<T>>(v) });
 		}
 
 		void Unregister(Key k) {
-			std::lock_guard lock(mtx_);
-			if (dictionary_.find(k) == dictionary_.end())
+			std::lock_guard lock(_mtx);
+			if (_dictionary.find(k) == _dictionary.end())
 				throw AddressingException("Unregister failure");
 
-			dictionary_.erase(k);
+			_dictionary.erase(k);
 		}
 
 		Value Get(Key k) {
-			std::lock_guard lock(mtx_);
-			if (dictionary_.find(k) == dictionary_.end())
+			std::lock_guard lock(_mtx);
+			if (_dictionary.find(k) == _dictionary.end())
 				throw AddressingException("Get failure");
 
-			return dictionary_[k]->Get();
+			return _dictionary[k]->Get();
 		}
 
 		void Set(Key k, Value v) {
-			std::lock_guard lock(mtx_);
-			if (dictionary_.find(k) == dictionary_.end())
+			std::lock_guard lock(_mtx);
+			if (_dictionary.find(k) == _dictionary.end())
 				throw AddressingException("Set failure");
 
-			dictionary_[k]->Set(v);
+			_dictionary[k]->Set(v);
 		}
 
 	private:
-		std::unordered_map<Key, std::shared_ptr<LeafB>> dictionary_;
-		std::mutex mtx_;
+		std::unordered_map<Key, std::shared_ptr<LeafB>> _dictionary;
+		std::mutex _mtx;
 	};
 }
