@@ -72,7 +72,7 @@ namespace byfxxm {
 			if (_dictionary.find(k) != _dictionary.end())
 				throw AddressingException("Register failure");
 
-			_dictionary.insert({ k, std::make_shared<LeafD<T>>(v) });
+			_dictionary.insert({ k, std::make_unique<LeafD<T>>(v) });
 		}
 
 		void Unregister(Key k) {
@@ -100,7 +100,7 @@ namespace byfxxm {
 		}
 
 	private:
-		std::unordered_map<Key, std::shared_ptr<LeafB>> _dictionary;
+		std::unordered_map<Key, std::unique_ptr<LeafB>> _dictionary;
 		std::mutex _mtx;
 	};
 }
