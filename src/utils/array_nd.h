@@ -18,8 +18,7 @@ namespace byfxxm {
 	*		arr.Memset('z');	 // 内存初始化
 	*		ArrayNd<int, 2> arr1{{0, 1}, {2, 3, 4}}; // 支持初始化列表
 	*/
-	template <ElementType Ty, size_t Num>
-		requires (Num > 0)
+	template <ElementType Ty, size_t Num> requires (Num > 0)
 	class ArrayNd final {
 	private:
 		template <class T, size_t N, bool RO>
@@ -58,8 +57,7 @@ namespace byfxxm {
 		};
 
 	public:
-		template <std::integral... Args>
-			requires (sizeof...(Args) == Num)
+		template <std::integral... Args> requires (sizeof...(Args) == Num)
 		ArrayNd(Args... args) : _count((... * args)), _shapes{ static_cast<size_t>(args)... } {
 			_elems = std::make_unique<Ty[]>(_count);
 			Memset(0);
@@ -134,8 +132,7 @@ namespace byfxxm {
 			}
 		}
 
-		template <size_t N>
-			requires (N < Num)
+		template <size_t N> requires (N < Num)
 		size_t Shape() const {
 			return _shapes[N];
 		}
