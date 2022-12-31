@@ -3,9 +3,7 @@
 namespace byfxxm {
 	namespace typelist {
 		template <class... Types>
-		struct Typelist {
-			static constexpr size_t value = sizeof...(Types);
-		};
+		struct Typelist {};
 
 		template <class TpList>
 		struct Front;
@@ -78,5 +76,13 @@ namespace byfxxm {
 
 		template <>
 		struct Empty<Typelist<>> : std::true_type {};
+
+		template <class TpList>
+		struct Size;
+
+		template <class... Args>
+		struct Size<Typelist<Args...>> {
+			static constexpr size_t value = sizeof...(Args);
+		};
 	}
 }
