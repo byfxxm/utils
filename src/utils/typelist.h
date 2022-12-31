@@ -66,7 +66,7 @@ namespace byfxxm {
 		template <class TpList>
 		struct PopBack;
 
-		template <class... Args>
+		template <class... Args> requires (sizeof...(Args) > 0)
 		struct PopBack<Typelist<Args...>> {
 			using type = _AddArgsExceptLast<Typelist<>, Args...>::type;
 		};
