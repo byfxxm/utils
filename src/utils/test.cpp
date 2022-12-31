@@ -16,6 +16,7 @@
 #include "crtp.h"
 #include "coroutine.h"
 #include "addressing.h"
+#include "typelist.h"
 
 void TestArrayNd() {
 	byfxxm::ArrayNd a((size_t)7, 8, 9);
@@ -368,6 +369,20 @@ void TestAddressing() {
 	inst->Set("sa.c", "hello world");
 	std::cout << std::get<int>(inst->Get("sa.a")) << std::endl;
 	std::cout << std::get<std::string>(inst->Get("sa.c")) << std::endl;
+}
+
+void TestTypelist() {
+	byfxxm::Typelist<int, double, char> tplist;
+	static_assert(std::is_same_v<byfxxm::Front<decltype(tplist)>::type, int>);
+	static_assert(std::is_same_v<byfxxm::Back<decltype(tplist)>::type, char>);
+
+	byfxxm::PushFront<decltype(tplist), long*>::type tp1;
+	static_assert(std::is_same_v<byfxxm::Front<decltype(tp1)>::type, long*>);
+
+	byfxxm::PushBack<decltype(tp1), const char*>::type tp2;
+	static_assert(std::is_same_v<byfxxm::Back<decltype(tp2)>::type, const char*>);
+	static_assert(decltype(tp2)::value == 5);
+	static_assert(std::is_same_v<byfxxm::PopBack<decltype(tp2)>::type, decltype(tp1)>);
 }
 
 int main() {
