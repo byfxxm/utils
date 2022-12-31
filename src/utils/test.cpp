@@ -372,17 +372,20 @@ void TestAddressing() {
 }
 
 void TestTypelist() {
-	byfxxm::Typelist<int, double, char> tplist;
-	static_assert(std::is_same_v<byfxxm::Front<decltype(tplist)>::type, int>);
-	static_assert(std::is_same_v<byfxxm::Back<decltype(tplist)>::type, char>);
+	byfxxm::typelist::Typelist<int, double, char> tplist;
+	static_assert(std::is_same_v<byfxxm::typelist::Front<decltype(tplist)>::type, int>);
+	static_assert(std::is_same_v<byfxxm::typelist::Back<decltype(tplist)>::type, char>);
 
-	byfxxm::PushFront<decltype(tplist), long*>::type tp1;
-	static_assert(std::is_same_v<byfxxm::Front<decltype(tp1)>::type, long*>);
+	byfxxm::typelist::PushFront<decltype(tplist), long*>::type tp1;
+	static_assert(std::is_same_v<byfxxm::typelist::Front<decltype(tp1)>::type, long*>);
 
-	byfxxm::PushBack<decltype(tp1), const char*>::type tp2;
-	static_assert(std::is_same_v<byfxxm::Back<decltype(tp2)>::type, const char*>);
+	byfxxm::typelist::PushBack<decltype(tp1), const char*>::type tp2;
+	static_assert(std::is_same_v<byfxxm::typelist::Back<decltype(tp2)>::type, const char*>);
 	static_assert(decltype(tp2)::value == 5);
-	static_assert(std::is_same_v<byfxxm::PopBack<decltype(tp2)>::type, decltype(tp1)>);
+	static_assert(std::is_same_v<byfxxm::typelist::PopBack<decltype(tp2)>::type, decltype(tp1)>);
+
+	static_assert(!byfxxm::typelist::Empty<decltype(tp2)>::value);
+	static_assert(byfxxm::typelist::Empty<byfxxm::typelist::Typelist<>>::value);
 }
 
 int main() {
