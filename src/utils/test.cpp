@@ -400,6 +400,7 @@ int main() {
 #if 0
 	TestCoroutine();
 #endif
+	TestTypelist();
 
 	return 0;
 }
