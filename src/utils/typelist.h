@@ -97,5 +97,18 @@ namespace byfxxm {
 		struct Count<Typelist<>, T> {
 			static constexpr size_t value = 0;
 		};
+
+		template <class TpList>
+		struct Reverse;
+
+		template <class First, class... Rest>
+		struct Reverse<Typelist<First, Rest...>> {
+			using type = PushBack<typename Reverse<Typelist<Rest...>>::type, First>::type;
+		};
+
+		template <>
+		struct Reverse<Typelist<>> {
+			using type = Typelist<>;
+		};
 	}
 }

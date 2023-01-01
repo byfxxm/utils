@@ -372,24 +372,29 @@ void TestAddressing() {
 }
 
 void TestTypelist() {
-	byfxxm::typelist::Typelist<int, double, char> tplist;
-	static_assert(std::is_same_v<byfxxm::typelist::Front<decltype(tplist)>::type, int>);
-	static_assert(std::is_same_v<byfxxm::typelist::Back<decltype(tplist)>::type, char>);
+	namespace typelist = byfxxm::typelist;
 
-	byfxxm::typelist::PushFront<decltype(tplist), long*>::type tp1;
-	static_assert(std::is_same_v<byfxxm::typelist::Front<decltype(tp1)>::type, long*>);
+	typelist::Typelist<int, double, char> tplist;
+	static_assert(std::is_same_v<typelist::Front<decltype(tplist)>::type, int>);
+	static_assert(std::is_same_v<typelist::Back<decltype(tplist)>::type, char>);
 
-	byfxxm::typelist::PushBack<decltype(tp1), const char*>::type tp2;
-	static_assert(std::is_same_v<byfxxm::typelist::Back<decltype(tp2)>::type, const char*>);
-	static_assert(byfxxm::typelist::Size<decltype(tp2)>::value == 5);
-	static_assert(std::is_same_v<byfxxm::typelist::PopBack<decltype(tp2)>::type, decltype(tp1)>);
+	typelist::PushFront<decltype(tplist), long*>::type tp1;
+	static_assert(std::is_same_v<typelist::Front<decltype(tp1)>::type, long*>);
 
-	static_assert(!byfxxm::typelist::Empty<decltype(tp2)>::value);
-	static_assert(byfxxm::typelist::Empty<byfxxm::typelist::Typelist<>>::value);
+	typelist::PushBack<decltype(tp1), const char*>::type tp2;
+	static_assert(std::is_same_v<typelist::Back<decltype(tp2)>::type, const char*>);
+	static_assert(typelist::Size<decltype(tp2)>::value == 5);
+	static_assert(std::is_same_v<typelist::PopBack<decltype(tp2)>::type, decltype(tp1)>);
 
-	byfxxm::typelist::PushBack<decltype(tp2), const char*>::type tp3;
-	static_assert(byfxxm::typelist::Count<decltype(tp3), const char*>::value == 2);
-	static_assert(byfxxm::typelist::Count<decltype(tp3), const char* const>::value == 0);
+	static_assert(!typelist::Empty<decltype(tp2)>::value);
+	static_assert(typelist::Empty<typelist::Typelist<>>::value);
+
+	typelist::PushBack<decltype(tp2), const char*>::type tp3;
+	static_assert(typelist::Count<decltype(tp3), const char*>::value == 2);
+	static_assert(typelist::Count<decltype(tp3), const char* const>::value == 0);
+
+	typelist::Reverse<decltype(tp3)>::type tp4;
+	static_assert(std::is_same_v<typelist::Front<decltype(tp4)>::type, const char*>);
 }
 
 int main() {
