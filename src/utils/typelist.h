@@ -84,5 +84,18 @@ namespace byfxxm {
 		struct Size<Typelist<Args...>> {
 			static constexpr size_t value = sizeof...(Args);
 		};
+
+		template <class TpList, class T>
+		struct Count;
+
+		template <class First, class... Rest, class T>
+		struct Count<Typelist<First, Rest...>, T> {
+			static constexpr size_t value = Count<Typelist<Rest...>, T>::value + (std::is_same_v<First, T> ? 1 : 0);
+		};
+
+		template <class T>
+		struct Count<Typelist<>, T> {
+			static constexpr size_t value = 0;
+		};
 	}
 }

@@ -386,6 +386,10 @@ void TestTypelist() {
 
 	static_assert(!byfxxm::typelist::Empty<decltype(tp2)>::value);
 	static_assert(byfxxm::typelist::Empty<byfxxm::typelist::Typelist<>>::value);
+
+	byfxxm::typelist::PushBack<decltype(tp2), const char*>::type tp3;
+	static_assert(byfxxm::typelist::Count<decltype(tp3), const char*>::value == 2);
+	static_assert(byfxxm::typelist::Count<decltype(tp3), const char* const>::value == 0);
 }
 
 int main() {
