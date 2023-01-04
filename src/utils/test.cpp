@@ -374,11 +374,11 @@ void TestAddressing() {
 void TestTypelist() {
 	namespace typelist = byfxxm::typelist;
 
-	typelist::Typelist<int, double, char> tplist;
-	static_assert(std::is_same_v<typelist::Front<decltype(tplist)>::type, int>);
-	static_assert(std::is_same_v<typelist::Back<decltype(tplist)>::type, char>);
+	typelist::Typelist<int, double, char> tp0;
+	static_assert(std::is_same_v<typelist::Front<decltype(tp0)>::type, int>);
+	static_assert(std::is_same_v<typelist::Back<decltype(tp0)>::type, char>);
 
-	typelist::PushFront<decltype(tplist), long*>::type tp1;
+	typelist::PushFront<decltype(tp0), long*>::type tp1;
 	static_assert(std::is_same_v<typelist::Front<decltype(tp1)>::type, long*>);
 
 	typelist::PushBack<decltype(tp1), const char*>::type tp2;
