@@ -36,10 +36,10 @@ namespace byfxxm {
 		using Key = std::string;
 		using Value = std::variant<int, double, bool, std::string>;
 
-		class LeafB {
+		class LeafBase {
 		public:
-			LeafB(void* p) : _p(p) {}
-			virtual ~LeafB() = default;
+			LeafBase(void* p) : _p(p) {}
+			virtual ~LeafBase() = default;
 			virtual Value Get() = 0;
 			virtual void Set(Value) = 0;
 
@@ -48,9 +48,9 @@ namespace byfxxm {
 		};
 
 		template <AddrType T>
-		class LeafD : public LeafB {
+		class LeafDerived : public LeafBase {
 		public:
-			LeafD(void* p) : LeafB(p) {}
+			LeafDerived(void* p) : LeafBase(p) {}
 
 			virtual Value Get() override {
 				return { *static_cast<T*>(_p) };
@@ -72,7 +72,7 @@ namespace byfxxm {
 			if (_dictionary.find(k) != _dictionary.end())
 				throw AddressingException("Register failure");
 
-			_dictionary.insert({ k, std::make_unique<LeafD<T>>(v) });
+			_dictionary.insert({ k, std::make_unique<LeafDerived<T>>(v) });
 		}
 
 		void Unregister(Key k) {
@@ -100,7 +100,7 @@ namespace byfxxm {
 		}
 
 	private:
-		std::unordered_map<Key, std::unique_ptr<LeafB>> _dictionary;
+		std::unordered_map<Key, std::unique_ptr<LeafBase>> _dictionary;
 		std::mutex _mtx;
 	};
 }
