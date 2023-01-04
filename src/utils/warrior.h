@@ -69,100 +69,100 @@ public:
 
 public:
 	Warrior(const WarriorInfo& winfo)
-		: name_(winfo.name)
-		, life_(winfo.life)
-		, att_(winfo.att)
-		, def_(winfo.def)
-		, freq_(winfo.freq)
-		, period_(1'000'000 / freq_)
-		, range_(winfo.range)
-		, pos_(winfo.pos)
+		: _name(winfo.name)
+		, _life(winfo.life)
+		, _att(winfo.att)
+		, _def(winfo.def)
+		, _freq(winfo.freq)
+		, _period(1'000'000 / _freq)
+		, _range(winfo.range)
+		, _pos(winfo.pos)
 	{}
 
 	virtual ~Warrior() {
-		if (thrd_.joinable())
-			thrd_.join();
+		if (_thread.joinable())
+			_thread.join();
 	}
 
 	virtual const std::string Name() const {
-		return name_;
+		return _name;
 	}
 
 	virtual Status GetStatus() const {
-		return status_.load();
+		return _status.load();
 	}
 
 	virtual bool IsDead() const {
-		return status_ == Status::kDead;
+		return _status == Status::kDead;
 	}
 
 	virtual bool IsIdle() const {
-		return status_ == Status::kIdle;
+		return _status == Status::kIdle;
 	}
 
 	virtual bool IsAttacking() const {
-		return status_ == Status::kAttacking;
+		return _status == Status::kAttacking;
 	}
 
 	virtual bool IsMoving() const {
-		return status_ == Status::kMoving;
+		return _status == Status::kMoving;
 	}
 
 	virtual void Attack(Warrior* war) {
-		status_ = Status::kAttacking;
-		thrd_ = std::thread([=, this]() {
-			AutoAttack(war);
+		_status = Status::kAttacking;
+		_thread = std::thread([=, this]() {
+			_AutoAttack(war);
 			});
 	}
 
 	virtual int Defense(int att) {
-		int damage = att - def_;
-		life_ -= damage;
-		if (life_ <= 0)
-			status_ = Status::kDead;
+		int damage = att - _def;
+		_life -= damage;
+		if (_life <= 0)
+			_status = Status::kDead;
 		return damage;
 	}
 
 	virtual int Life() const {
-		return life_;
+		return _life;
 	}
 
 protected:
-	virtual bool IsInRange(const Warrior* war) const {
-		return (pos_ - war->pos_).Length() <= range_;
+	virtual bool _IsInRange(const Warrior* war) const {
+		return (_pos - war->_pos).Length() <= _range;
 	}
 
-	virtual void AutoAttack(Warrior* war) {
+	virtual void _AutoAttack(Warrior* war) {
 		auto t0 = std::chrono::steady_clock::now();
-		while (!IsDead() && !war->IsDead() && IsInRange(war)) {
-			AttackOnce(war);
+		while (!IsDead() && !war->IsDead() && _IsInRange(war)) {
+			_AttackOnce(war);
 			if (war->IsDead())
 				break;
 
-			while (std::chrono::steady_clock::now() < t0 + std::chrono::microseconds(period_))
+			while (std::chrono::steady_clock::now() < t0 + std::chrono::microseconds(_period))
 				std::this_thread::yield();
-			t0 += std::chrono::microseconds(period_);
+			t0 += std::chrono::microseconds(_period);
 		}
 
-		status_ = Status::kIdle;
+		_status = Status::kIdle;
 	}
 
-	void AttackOnce(Warrior* war) {
-		auto damage = war->Defense(att_);
-		printf("%s attack %s cause %d damage points. %s's life is %d left.\n", name_.c_str(), war->name_.c_str(), damage, war->name_.c_str(), war->Life());
+	void _AttackOnce(Warrior* war) {
+		auto damage = war->Defense(_att);
+		printf("%s attack %s cause %d damage points. %s's life is %d left.\n", _name.c_str(), war->_name.c_str(), damage, war->_name.c_str(), war->Life());
 	}
 
 protected:
-	std::string name_;
-	std::atomic<int> life_{ 1 };
-	int def_{ 0 };
-	int att_{ 0 };
-	size_t freq_{ 1 };		// ¹¥»÷´ÎÊý/Ãë
-	size_t period_{ 0 };	// ¹¥»÷¼ä¸ô(Î¢Ãë)
-	double range_{ 0.5 };
-	Position pos_{ 10,10 };
-	std::thread thrd_;
-	std::atomic<Status> status_{ Status::kIdle };
+	std::string _name;
+	std::atomic<int> _life{ 1 };
+	int _def{ 0 };
+	int _att{ 0 };
+	size_t _freq{ 1 };		// ¹¥»÷´ÎÊý/Ãë
+	size_t _period{ 0 };	// ¹¥»÷¼ä¸ô(Î¢Ãë)
+	double _range{ 0.5 };
+	Position _pos{ 10,10 };
+	std::thread _thread;
+	std::atomic<Status> _status{ Status::kIdle };
 };
 
 struct ArcherInfo : public WarriorInfo {
@@ -170,7 +170,7 @@ struct ArcherInfo : public WarriorInfo {
 
 class Archer : public Warrior {
 public:
-	Archer(const ArcherInfo& arc_info) : Warrior(arc_info) { range_ = 10; }
+	Archer(const ArcherInfo& arc_info) : Warrior(arc_info) { _range = 10; }
 };
 
 class BattleGround {
@@ -185,40 +185,40 @@ public:
 	}
 
 	void Clear() {
-		std::lock_guard<std::mutex> lck(mtx_);
-		for (auto w : warriors_)
+		std::lock_guard<std::mutex> lck(_mtx);
+		for (auto w : _warriors)
 			delete w;
 
-		warriors_.clear();
+		_warriors.clear();
 	}
 
 	Warrior* CreateWarrior(const WarriorInfo& winfo) {
-		std::lock_guard<std::mutex> lck(mtx_);
-		ClearDeadIfNeed();
+		std::lock_guard<std::mutex> lck(_mtx);
+		_ClearDeadIfNeed();
 		auto war = new Warrior(winfo);
-		warriors_.push_back(war);
+		_warriors.push_back(war);
 		return war;
 	}
 
 	Archer* CreateArcher(const ArcherInfo& ainfo) {
-		std::lock_guard<std::mutex> lck(mtx_);
-		ClearDeadIfNeed();
+		std::lock_guard<std::mutex> lck(_mtx);
+		_ClearDeadIfNeed();
 		auto archer = new Archer(ainfo);
-		warriors_.push_back(archer);
+		_warriors.push_back(archer);
 		return archer;
 	}
 
 private:
-	void ClearDeadIfNeed() {
-		for (auto it = warriors_.begin(); it != warriors_.end();) {
+	void _ClearDeadIfNeed() {
+		for (auto it = _warriors.begin(); it != _warriors.end();) {
 			if ((*it)->GetStatus() == Warrior::Status::kDead)
-				warriors_.erase(it);
+				_warriors.erase(it);
 
 			++it;
 		}
 	}
 
 private:
-	std::vector<Warrior*> warriors_;
-	std::mutex mtx_;
+	std::vector<Warrior*> _warriors;
+	std::mutex _mtx;
 };
