@@ -367,8 +367,10 @@ void TestAddressing() {
 	auto inst = byfxxm::Addressing::Instance();
 	inst->Set("sa.a", 404);
 	inst->Set("sa.c", "hello world");
-	std::cout << std::get<int>(inst->Get("sa.a")) << std::endl;
-	std::cout << std::get<std::string>(inst->Get("sa.c")) << std::endl;
+	byfxxm::Print(inst->Get("sa.a"));
+	byfxxm::Print(inst->Get("sa.c"));
+	byfxxm::Print(byfxxm::Type(inst->Get("sa.a")));
+	byfxxm::Print(byfxxm::Type(inst->Get("sa.c")));
 }
 
 void TestTypelist() {
@@ -399,20 +401,20 @@ void TestTypelist() {
 
 int main() {
 	TestAddressing();
-	TestArrayNd();
-	TestMetaprogramming();
-	TestVariableBuffer();
-	TestHashMap();
-	TestWarrior();
-	TestNQueens();
-	TestAsm();
-	TestReflection();
-	TestRingBuffer();
-	TestCrtp();
+	//TestArrayNd();
+	//TestMetaprogramming();
+	//TestVariableBuffer();
+	//TestHashMap();
+	//TestWarrior();
+	//TestNQueens();
+	//TestAsm();
+	//TestReflection();
+	//TestRingBuffer();
+	//TestCrtp();
+	//TestTypelist();
 #if 0
 	TestCoroutine();
 #endif
-	TestTypelist();
 
 	return 0;
 }

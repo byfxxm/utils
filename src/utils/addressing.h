@@ -103,4 +103,51 @@ namespace byfxxm {
 		std::unordered_map<Key, std::unique_ptr<LeafBase>> _dictionary;
 		std::mutex _mtx;
 	};
+
+	template <size_t N>
+	void _Print(const Addressing::Value& v) {
+		std::cout << std::get<N>(v) << std::endl;
+	}
+
+	void Print(const Addressing::Value& v) {
+		switch (v.index()) {
+		case 0:
+			_Print<0>(v);
+			break;
+		case 1:
+			_Print<1>(v);
+			break;
+		case 2:
+			_Print<2>(v);
+			break;
+		case 3:
+			_Print<3>(v);
+			break;
+		default:
+			break;
+		}
+	}
+
+	Addressing::Value Type(const Addressing::Value& v) {
+		const char* rv = nullptr;
+
+		switch (v.index()) {
+		case 0:
+			rv = "int";
+			break;
+		case 1:
+			rv = "double";
+			break;
+		case 2:
+			rv = "bool";
+			break;
+		case 3:
+			rv = "string";
+			break;
+		default:
+			break;
+		}
+
+		return rv;
+	}
 }
