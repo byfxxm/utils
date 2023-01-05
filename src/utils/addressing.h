@@ -136,7 +136,7 @@ namespace byfxxm {
 		case 3:
 			return "string";
 		default:
-			throw std::exception();
+			throw AddressingException("error param");
 		}
 	}
 
@@ -151,7 +151,7 @@ namespace byfxxm {
 		case 1:
 			return std::get<1>(v);
 		default:
-			throw std::exception();
+			throw AddressingException("error param");
 		}
 	}
 

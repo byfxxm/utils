@@ -371,7 +371,7 @@ void TestAddressing() {
 	byfxxm::Print(inst->Get("sa.c"));
 	byfxxm::Print(byfxxm::Type(inst->Get("sa.a")));
 	byfxxm::Print(byfxxm::Type(inst->Get("sa.c")));
-	byfxxm::Print(inst->Get("sa.a") + inst->Get("sa.a") / inst->Get("sa.c"));
+	byfxxm::Print(inst->Get("sa.a") + inst->Get("sa.a") / inst->Get("sa.a"));
 }
 
 void TestTypelist() {
