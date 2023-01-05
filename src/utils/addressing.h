@@ -34,7 +34,10 @@ namespace byfxxm {
 
 	public:
 		using Key = std::string;
-		using Value = std::variant<int, double, bool, std::string>;
+		class Value : public std::variant<int, double, bool, std::string> {
+		public:
+			using std::variant<int, double, bool, std::string>::variant;
+		};
 
 		class LeafBase {
 		public:
@@ -112,42 +115,59 @@ namespace byfxxm {
 	void Print(const Addressing::Value& v) {
 		switch (v.index()) {
 		case 0:
-			_Print<0>(v);
-			break;
+			return _Print<0>(v);
 		case 1:
-			_Print<1>(v);
-			break;
+			return _Print<1>(v);
 		case 2:
-			_Print<2>(v);
-			break;
+			return _Print<2>(v);
 		case 3:
-			_Print<3>(v);
-			break;
-		default:
-			break;
+			return _Print<3>(v);
 		}
 	}
 
 	Addressing::Value Type(const Addressing::Value& v) {
-		const char* rv = nullptr;
-
 		switch (v.index()) {
 		case 0:
-			rv = "int";
-			break;
+			return "int";
 		case 1:
-			rv = "double";
-			break;
+			return "double";
 		case 2:
-			rv = "bool";
-			break;
+			return "bool";
 		case 3:
-			rv = "string";
-			break;
+			return "string";
 		default:
-			break;
+			throw std::exception("error param");
 		}
+	}
 
-		return rv;
+	bool IsNumber(const Addressing::Value& v) {
+		return v.index() == 0 || v.index() == 1;
+	}
+
+	double ToDouble(const Addressing::Value& v) {
+		switch (v.index()) {
+		case 0:
+			return std::get<0>(v);
+		case 1:
+			return std::get<1>(v);
+		default:
+			throw std::exception("error param");
+		}
+	}
+
+	Addressing::Value operator+(const Addressing::Value& v1, const Addressing::Value& v2) {
+		return ToDouble(v1) + ToDouble(v2);
+	}
+
+	Addressing::Value operator-(const Addressing::Value& v1, const Addressing::Value& v2) {
+		return ToDouble(v1) - ToDouble(v2);
+	}
+
+	Addressing::Value operator*(const Addressing::Value& v1, const Addressing::Value& v2) {
+		return ToDouble(v1) * ToDouble(v2);
+	}
+
+	Addressing::Value operator/(const Addressing::Value& v1, const Addressing::Value& v2) {
+		return ToDouble(v1) / ToDouble(v2);
 	}
 }
