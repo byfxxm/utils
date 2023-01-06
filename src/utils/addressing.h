@@ -122,6 +122,8 @@ namespace byfxxm {
 			return _Print<2>(v);
 		case 3:
 			return _Print<3>(v);
+		default:
+			throw AddressingException("error param");
 		}
 	}
 
