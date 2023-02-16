@@ -19,6 +19,10 @@ namespace byfxxm {
 		std::string _wh;
 	};
 
+	using Key = std::string;
+	template <class... Ts>
+	using Value = std::variant<Ts...>;
+
 	template <class... Ts>
 	class Addressing {
 	private:
@@ -29,16 +33,13 @@ namespace byfxxm {
 
 	public:
 		using Key = std::string;
-		using Value = std::variant<Ts...>;
+		using Value = byfxxm::Value<Ts...>;
 
 		class LeafBase {
 		public:
 			virtual ~LeafBase() = default;
 			virtual Value Get() = 0;
 			virtual void Set(Value) = 0;
-
-		//protected:
-		//	void* _p;
 		};
 
 		template <class T>
@@ -101,70 +102,27 @@ namespace byfxxm {
 		std::mutex _mtx;
 	};
 
-	template <size_t N, class... Ts> requires (N < sizeof...(Ts))
-	void _Print(const typename Addressing<Ts...>::Value& v) {
-		std::cout << std::get<N>(v) << std::endl;
+	template <class... Ts, size_t... N, class Fn>
+	void _PrintHelp(const Value<Ts...>& v, std::index_sequence<N...>, Fn&& f) {
+		(... , f(std::get_if<N>(&v)));
 	}
 
-	//void Print(const Addressing::Value& v) {
-	//	switch (v.index()) {
-	//	case 0:
-	//		return _Print<0>(v);
-	//	case 1:
-	//		return _Print<1>(v);
-	//	case 2:
-	//		return _Print<2>(v);
-	//	case 3:
-	//		return _Print<3>(v);
-	//	default:
-	//		throw AddressingException("error param");
-	//	}
-	//}
+	template <class... Ts>
+	void Print(const Value<Ts...>& v) {
+		_PrintHelp(v, std::make_index_sequence<sizeof...(Ts)>{}, [](auto&& v) {
+			if (v) std::cout << *v << std::endl;
+			});
+	}
 
-	//template <class... Ts>
-	//Addressing<Ts...>::Value Type(const typename Addressing<Ts...>::Value& v) {
-	//	switch (v.index()) {
-	//	case 0:
-	//		return "int";
-	//	case 1:
-	//		return "double";
-	//	case 2:
-	//		return "bool";
-	//	case 3:
-	//		return "string";
-	//	default:
-	//		throw AddressingException("error param");
-	//	}
-	//}
+	template <class... Ts, size_t... N, class Fn>
+	std::string _TypeHelp(const Value<Ts...>& v, std::index_sequence<N...>, Fn&& f) {
+		return (... + f(std::get_if<N>(&v)));
+	}
 
-	//bool IsNumber(const Addressing::Value& v) {
-	//	return v.index() == 0 || v.index() == 1;
-	//}
-
-	//double ToDouble(const Addressing::Value& v) {
-	//	switch (v.index()) {
-	//	case 0:
-	//		return std::get<0>(v);
-	//	case 1:
-	//		return std::get<1>(v);
-	//	default:
-	//		throw AddressingException("error param");
-	//	}
-	//}
-
-	//Addressing::Value operator+(const Addressing::Value& v1, const Addressing::Value& v2) {
-	//	return ToDouble(v1) + ToDouble(v2);
-	//}
-
-	//Addressing::Value operator-(const Addressing::Value& v1, const Addressing::Value& v2) {
-	//	return ToDouble(v1) - ToDouble(v2);
-	//}
-
-	//Addressing::Value operator*(const Addressing::Value& v1, const Addressing::Value& v2) {
-	//	return ToDouble(v1) * ToDouble(v2);
-	//}
-
-	//Addressing::Value operator/(const Addressing::Value& v1, const Addressing::Value& v2) {
-	//	return ToDouble(v1) / ToDouble(v2);
-	//}
+	template <class... Ts>
+	std::string Type(const Value<Ts...>& v) {
+		return _TypeHelp(v, std::make_index_sequence<sizeof...(Ts)>{}, [](auto&& v) {
+			return v ? std::string(typeid(*v).name()) : std::string{};
+			});
+	}
 }

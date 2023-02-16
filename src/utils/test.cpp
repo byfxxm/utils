@@ -364,15 +364,14 @@ void TestAddressing() {
 		std::string c;
 	};
 
-	//A sa{ "sa" };
-	//auto inst = byfxxm::Addressing::Instance();
-	//inst->Set("sa.a", 404);
-	//inst->Set("sa.c", "hello world");
-	//byfxxm::Print(inst->Get("sa.a"));
-	//byfxxm::Print(inst->Get("sa.c"));
-	//byfxxm::Print(byfxxm::Type(inst->Get("sa.a")));
-	//byfxxm::Print(byfxxm::Type(inst->Get("sa.c")));
-	//byfxxm::Print(inst->Get("sa.a") + inst->Get("sa.a") / inst->Get("sa.a"));
+	A sa{ "sa" };
+	auto inst = Addr1::Instance();
+	inst->Set("sa.a", 404);
+	inst->Set("sa.c", "hello world");
+	byfxxm::Print(inst->Get("sa.a"));
+	byfxxm::Print(inst->Get("sa.c"));
+	std::cout << byfxxm::Type(inst->Get("sa.a")) << std::endl;
+	std::cout << byfxxm::Type(inst->Get("sa.b")) << std::endl;
 }
 
 void TestTypelist() {
