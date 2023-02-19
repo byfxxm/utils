@@ -17,6 +17,7 @@
 #include "coroutine.h"
 #include "addressing.h"
 #include "typelist.h"
+#include "coro.h"
 
 void TestArrayNd() {
 	byfxxm::ArrayNd a((size_t)7, 8, 9);
@@ -400,8 +401,23 @@ void TestTypelist() {
 	static_assert(std::is_same_v<typelist::Front<decltype(tp4)>::type, const char*>);
 }
 
+void TestCoro() {
+	byfxxm::Coro co;
+	co.SetMain([](byfxxm::CoMainHelper* helper, void*) {
+		helper->Switch(0);
+		}, nullptr);
+
+	co.AddSub([](byfxxm::CoSubHelper* helper, void*) {
+		std::cout << "called" << std::endl;
+		helper->SwitchToMain();
+		}, nullptr);
+
+	co.AsyncRun();
+}
+
 int main() {
-	TestAddressing();
+	TestCoro();
+	//TestAddressing();
 	//TestArrayNd();
 	//TestMetaprogramming();
 	//TestVariableBuffer();
