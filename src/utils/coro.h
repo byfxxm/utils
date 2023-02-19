@@ -8,7 +8,6 @@
 namespace byfxxm {
 	class CoMainHelper;
 	class CoSubHelper;
-
 	using _CoMainFunc = std::function<void(CoMainHelper*, void*)>;
 	using _CoSubFunc = std::function<void(CoSubHelper*, void*)>;
 	using _CoUserPtr = void*;
