@@ -419,7 +419,7 @@ void TestCoro() {
 		*(int*)p = 2;
 		std::cout << *(int*)p << std::endl;
 		helper->SwitchToMain();
-		}, & x);
+		}, &x);
 
 	co.AsyncRun();
 }
