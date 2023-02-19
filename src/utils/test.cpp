@@ -406,7 +406,7 @@ void TestCoro() {
 	int x = 0;
 	co.SetMain([](byfxxm::CoMainHelper* helper, void* p) {
 		while (*(int*)p != 2)
-			helper->Switch(*(int*)p);
+			helper->SwitchToSub(*(int*)p);
 		}, &x);
 
 	co.AddSub([](byfxxm::CoSubHelper* helper, void* p) {

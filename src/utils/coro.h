@@ -20,7 +20,7 @@ namespace byfxxm {
 	public:
 		CoMainHelper(const std::vector<_CoSub>& co_list) : _co_subs(co_list) {}
 
-		void Switch(size_t n) {
+		void SwitchToSub(size_t n) {
 			SwitchToFiber(std::get<_CoPtr>(_co_subs[n]).get());
 		}
 
