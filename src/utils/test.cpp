@@ -403,14 +403,23 @@ void TestTypelist() {
 
 void TestCoro() {
 	byfxxm::Coro co;
-	co.SetMain([](byfxxm::CoMainHelper* helper, void*) {
-		helper->Switch(0);
-		}, nullptr);
+	int x = 0;
+	co.SetMain([](byfxxm::CoMainHelper* helper, void* p) {
+		while (*(int*)p != 2)
+			helper->Switch(*(int*)p);
+		}, &x);
 
-	co.AddSub([](byfxxm::CoSubHelper* helper, void*) {
-		std::cout << "called" << std::endl;
+	co.AddSub([](byfxxm::CoSubHelper* helper, void* p) {
+		*(int*)p = 1;
+		std::cout << *(int*)p << std::endl;
 		helper->SwitchToMain();
-		}, nullptr);
+		}, &x);
+
+	co.AddSub([](byfxxm::CoSubHelper* helper, void* p) {
+		*(int*)p = 2;
+		std::cout << *(int*)p << std::endl;
+		helper->SwitchToMain();
+		}, & x);
 
 	co.AsyncRun();
 }
