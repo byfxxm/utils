@@ -60,7 +60,7 @@ namespace byfxxm {
 				return;
 
 			_runtime = std::thread([this] {
-				DoRun();
+				_DoRun();
 				});
 		}
 
@@ -69,14 +69,14 @@ namespace byfxxm {
 				return;
 
 			_runtime = std::thread([this] {
-				DoRun();
+				_DoRun();
 				});
 
 			_runtime.join();
 		}
 
 	private:
-		void DoRun() {
+		void _DoRun() {
 			CoSubHelper sub_helper(_co_main);
 			std::vector<std::unique_ptr<std::packaged_task<void()>>> co_binds(_co_subs.size());
 			for (size_t i = 0; i < _co_subs.size(); ++i) {
