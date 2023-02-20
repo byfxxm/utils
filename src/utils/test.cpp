@@ -421,7 +421,7 @@ void TestCoro() {
 		helper->SwitchToMain();
 		}, &x);
 
-	co.AsyncRun();
+	co.Run();
 }
 
 int main() {

@@ -43,7 +43,8 @@ namespace byfxxm {
 	public:
 		Coro() = default;
 		~Coro() {
-			_runtime.join();
+			if (_runtime.joinable())
+				_runtime.join();
 		}
 
 		void SetMain(const std::function<void(CoMainHelper*, void*)>& func, void* user = nullptr) {
