@@ -426,18 +426,18 @@ void TestCoro() {
 
 int main() {
 	TestCoro();
-	//TestAddressing();
+	TestAddressing();
 	TestArrayNd();
-	//TestMetaprogramming();
-	//TestVariableBuffer();
-	//TestHashMap();
-	//TestWarrior();
-	//TestNQueens();
-	//TestAsm();
-	//TestReflection();
-	//TestRingBuffer();
-	//TestCrtp();
-	//TestTypelist();
+	TestMetaprogramming();
+	TestVariableBuffer();
+	TestHashMap();
+	TestWarrior();
+	TestNQueens();
+	TestAsm();
+	TestReflection();
+	TestRingBuffer();
+	TestCrtp();
+	TestTypelist();
 #if 0
 	TestCoroutine();
 #endif
