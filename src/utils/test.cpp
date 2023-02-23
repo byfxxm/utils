@@ -427,7 +427,7 @@ void TestCoro() {
 int main() {
 	TestCoro();
 	//TestAddressing();
-	//TestArrayNd();
+	TestArrayNd();
 	//TestMetaprogramming();
 	//TestVariableBuffer();
 	//TestHashMap();

@@ -10,6 +10,19 @@ namespace byfxxm {
 	template <class T>
 	concept ElementType = std::is_trivial_v<T> && std::convertible_to<T, double>;
 
+	template <class T, size_t N>
+	struct InitializerList {
+		using type = std::initializer_list<typename InitializerList<T, N - 1>::type>;
+	};
+
+	template <class T>
+	struct InitializerList<T, 1> {
+		using type = std::initializer_list<T>;
+	};
+
+	template <class T, size_t N>
+	using InitializerList_t = InitializerList<T, N>::type;
+
 	/*
 	* ¶àÎ¬Êý×é
 	* usage:
@@ -63,19 +76,6 @@ namespace byfxxm {
 			Memset(0);
 			_InitializeFactors();
 		}
-
-		template <class T, size_t N>
-		struct InitializerList {
-			using type = std::initializer_list<typename InitializerList<T, N - 1>::type>;
-		};
-
-		template <class T>
-		struct InitializerList<T, 1> {
-			using type = std::initializer_list<T>;
-		};
-
-		template <class T, size_t N>
-		using InitializerList_t = InitializerList<T, N>::type;
 
 		ArrayNd(InitializerList_t<Ty, Num> list) {
 			_shapes.fill(0);
