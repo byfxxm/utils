@@ -8,7 +8,7 @@
 
 namespace byfxxm {
 	template <class T>
-	concept ElementType = std::is_trivial_v<T> && std::convertible_to<T, double>;
+	concept ElementT = std::is_trivial_v<T> && std::convertible_to<T, double>;
 
 	template <class T, size_t N>
 	struct InitializerList {
@@ -31,7 +31,7 @@ namespace byfxxm {
 	*		arr.Memset('z');	 // 内存初始化
 	*		ArrayNd<int, 2> arr1{{0, 1}, {2, 3, 4}}; // 支持初始化列表
 	*/
-	template <ElementType Ty, size_t Num> requires (Num > 0)
+	template <ElementT Ty, size_t Num> requires (Num > 0)
 	class ArrayNd final {
 	private:
 		template <class T, size_t N, bool RO>
