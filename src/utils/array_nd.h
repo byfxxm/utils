@@ -35,15 +35,15 @@ namespace byfxxm {
 	class ArrayNd final {
 	private:
 		template <class T, size_t N, bool RO>
-		class Proxy {
+		class _Proxy {
 		public:
-			Proxy(T* ptr, const size_t* shape, const size_t* factor) : _ptr(ptr), _shape(shape), _factor(factor) {
+			_Proxy(T* ptr, const size_t* shape, const size_t* factor) : _ptr(ptr), _shape(shape), _factor(factor) {
 				assert(_ptr);
 			}
 
-			const Proxy<T, N - 1, RO> operator[](size_t pos) const {
+			const _Proxy<T, N - 1, RO> operator[](size_t pos) const {
 				assert(pos >= 0 && pos < _shape[0]);
-				return Proxy<T, N - 1, RO>(_ptr + pos * _factor[0], _shape + 1, _factor + 1);
+				return _Proxy<T, N - 1, RO>(_ptr + pos * _factor[0], _shape + 1, _factor + 1);
 			}
 
 		private:
@@ -53,9 +53,9 @@ namespace byfxxm {
 		};
 
 		template <class T, bool RO>
-		class Proxy<T, 1, RO> {
+		class _Proxy<T, 1, RO> {
 		public:
-			Proxy(T* ptr, const size_t* shape, const size_t*) : _ptr(ptr), _shape(shape) {}
+			_Proxy(T* ptr, const size_t* shape, const size_t*) : _ptr(ptr), _shape(shape) {}
 
 			auto& operator[](size_t pos) const {
 				if constexpr (RO)
@@ -111,11 +111,11 @@ namespace byfxxm {
 		ArrayNd& operator=(ArrayNd&& arr) noexcept = default;
 
 		decltype(auto) operator[](size_t pos) const {
-			return Proxy<Ty, Num, true>(_elems.get(), &_shapes.front(), &_factors.front())[pos];
+			return _Proxy<Ty, Num, true>(_elems.get(), &_shapes.front(), &_factors.front())[pos];
 		}
 
 		decltype(auto) operator[](size_t pos) {
-			return Proxy<Ty, Num, false>(_elems.get(), &_shapes.front(), &_factors.front())[pos];
+			return _Proxy<Ty, Num, false>(_elems.get(), &_shapes.front(), &_factors.front())[pos];
 		}
 
 		template <class Predicate>
