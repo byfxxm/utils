@@ -71,7 +71,7 @@ namespace byfxxm {
 
 	public:
 		template <std::integral... Args> requires (sizeof...(Args) == Num)
-		ArrayNd(Args... args) : _count((... * args)), _shapes{ static_cast<size_t>(args)... } {
+		ArrayNd(Args&&... args) : _count((... * std::forward<Args>(args))), _shapes{ static_cast<size_t>(args)... } {
 			_elems = std::make_unique<Ty[]>(_count);
 			Memset(0);
 			_InitializeFactors();
@@ -125,7 +125,7 @@ namespace byfxxm {
 			}
 		}
 
-		void Memset(Ty val) {
+		void Memset(const Ty& val) {
 			assert(_elems);
 			for (size_t i = 0; i < _count; ++i) {
 				_elems[i] = val;
