@@ -72,6 +72,9 @@ void TestArrayNd() {
 
 	e.ForEach([](auto&& n) {return n * 20; });
 	assert(e[1] == 800);
+
+	byfxxm::ArrayNd d2(22, 33);
+	d2 = d;
 }
 
 #if 0

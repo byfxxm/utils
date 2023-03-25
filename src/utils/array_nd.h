@@ -91,24 +91,30 @@ namespace byfxxm {
 			_Assignment(list, 0, 0);
 		}
 
-		ArrayNd(const ArrayNd& arr) {
-			*this = arr;
+		ArrayNd(const ArrayNd& rhs)
+			: _count(rhs._count)
+			, _shapes(rhs._shapes)
+			, _factors(rhs._factors) {
+			_elems = std::make_unique<Ty[]>(_count);
+			memcpy(_elems.get(), rhs._elems.get(), _count * sizeof(Ty));
 		}
 
-		ArrayNd& operator=(const ArrayNd& arr) {
-			if (this == &arr)
-				return *this;
-
-			_count = arr._count;
-			_shapes = arr._shapes;
-			_factors = arr._factors;
-			_elems = std::make_unique<Ty[]>(_count);
-			memcpy(_elems.get(), arr._elems.get(), _count * sizeof(Ty));
+		ArrayNd& operator=(const ArrayNd& rhs) {
+			ArrayNd copy(rhs);
+			Swap(copy);
 			return *this;
 		}
 
-		ArrayNd(ArrayNd&& arr) noexcept = default;
-		ArrayNd& operator=(ArrayNd&& arr) noexcept = default;
+		ArrayNd(ArrayNd&&) noexcept = default;
+		ArrayNd& operator=(ArrayNd&&) noexcept = default;
+
+		void Swap(ArrayNd& rhs) noexcept {
+			using std::swap;
+			swap(_count, rhs._count);
+			swap(_shapes, rhs._shapes);
+			swap(_factors, rhs._factors);
+			swap(_elems, rhs._elems);
+		}
 
 		decltype(auto) operator[](size_t pos) const {
 			return _Proxy<Ty, Num, true>(_elems.get(), &_shapes.front(), &_factors.front())[pos];
@@ -179,9 +185,9 @@ namespace byfxxm {
 
 	private:
 		size_t _count{ 0 };
-		std::unique_ptr<Ty[]> _elems;
 		std::array<size_t, Num> _shapes;
 		std::array<size_t, Num> _factors;
+		std::unique_ptr<Ty[]> _elems;
 	};
 
 	template <class First, class... Rest>
