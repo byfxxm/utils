@@ -101,20 +101,12 @@ namespace byfxxm {
 
 		ArrayNd& operator=(const ArrayNd& rhs) {
 			ArrayNd copy(rhs);
-			Swap(copy);
+			swap(*this, copy);
 			return *this;
 		}
 
 		ArrayNd(ArrayNd&&) noexcept = default;
 		ArrayNd& operator=(ArrayNd&&) noexcept = default;
-
-		void Swap(ArrayNd& rhs) noexcept {
-			using std::swap;
-			swap(_count, rhs._count);
-			swap(_shapes, rhs._shapes);
-			swap(_factors, rhs._factors);
-			swap(_elems, rhs._elems);
-		}
 
 		decltype(auto) operator[](size_t pos) const {
 			return _Proxy<Ty, Num, true>(_elems.get(), &_shapes.front(), &_factors.front())[pos];
@@ -141,6 +133,14 @@ namespace byfxxm {
 		template <size_t N> requires (N < Num)
 		size_t Shape() const {
 			return _shapes[N];
+		}
+
+		friend void swap(ArrayNd& lhs, ArrayNd& rhs) noexcept {
+			using std::swap;
+			swap(lhs._count, rhs._count);
+			swap(lhs._shapes, rhs._shapes);
+			swap(lhs._factors, rhs._factors);
+			swap(lhs._elems, rhs._elems);
 		}
 
 	private:

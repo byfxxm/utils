@@ -75,6 +75,7 @@ void TestArrayNd() {
 
 	byfxxm::ArrayNd d2(22, 33);
 	d2 = d;
+	swap(d2, d);
 }
 
 #if 0
