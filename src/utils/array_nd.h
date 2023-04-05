@@ -96,7 +96,7 @@ namespace byfxxm {
 			, _shapes(rhs._shapes)
 			, _factors(rhs._factors) {
 			_elems = std::make_unique<Ty[]>(_count);
-			memcpy(_elems.get(), rhs._elems.get(), _count * sizeof(Ty));
+			std::copy(rhs._elems.get(), rhs._elems.get() + _count, _elems.get());
 		}
 
 		ArrayNd& operator=(const ArrayNd& rhs) {
