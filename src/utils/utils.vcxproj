@@ -147,6 +147,7 @@
     <ClInclude Include="array_nd.h" />
     <ClInclude Include="array_nd_1.h" />
     <ClInclude Include="asm.h" />
+    <ClInclude Include="bench_mark.h" />
     <ClInclude Include="coroutine.h" />
     <ClInclude Include="crtp.h" />
     <ClInclude Include="coro.h" />
