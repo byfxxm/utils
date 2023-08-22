@@ -136,11 +136,10 @@ namespace byfxxm {
 		}
 
 		friend void swap(ArrayNd& lhs, ArrayNd& rhs) noexcept {
-			using std::swap;
-			swap(lhs._count, rhs._count);
-			swap(lhs._shapes, rhs._shapes);
-			swap(lhs._factors, rhs._factors);
-			swap(lhs._elems, rhs._elems);
+			std::swap(lhs._count, rhs._count);
+			std::swap(lhs._shapes, rhs._shapes);
+			std::swap(lhs._factors, rhs._factors);
+			std::swap(lhs._elems, rhs._elems);
 		}
 
 	private:
