@@ -73,4 +73,19 @@ namespace meta {
 		(..., (max = (rest > max) ? static_cast<T>(rest) : max));
 		return max;
 	}
+
+	/// <summary>
+	/// ÅÐ¶ÏÊÇ·ñËØÊý
+	/// </summary>
+	template <size_t N>
+	constexpr bool IsPrime = false;
+
+	template <size_t... Ns>
+	constexpr bool _IsPrime(std::index_sequence<Ns...>) {
+		constexpr size_t N = sizeof...(Ns) + 2;
+		return (true && ... && (N % (Ns + 2) != 0));
+	}
+
+	template <size_t N> requires (N >= 2 && _IsPrime(std::make_index_sequence<N - 2>{}))
+	constexpr bool IsPrime<N> = true;
 }

@@ -254,6 +254,15 @@ void TestMetaprogramming() {
 
 	constexpr double a1 = 15.5;
 	static_assert(meta::Max(1, 3, 2, a1, 12) == 15.5);
+
+	static_assert(meta::IsPrime<2>);
+	static_assert(meta::IsPrime<3>);
+	static_assert(!meta::IsPrime<4>);
+	static_assert(meta::IsPrime<5>);
+	static_assert(!meta::IsPrime<6>);
+	static_assert(meta::IsPrime<7>);
+	static_assert(!meta::IsPrime<42>);
+	static_assert(meta::IsPrime<97>);
 }
 
 void TestNQueens() {
