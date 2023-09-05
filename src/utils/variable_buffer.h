@@ -12,7 +12,9 @@ namespace byfxxm {
 
 	public:
 		void Reset() {
-			read_index_ = write_index_;
+			using std::swap;
+			VariableBuffer copy;
+			swap(this, copy);
 		}
 
 		bool IsEmpty() const {
