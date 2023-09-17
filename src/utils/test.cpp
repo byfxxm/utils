@@ -312,20 +312,12 @@ void TestCrtp() {
 		void Func() {
 			std::cout << "this is Derived2" << std::endl;
 		}
-
-		int Func1(int n1, double n2) {
-			return n1 + static_cast<int>(n2);
-		}
 	};
 
 	Derived1 a;
 	Derived2 b;
 	crtp::Func(a);
 	crtp::Func(b);
-
-	crtp::Container<crtp::Base, Derived1, Derived2> cont(a, b);
-	cont.Get<0>()->Func();
-	cont.Get<1>()->Func();
 }
 
 void TestCoroutine() {
