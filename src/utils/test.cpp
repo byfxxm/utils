@@ -302,22 +302,22 @@ void TestReflection() {
 void TestCrtp() {
 	class Derived1 : public crtp::Base<Derived1> {
 	public:
-		void Func() {
+		void Func(int n) {
 			std::cout << "this is Derived1" << std::endl;
 		}
 	};
 
 	class Derived2 : public crtp::Base<Derived2> {
 	public:
-		void Func() {
+		void Func(int n) {
 			std::cout << "this is Derived2" << std::endl;
 		}
 	};
 
 	std::vector<std::variant<Derived1, Derived2>> vec = { Derived1(), Derived2(), Derived1() };
 	for (auto& x : vec) {
-		std::visit([](auto& x1) {
-			crtp::Func(x1);
+		std::visit([](auto& obj) {
+			crtp::Func(obj, 1);
 			}, x);
 	}
 }
