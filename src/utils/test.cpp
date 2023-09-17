@@ -314,10 +314,12 @@ void TestCrtp() {
 		}
 	};
 
-	Derived1 a;
-	Derived2 b;
-	crtp::Func(a);
-	crtp::Func(b);
+	std::vector<std::variant<Derived1, Derived2>> vec = { Derived1(), Derived2(), Derived1() };
+	for (auto& x : vec) {
+		std::visit([](auto& x1) {
+			crtp::Func(x1);
+			}, x);
+	}
 }
 
 void TestCoroutine() {
