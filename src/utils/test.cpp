@@ -19,7 +19,8 @@
 #include "typelist.h"
 #include "coro.h"
 
-void TestArrayNd() {
+void TestArrayNd()
+{
 	byfxxm::ArrayNd a((size_t)7, 8, 9);
 	a.Memset(50);
 	for (size_t i = 0; i < 7; ++i)
@@ -40,18 +41,14 @@ void TestArrayNd() {
 
 	int x = 22;
 	byfxxm::ArrayNd<int, 3> c =
-	{
 		{
-			{ 1, 2, 3 },
-			{ 4, 5 }
-		},
-		{
-			{ 13, 14 },
-			{ 6, 7, 8, 9 },
-			{ x }
-		},
-		{},
-	};
+			{{1, 2, 3},
+			 {4, 5}},
+			{{13, 14},
+			 {6, 7, 8, 9},
+			 {x}},
+			{},
+		};
 
 	assert(c[0][0][1] == 2);
 	assert(c[0][1][1] == 5);
@@ -62,15 +59,17 @@ void TestArrayNd() {
 		for (size_t j = 0; j < c.Shape<2>(); ++j)
 			assert(c[2][i][j] == 0);
 
-	byfxxm::ArrayNd<int, 2> d{ {0, 1}, {2, 3, 4} };
+	byfxxm::ArrayNd<int, 2> d{{0, 1}, {2, 3, 4}};
 	assert(d[1][1] == 3);
 
-	byfxxm::ArrayNd<int, 1> e = { 1, 2, 3, 4 };
+	byfxxm::ArrayNd<int, 1> e = {1, 2, 3, 4};
 	assert(e[3] == 4);
-	e.ForEach([](auto&& x) { return x * 20; });
+	e.ForEach([](auto &&x)
+			  { return x * 20; });
 	assert(e[2] == 60);
 
-	e.ForEach([](auto&& n) {return n * 20; });
+	e.ForEach([](auto &&n)
+			  { return n * 20; });
 	assert(e[1] == 800);
 
 	byfxxm::ArrayNd d2(22, 33);
@@ -106,14 +105,16 @@ void TestArrayNd1() {
 }
 #endif
 
-void TestVariableBuffer() {
+void TestVariableBuffer()
+{
 	byfxxm::VariableBuffer<20> vbuf;
 	double x = 3.1415926;
 	int y = -999;
 	short z = 66;
 	volatile bool write_finished = false;
 
-	std::thread th1([&]() {
+	std::thread th1([&]()
+					{
 		for (int i = 0; i < 100; ++i) {
 			auto remainder = i % 3;
 			if (remainder ==0)
@@ -126,10 +127,10 @@ void TestVariableBuffer() {
 				while (!vbuf.Write((char*)&z, sizeof(z)))
 					std::this_thread::yield();
 		}
-		write_finished = true;
-		});
+		write_finished = true; });
 
-	std::thread th2([&]() {
+	std::thread th2([&]()
+					{
 		union Buffer {
 			double d;
 			int i;
@@ -151,27 +152,28 @@ void TestVariableBuffer() {
 				std::cout << buf.s << "\t" << count << std::endl;
 			else
 				assert(0);
-		}
-		});
+		} });
 
 	th1.join();
 	th2.join();
 
 	byfxxm::VariableBuffer<1000> vbuf1;
 	double d[100]{};
-	for (auto& i : d)
+	for (auto &i : d)
 		i = x;
 	vbuf1.Write(d);
 	double d1[200]{};
 	size_t count = 0;
 	vbuf1.Read(d1, count);
 	assert(count == sizeof(d));
-	for (auto i = 0; i < 100; ++i) {
+	for (auto i = 0; i < 100; ++i)
+	{
 		assert(d1[i] == x);
 	}
 }
 
-void TestHashMap() {
+void TestHashMap()
+{
 	HashMap<size_t, double> m;
 	m[203] = 3.1415926;
 	for (size_t i = 0; i < 100; ++i)
@@ -185,20 +187,27 @@ void TestHashMap() {
 	std::cout << std::setprecision(8) << m[203] << std::endl;
 }
 
-void TestRingBuffer() {
+void TestRingBuffer()
+{
 	byfxxm::RingBuffer<int, 1024> rb1;
 	byfxxm::RingBuffer<int, 1023> rb2;
-	int temp{ 0 };
+	int temp{0};
 
 	auto time1 = std::chrono::high_resolution_clock::now();
-	for (int i = 0; i < 10000; ++i) {
-		while (rb1.Write(5));
-		while (rb1.Read(temp));
+	for (int i = 0; i < 10000; ++i)
+	{
+		while (rb1.Write(5))
+			;
+		while (rb1.Read(temp))
+			;
 	}
 	auto time2 = std::chrono::high_resolution_clock::now();
-	for (int i = 0; i < 10000; ++i) {
-		while (rb2.Write(5));
-		while (rb2.Read(temp));
+	for (int i = 0; i < 10000; ++i)
+	{
+		while (rb2.Write(5))
+			;
+		while (rb2.Read(temp))
+			;
 	}
 	auto time3 = std::chrono::high_resolution_clock::now();
 
@@ -206,10 +215,11 @@ void TestRingBuffer() {
 	std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(time3 - time2).count() << " ms" << std::endl;
 }
 
-void TestWarrior() {
+void TestWarrior()
+{
 	auto battle_ground = BattleGround::Instance();
-	auto A = battle_ground->CreateWarrior({ "A", 11, 5, 2, 10 });
-	auto B = battle_ground->CreateWarrior({ "B", 11, 3, 3, 20 });
+	auto A = battle_ground->CreateWarrior({"A", 11, 5, 2, 10});
+	auto B = battle_ground->CreateWarrior({"B", 11, 3, 3, 20});
 	A->Attack(B);
 	B->Attack(A);
 
@@ -224,12 +234,16 @@ void TestWarrior() {
 		std::cout << "Even" << std::endl;
 }
 
-void TestMetaprogramming() {
-	struct A {
+void TestMetaprogramming()
+{
+	struct A
+	{
 		using type = void;
 	};
 
-	struct B {};
+	struct B
+	{
+	};
 
 	static_assert(meta::HasType<A>);
 	static_assert(!meta::HasType<B>);
@@ -240,14 +254,17 @@ void TestMetaprogramming() {
 	A a[5];
 	static_assert(meta::Countof(a) == 5);
 
-	struct C : public B {};
+	struct C : public B
+	{
+	};
 	static_assert(meta::IsBaseOf<C, B>);
 	static_assert(!meta::IsBaseOf<C, A>);
 	static_assert(!meta::IsBaseOf<int, double>);
 	static_assert(!meta::IsBaseOf<B, C>);
 	static_assert(!meta::IsBaseOf<int, C>);
 
-	[]<size_t... Ns>(meta::Seq<Ns...> seq) {
+	[]<size_t... Ns>(meta::Seq<Ns...> seq)
+	{
 		static_assert((... + Ns) == 10);
 		(std::cout << ... << (std::to_string(Ns) + "\n")) << std::endl;
 	}(meta::Make<5>::type{});
@@ -265,29 +282,34 @@ void TestMetaprogramming() {
 	static_assert(meta::IsPrime<97>);
 }
 
-void TestNQueens() {
+void TestNQueens()
+{
 	NQueens::Queens<8> queens_8;
-	for (size_t i = 0; i < queens_8.Count(); ++i) {
+	for (size_t i = 0; i < queens_8.Count(); ++i)
+	{
 		std::cout << "resolve " << i << ":" << std::endl;
-		for (auto& q : queens_8[i])
+		for (auto &q : queens_8[i])
 			std::cout << q.GetX() << ", " << q.GetY() << std::endl;
 	}
 }
 
-void TestAsm() {
+void TestAsm()
+{
 	int a[100]{};
 	Memset(a, (int)2, 100);
 }
 
-void TestReflection() {
-	class Type1 : public byfxxm::ISerialize {
+void TestReflection()
+{
+	class Type1 : public byfxxm::ISerialize
+	{
 	public:
-		virtual void Serialize() override {
-
+		virtual void Serialize() override
+		{
 		}
 
-		virtual void Deserialize() override {
-
+		virtual void Deserialize() override
+		{
 		}
 
 	private:
@@ -299,53 +321,65 @@ void TestReflection() {
 	byfxxm::ReflectionHelper::Instance().Deserialize(Type1());
 }
 
-void TestCrtp() {
-	class Derived1 : public crtp::Base<Derived1> {
+void TestCrtp()
+{
+	class Derived1 : public crtp::Base<Derived1>
+	{
 	public:
-		void Func(int n) {
+		void Func(int n)
+		{
 			std::cout << "this is Derived1" << std::endl;
 		}
 	};
 
-	class Derived2 : public crtp::Base<Derived2> {
+	class Derived2 : public crtp::Base<Derived2>
+	{
 	public:
-		void Func(int n) {
+		void Func(int n)
+		{
 			std::cout << "this is Derived2" << std::endl;
 		}
 	};
 
-	std::vector<std::variant<Derived1, Derived2>> vec = { Derived1(), Derived2(), Derived1() };
-	for (auto& x : vec) {
-		std::visit([](auto& obj) {
-			crtp::Func(obj, 1);
-			}, x);
+	std::vector<std::variant<Derived1, Derived2>> vec = {Derived1(), Derived2(), Derived1()};
+	for (auto &x : vec)
+	{
+		std::visit([](auto &obj)
+				   { crtp::Func(obj, 1); },
+				   x);
 	}
 }
 
-void TestCoroutine() {
-	auto f = []() -> coroutine::Task {
+void TestCoroutine()
+{
+	auto f = []() -> coroutine::Task
+	{
 		puts("start");
 		co_await coroutine::Awaiter{};
 		puts("end");
 		co_return 1;
-		};
+	};
 
 	auto x = f();
 	puts("return");
 	std::this_thread::sleep_for(std::chrono::seconds(2));
 }
 
-void TestAddressing() {
+void TestAddressing()
+{
 	using Addr1 = byfxxm::Addressing<int, double, std::string>;
-	class A {
+	class A
+	{
 	public:
-		A(std::string name) : name_(name) {
+		A(std::string name) : name_(name)
+		{
 			Addr1::Instance()->Register(name_ + ".a", &a);
 			Addr1::Instance()->Register(name_ + ".b", &b);
 			Addr1::Instance()->Register(name_ + ".c", &c);
 		}
 
-		~A() {
+		~A()
+		{
 			Addr1::Instance()->Unregister(name_ + ".a");
 			Addr1::Instance()->Unregister(name_ + ".b");
 			Addr1::Instance()->Unregister(name_ + ".c");
@@ -358,7 +392,7 @@ void TestAddressing() {
 		std::string c;
 	};
 
-	A sa{ "sa" };
+	A sa{"sa"};
 	auto inst = Addr1::Instance();
 	inst->Set("sa.a", 404);
 	inst->Set("sa.c", "hello world");
@@ -368,56 +402,62 @@ void TestAddressing() {
 	std::cout << byfxxm::Type(inst->Get("sa.b")) << std::endl;
 }
 
-void TestTypelist() {
+void TestTypelist()
+{
 	namespace typelist = byfxxm::typelist;
 
 	typelist::Typelist<int, double, char> tp0;
 	static_assert(std::is_same_v<typelist::Front<decltype(tp0)>::type, int>);
 	static_assert(std::is_same_v<typelist::Back<decltype(tp0)>::type, char>);
 
-	typelist::PushFront<decltype(tp0), long*>::type tp1;
-	static_assert(std::is_same_v<typelist::Front<decltype(tp1)>::type, long*>);
+	typelist::PushFront<decltype(tp0), long *>::type tp1;
+	static_assert(std::is_same_v<typelist::Front<decltype(tp1)>::type, long *>);
 
-	typelist::PushBack<decltype(tp1), const char*>::type tp2;
-	static_assert(std::is_same_v<typelist::Back<decltype(tp2)>::type, const char*>);
+	typelist::PushBack<decltype(tp1), const char *>::type tp2;
+	static_assert(std::is_same_v<typelist::Back<decltype(tp2)>::type, const char *>);
 	static_assert(typelist::Size<decltype(tp2)>::value == 5);
 	static_assert(std::is_same_v<typelist::PopBack<decltype(tp2)>::type, decltype(tp1)>);
 
 	static_assert(!typelist::Empty<decltype(tp2)>::value);
 	static_assert(typelist::Empty<typelist::Typelist<>>::value);
 
-	typelist::PushBack<decltype(tp2), const char*>::type tp3;
-	static_assert(typelist::Count<decltype(tp3), const char*>::value == 2);
-	static_assert(typelist::Count<decltype(tp3), const char* const>::value == 0);
+	typelist::PushBack<decltype(tp2), const char *>::type tp3;
+	static_assert(typelist::Count<decltype(tp3), const char *>::value == 2);
+	static_assert(typelist::Count<decltype(tp3), const char *const>::value == 0);
 
 	typelist::Reverse<decltype(tp3)>::type tp4;
-	static_assert(std::is_same_v<typelist::Front<decltype(tp4)>::type, const char*>);
+	static_assert(std::is_same_v<typelist::Front<decltype(tp4)>::type, const char *>);
 }
 
-void TestCoro() {
+void TestCoro()
+{
 	byfxxm::Coro co;
 	int x = 0;
-	co.SetMain([](byfxxm::CoMainHelper* helper, void* p) {
+	co.SetMain([](byfxxm::CoMainHelper *helper, void *p)
+			   {
 		while (*(int*)p != 2)
-			helper->SwitchToSub(*(int*)p);
-		}, &x);
+			helper->SwitchToSub(*(int*)p); },
+			   &x);
 
-	co.AddSub([](byfxxm::CoSubHelper* helper, void* p) {
+	co.AddSub([](byfxxm::CoSubHelper *helper, void *p)
+			  {
 		*(int*)p = 1;
 		std::cout << *(int*)p << std::endl;
-		helper->SwitchToMain();
-		}, &x);
+		helper->SwitchToMain(); },
+			  &x);
 
-	co.AddSub([](byfxxm::CoSubHelper* helper, void* p) {
+	co.AddSub([](byfxxm::CoSubHelper *helper, void *p)
+			  {
 		*(int*)p = 2;
 		std::cout << *(int*)p << std::endl;
-		helper->SwitchToMain();
-		}, &x);
+		helper->SwitchToMain(); },
+			  &x);
 
 	co.Run();
 }
 
-int main() {
+int main()
+{
 	TestCoro();
 	TestAddressing();
 	TestArrayNd();
@@ -432,9 +472,6 @@ int main() {
 	TestCrtp();
 	TestTypelist();
 	TestCoroutine();
-#if 0
-	TestCoroutine();
-#endif
 
 	return 0;
 }
