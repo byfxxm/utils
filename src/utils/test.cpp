@@ -323,30 +323,16 @@ void TestCrtp() {
 }
 
 void TestCoroutine() {
-	auto f1= [](void* p) -> coroutine::Task {
-		while (1) {
-			std::cout << p << std::endl;
-			co_await std::suspend_always{};
-		}
-	};
+	auto f = []() -> coroutine::Task {
+		puts("start");
+		co_await coroutine::Awaiter{};
+		puts("end");
+		co_return 1;
+		};
 
-	auto f2 = [](void* p) -> coroutine::Task {
-		while (1) {
-			std::cout << p << std::endl;
-			co_await std::suspend_always{};
-		}
-	};
-
-	auto co1 = f1(nullptr);
-	auto co2 = f2(new int(5));
-	auto mf = [&]() {
-		while (1) {
-			co1.handle_.resume();
-			co2.handle_.resume();
-		}
-	};
-	
-	mf();
+	auto x = f();
+	puts("return");
+	std::this_thread::sleep_for(std::chrono::seconds(2));
 }
 
 void TestAddressing() {
@@ -445,6 +431,7 @@ int main() {
 	TestRingBuffer();
 	TestCrtp();
 	TestTypelist();
+	TestCoroutine();
 #if 0
 	TestCoroutine();
 #endif
