@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="addressing.h" />
+    <ClInclude Include="any_container.h" />
     <ClInclude Include="array_nd.h" />
     <ClInclude Include="array_nd_1.h" />
     <ClInclude Include="asm.h" />
