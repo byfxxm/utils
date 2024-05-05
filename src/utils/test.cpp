@@ -19,6 +19,7 @@
 #include "typelist.h"
 #include "coro.h"
 #include "any_container.h"
+#include "factory.h"
 
 void TestArrayNd()
 {
@@ -457,6 +458,11 @@ void TestCoro()
 	co.Run();
 }
 
+void TestFactory() {
+	byfxxm::FactoryA fa;
+	auto x = fa.ProduceOne();
+}
+
 int main()
 {
 	TestCoro();
@@ -473,6 +479,7 @@ int main()
 	TestCrtp();
 	TestTypelist();
 	TestCoroutine();
+	TestFactory();
 
 	return 0;
 }
